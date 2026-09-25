@@ -1,0 +1,110 @@
+/*
+ * Entrées du hero en CSS : elles se jouent dès le premier affichage,
+ * avant même que React ait pris la main. Valeurs réglées dans geometrie.ts.
+ */
+
+/* La fenêtre en arche : demi-cercle exact en haut (rapport 3:4), cadre chêne */
+.arche {
+  border-radius: 50% 50% 1.75rem 1.75rem / 37.5% 37.5% 1.75rem 1.75rem;
+  box-shadow:
+    0 0 0 5px var(--color-nuit, #051a4b),
+    0 0 0 7px var(--color-chene, #c98a35);
+  container-type: inline-size;
+  animation: arche-ouvre 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* « La fenêtre s'ouvre » : le paysage se pose */
+.paysage {
+  animation: paysage-pose 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.titre {
+  position: absolute;
+  left: var(--titre-gauche);
+  top: var(--titre-haut);
+  margin: 0;
+  font-family: var(--font-display, Georgia, serif);
+  font-size: var(--titre-taille);
+  font-weight: 700;
+  line-height: var(--titre-interligne);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  color: var(--color-nuit, #051a4b);
+  /* Halo calcaire : détache le bleu du ciel sans le trahir */
+  text-shadow:
+    0 0 28px rgba(241, 224, 200, 0.45),
+    0 0 2px rgba(241, 224, 200, 0.25);
+}
+
+/* Chaque ligne se lève derrière la cathédrale */
+.ligne {
+  display: block;
+  animation: titre-leve var(--titre-duree) var(--titre-courbe) var(--titre-delai) both;
+}
+
+.ligne2 {
+  padding-left: var(--titre-retrait);
+  font-style: italic;
+  font-weight: 600;
+  animation-delay: calc(var(--titre-delai) + var(--titre-decalage));
+}
+
+/* Textes autour de l'arche : ils montent doucement, à la suite de la fenêtre */
+.monte {
+  animation: texte-monte 0.8s cubic-bezier(0.22, 1, 0.36, 1) var(--delai, 0.4s) both;
+}
+
+/* Vidéo : fondu dès qu'elle joue vraiment */
+.video {
+  opacity: 0;
+  transition: opacity 600ms ease;
+}
+
+.videoVisible {
+  opacity: 1;
+}
+
+@keyframes arche-ouvre {
+  from {
+    transform: scale(0.96);
+  }
+}
+
+@keyframes paysage-pose {
+  from {
+    transform: translate3d(0, 28px, 0) scale(1.06);
+  }
+}
+
+@keyframes texte-monte {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+}
+
+@keyframes titre-leve {
+  0% {
+    transform: translate3d(0, var(--titre-depart), 0);
+    opacity: 0;
+  }
+  22% {
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arche,
+  .paysage,
+  .ligne,
+  .monte {
+    animation: none;
+  }
+  .video {
+    transition: none;
+  }
+}
