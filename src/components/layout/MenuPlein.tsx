@@ -18,6 +18,8 @@ type Props = {
 };
 
 const entree = [0.22, 1, 0.36, 1] as const;
+const { navigation } = site;
+const { actions } = site.textes;
 
 const panneau: Variants = {
   ferme: { opacity: 0, transition: { duration: 0.22, ease: "easeOut" } },
@@ -36,11 +38,28 @@ const glisse: Variants = {
 };
 
 /**
+ * Après un lien du menu, le focus va au titre de la section visée (et non au
+ * bouton « Menu » en haut de page) : la tabulation repart de là, et le lecteur
+ * d'écran annonce où l'on est arrivé.
+ */
+function focaliserSection(id: string) {
+  const section = document.getElementById(id);
+  if (!section) return;
+  const idTitre = section.getAttribute("aria-labelledby");
+  const cible = (idTitre && document.getElementById(idTitre)) || section.querySelector<HTMLElement>("h2") || section;
+  if (!cible.hasAttribute("tabindex")) cible.setAttribute("tabindex", "-1");
+  cible.setAttribute("data-cible-menu", "");
+  cible.focus({ preventScroll: true });
+}
+
+/**
  * Menu plein écran sur <dialog> natif (piège du focus, Échap, retour du focus).
  * La fermeture joue d'abord le fondu, puis ferme le dialogue.
  */
 export function MenuPlein({ id, ouvert, onFermer }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
+  // Section visée par le dernier lien cliqué, focalisée une fois le menu refermé
+  const cible = useRef<string | null>(null);
   const telReel = !estPlaceholder(site.telephone);
 
   useEffect(() => {
@@ -52,7 +71,7 @@ export function MenuPlein({ id, ouvert, onFermer }: Props) {
     <dialog
       ref={ref}
       id={id}
-      aria-label="Menu"
+      aria-label={navigation.menu}
       data-lenis-prevent
       onCancel={(e) => {
         e.preventDefault();
@@ -68,7 +87,12 @@ export function MenuPlein({ id, ouvert, onFermer }: Props) {
         animate={ouvert ? "ouvert" : "ferme"}
         variants={panneau}
         onAnimationComplete={(etat) => {
-          if (etat === "ferme" && ref.current?.open) ref.current.close();
+          if (etat !== "ferme" || !ref.current?.open) return;
+          // La fermeture native rend le focus au bouton « Menu » ; on le déplace ensuite vers la section visée
+          ref.current.close();
+          const id = cible.current;
+          cible.current = null;
+          if (id) focaliserSection(id);
         }}
         className="relative isolate flex min-h-full flex-col overflow-hidden bg-nuit"
       >
@@ -98,17 +122,20 @@ export function MenuPlein({ id, ouvert, onFermer }: Props) {
               className="inline-flex h-11 shrink-0 items-center gap-2 rounded-full border-[1.5px] border-calcaire/85 px-4 text-[0.9375rem] font-semibold text-calcaire transition-colors hover:bg-calcaire/10"
             >
               <X aria-hidden className="size-[18px]" strokeWidth={2.2} />
-              Fermer
+              {navigation.fermer}
             </button>
           </div>
 
-          <nav aria-label="Sections de la page" className="mt-6 md:mt-12">
+          <nav aria-label={navigation.ariaMenu} className="mt-6 md:mt-12">
             <ul className="flex flex-col gap-1">
               {SECTIONS.map((s) => (
                 <motion.li key={s.id} variants={ligne}>
                   <a
                     href={ancre(s.id)}
-                    onClick={onFermer}
+                    onClick={() => {
+                      cible.current = s.id;
+                      onFermer();
+                    }}
                     className="group flex min-h-14 items-center gap-4 font-display text-[2.25rem] font-semibold leading-[1.1] tracking-[-0.015em] text-calcaire md:text-[3rem]"
                   >
                     <span
@@ -123,11 +150,21 @@ export function MenuPlein({ id, ouvert, onFermer }: Props) {
           </nav>
 
           <div className="mt-auto pt-10">
-            {/* Un clic sur Commander ou Réserver referme le menu derrière la fenêtre qui s'ouvre */}
-            <motion.div variants={glisse} onClick={onFermer} className="grid grid-cols-[1.2fr_1fr] gap-2 md:max-w-md">
+            {/* Commander ou Réserver : le menu se ferme tout de suite, avant que la fenêtre ne s'ouvre.
+                Le focus revient ainsi au bouton « Menu », que la fenêtre retrouvera à sa fermeture. */}
+            <motion.div
+              variants={glisse}
+              onClick={() => {
+                cible.current = null;
+                ref.current?.close();
+                onFermer();
+              }}
+              className="grid grid-cols-[1.2fr_1fr] gap-2 md:max-w-md"
+            >
               <BoutonCommander forme="arche" className="h-14 w-full px-3! xs:px-5!" />
               <BoutonReserver forme="arche" className="h-14 w-full px-3! xs:px-5!">
-                Réserver<span className="sr-only"> une table</span>
+                {actions.reserverCourt}
+                <span className="sr-only">{` ${actions.reserverComplement}`}</span>
               </BoutonReserver>
             </motion.div>
 
@@ -140,7 +177,7 @@ export function MenuPlein({ id, ouvert, onFermer }: Props) {
               >
                 <MapPin aria-hidden className="size-5 shrink-0 text-or" />
                 {adresseComplete}
-                <span className="sr-only"> (itinéraire, nouvel onglet)</span>
+                <span className="sr-only">{` ${actions.itineraireNouvelOnglet}`}</span>
               </a>
               {telReel ? (
                 <a

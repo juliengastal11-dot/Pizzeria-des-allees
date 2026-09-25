@@ -3,6 +3,47 @@
  * avant même que React ait pris la main. Valeurs réglées dans geometrie.ts.
  */
 
+/*
+ * Taille de la fenêtre : toujours 3:4 (vidéo, poster et horizon y sont calés),
+ * et assez petite pour que l'en-tête, l'arche et les deux arches-boutons du
+ * pont tiennent dans le premier écran, barres du navigateur comprises (svh).
+ * Réserve = marge haute + surtitre + écarts + pont jusqu'à la ligne d'eau.
+ */
+.cadre {
+  /* Hauteur d'écran barres comprises (svh), repli en vh pour les navigateurs plus anciens */
+  --ecran: 100vh;
+  width: min(100%, 28rem, max(15rem, calc((var(--ecran) - 14.75rem - env(safe-area-inset-top)) * 0.75)));
+  aspect-ratio: 3 / 4;
+}
+
+@supports (height: 100svh) {
+  .cadre {
+    --ecran: 100svh;
+  }
+}
+
+@media (min-width: 40rem) {
+  .cadre {
+    width: min(100%, 26rem, max(15rem, calc((var(--ecran) - 14.75rem - env(safe-area-inset-top)) * 0.75)));
+  }
+}
+
+@media (min-width: 48rem) {
+  .cadre {
+    width: min(100%, 26rem, max(18rem, calc((var(--ecran) - 17.5rem - env(safe-area-inset-top)) * 0.75)));
+  }
+}
+
+/* Ordinateur : colonne de droite, hauteur réglée sur l'écran, pont et reflets au-dessus du pli */
+@media (min-width: 64rem) {
+  .cadre {
+    --arche-h: clamp(24rem, min(76 * var(--ecran) / 100, calc(var(--ecran) - 20.5rem)), 45rem);
+    width: calc(var(--arche-h) * 0.75);
+    height: var(--arche-h);
+    aspect-ratio: auto;
+  }
+}
+
 /* La fenêtre en arche : demi-cercle exact en haut (rapport 3:4), cadre chêne */
 .arche {
   border-radius: 50% 50% 1.75rem 1.75rem / 37.5% 37.5% 1.75rem 1.75rem;
@@ -22,13 +63,14 @@
   position: absolute;
   left: var(--titre-gauche);
   top: var(--titre-haut);
+  /* Chaque ligne tient sur une ligne ; si l'espacement du texte est agrandi (WCAG 1.4.12), elle se replie au lieu d'être rognée */
+  width: calc(100% - var(--titre-gauche) - 3cqi);
   margin: 0;
   font-family: var(--font-display, Georgia, serif);
   font-size: var(--titre-taille);
   font-weight: 700;
   line-height: var(--titre-interligne);
   letter-spacing: -0.01em;
-  white-space: nowrap;
   color: var(--color-nuit, #051a4b);
   /* Halo calcaire : détache le bleu du ciel sans le trahir */
   text-shadow:
@@ -44,6 +86,8 @@
 
 .ligne2 {
   padding-left: var(--titre-retrait);
+  /* Plus bas dans l'arche, elle a toute la largeur : elle ne se replie pas (sinon « Allées » passerait derrière la cathédrale) */
+  white-space: nowrap;
   font-style: italic;
   font-weight: 600;
   animation-delay: calc(var(--titre-delai) + var(--titre-decalage));

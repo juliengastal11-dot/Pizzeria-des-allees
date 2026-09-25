@@ -3,13 +3,24 @@
  *  FICHIER DE CONFIGURATION UNIQUE — La Pizzeria des Allées
  * ============================================================================
  *  Tout ce qui peut changer (nom, logo, liens, horaires, téléphone, textes,
- *  photos, pizzas mises en avant) se modifie ICI, et nulle part ailleurs.
+ *  photos, pizzas mises en avant, mentions légales) se modifie ICI, et nulle
+ *  part ailleurs.
  *
  *  Règle des placeholders : toute valeur encore inconnue s'écrit entre
  *  crochets, par exemple "[À CONFIRMER]". Le site les reconnaît (voir
  *  `estPlaceholder`) : il les affiche en pointillés dans la maquette et
  *  désactive les liens correspondants. Pour lister ceux qui restent :
  *      rechercher « [ » dans ce fichier.
+ *
+ *  Typographie française :
+ *   - «   » est une espace insécable : on la met avant « : ; ! ? »,
+ *     après « et avant » (ex. "Horaires :"), entre un nombre et son unité.
+ *   - apostrophe typographique « ’ » dans les textes affichés (l’Orb, qu’on).
+ *   - « {mot} » dans un texte est remplacé par le site (nombre, nom, commune…).
+ *
+ *  Repères de relecture :
+ *   - « // À VALIDER » : affirmation ou choix à faire confirmer par le restaurant.
+ *   - « // ⚠ » : point bloquant avant la mise en ligne.
  * ============================================================================
  */
 
@@ -38,7 +49,11 @@ export type Photo = {
   alt: string;
   legende: string;
   lieu: "salle" | "terrasse";
-  /** Position du cadrage dans les arches (object-position CSS). */
+  /**
+   * Point de cadrage dans les arches (« x% y% », comme object-position CSS).
+   * Les photos paysage sont zoomées autour de ce point (voir
+   * src/components/sections/salle/cadrage.ts) : « 50% 100% » garde le bas de la photo.
+   */
   cadrage?: string;
 };
 
@@ -47,13 +62,15 @@ export const site = {
    * Identité
    * --------------------------------------------------------------------- */
   nom: "La Pizzeria des Allées",
+  /** Nom court, sous l'icône du site ajouté à l'écran d'accueil d'un téléphone. */
+  nomCourt: "Pizzeria des Allées",
   /** Découpage du nom pour le grand titre du hero (deux lignes). */
   nomLignes: ["La Pizzeria", "des Allées"] as const,
   logo: {
     src: "/images/logo.png",
-    alt: "Logo de La Pizzeria des Allées : badge rond bleu nuit et or représentant la cathédrale Saint-Nazaire et le Pont Vieux",
+    alt: "Logo de La Pizzeria des Allées : badge rond bleu nuit et or représentant la cathédrale Saint-Nazaire et le Pont Vieux",
   },
-  /** Domaine définitif, sans barre finale. Sert au SEO et au sitemap. */
+  /** Domaine définitif, sans barre finale. Sert au SEO et au sitemap. Tant que c'est un placeholder, le site n'est pas indexé. */
   urlSite: "https://[DOMAINE À VENIR]",
 
   /* ------------------------------------------------------------------------
@@ -63,7 +80,10 @@ export const site = {
     rue: "43 Allées Paul Riquet",
     codePostal: "34500",
     ville: "Béziers",
+    region: "Occitanie",
     pays: "FR",
+    /** Position du restaurant (données structurées Google). La carte de livraison utilise la même. */
+    geo: { latitude: 43.341425, longitude: 3.218144 },
   },
   telephone: "[À CONFIRMER]", // format affiché, ex. "04 67 00 00 00"
   email: "[À CONFIRMER]",
@@ -75,6 +95,8 @@ export const site = {
    */
   horaires: {
     aConfirmer: true,
+    /** Mention affichée (en pointillés) tant que `aConfirmer` est vrai. */
+    mentionAConfirmer: "[À CONFIRMER]",
     semaine: {
       lundi: [],
       mardi: [{ ouverture: "12:00", fermeture: "14:00" }, { ouverture: "18:30", fermeture: "22:30" }],
@@ -87,7 +109,8 @@ export const site = {
   },
 
   paiements: ["Carte bancaire", "Titres-restaurant", "Espèces"],
-  couverts: { salle: 50, terrasse: 100 },
+  /** Capacité : reprise dans le titre de la section « La salle » ({salle} et {terrasse}). */
+  couverts: { salle: 50, terrasse: 100 }, // À VALIDER
 
   /* ------------------------------------------------------------------------
    * Outils externes (liens et widgets uniquement, aucune API)
@@ -97,13 +120,20 @@ export const site = {
     commander: "[LIEN OBYPAY À VENIR]",
     /**
      * TheFork : widget de réservation ouvert dans une fenêtre du site.
-     * ⚠ Au 25/09/2026, ce widget affiche encore « Basilic & Co Béziers » :
-     * renommer la fiche dans TheFork Manager avant la mise en ligne.
+     * ⚠ BLOQUANT : au 25/09/2026, ce widget affiche encore « Basilic & Co Béziers ».
+     * Faire renommer la fiche dans TheFork Manager (nom, photos, description)
+     * AVANT la mise en ligne, puis ouvrir le widget à la main pour vérifier
+     * qu'il ne reste aucune mention de l'ancienne enseigne.
      */
     reserver: "https://widget.thefork.com/fr/acc6e60d-e29b-4326-afa2-800b8c26bb8b?step=date",
     /** Itinéraire Google Maps (s'ouvre dans un nouvel onglet, aucun cookie sur le site). */
     itineraire: "https://www.google.com/maps/dir/?api=1&destination=43+All%C3%A9es+Paul+Riquet%2C+34500+B%C3%A9ziers",
-    /** Carte intégrée, chargée seulement au clic du visiteur (RGPD). */
+    /**
+     * Le restaurant sur une carte (données structurées « hasMap »).
+     * À remplacer par le lien de la fiche Google Business Profile quand elle existera.
+     */
+    carte: "https://www.google.com/maps/search/?api=1&query=43+All%C3%A9es+Paul+Riquet%2C+34500+B%C3%A9ziers",
+    /** Carte Google intégrée (section Infos), chargée seulement au clic du visiteur (RGPD). */
     carteIntegree: "https://www.google.com/maps/embed?origin=mfe&pb=!1m3!2m1!1s43+All%C3%A9es+Paul+Riquet,+34500+B%C3%A9ziers!6i17",
   },
 
@@ -121,11 +151,16 @@ export const site = {
     actif: false,
     outil: "[OUTIL À CHOISIR]",
     url: "[LIEN À VENIR]",
-    texte: "Cumulez des points à chaque commande et profitez d'une pizza offerte.",
+    /** Titre lu par les lecteurs d'écran (le bandeau n'a pas de titre visible). */
+    titre: "Programme de fidélité",
+    texte: "Cumulez des points à chaque commande et profitez d’une pizza offerte.", // À VALIDER
+    bouton: "Rejoindre",
   },
 
   /* ------------------------------------------------------------------------
    * Livraison et à emporter
+   * Les coordonnées de chaque commune (carte de nuit) sont dans
+   * src/components/sections/livraison/geographie.ts : y ajouter toute nouvelle commune.
    * --------------------------------------------------------------------- */
   livraison: {
     communes: [
@@ -143,47 +178,270 @@ export const site = {
   },
 
   /* ------------------------------------------------------------------------
+   * Menu et navigation
+   * --------------------------------------------------------------------- */
+  navigation: {
+    /** Sections reliées par le menu, dans l'ordre. La clé est l'ancre de la section : ne pas la changer. */
+    sections: {
+      histoire: "Notre histoire",
+      carte: "La carte",
+      livraison: "Livraison",
+      salle: "La salle",
+      infos: "Infos pratiques",
+    },
+    menu: "Menu",
+    fermer: "Fermer",
+    ariaPrincipale: "Navigation principale",
+    ariaMenu: "Sections de la page",
+    /** Nom du lien du logo. */
+    lienAccueil: "{nom}, accueil",
+    /** Lien d'évitement, visible au clavier seulement. */
+    allerAuContenu: "Aller au contenu",
+  },
+
+  /* ------------------------------------------------------------------------
    * Textes (à valider avec le restaurateur)
    * --------------------------------------------------------------------- */
   textes: {
+    // Boutons Commander / Réserver et leurs fenêtres (partout sur le site)
+    actions: {
+      commander: "Commander",
+      reserver: "Réserver une table",
+      /** Version courte des petits boutons : « Réserver » (« une table » reste lu par les lecteurs d'écran). */
+      reserverCourt: "Réserver",
+      reserverComplement: "une table",
+      groupe: "Commander ou réserver",
+      itineraire: "Itinéraire",
+      nouvelOnglet: "(nouvel onglet)",
+      itineraireNouvelOnglet: "(itinéraire, nouvel onglet)",
+      fermer: "Fermer",
+      fenetreCommande: {
+        titre: "Commander en ligne",
+        annonce: "La commande en ligne, en click & collect ou en livraison, ouvre très bientôt.",
+        attenteTelephone: "En attendant, appelez-nous au",
+        attenteAdresse: "En attendant, retrouvez-nous sur place :",
+      },
+      fenetreReservation: {
+        titre: "Réserver une table",
+        chargement: "Chargement du module de réservation…",
+        titreIframe: "Réservation en ligne avec TheFork",
+        fournisseur: "Le module de réservation est fourni par TheFork, qui peut déposer des cookies.",
+        confidentialite: "Confidentialité",
+        ouvrirOnglet: "Ouvrir dans un nouvel onglet",
+      },
+    },
+
+    // Hero
     hero: {
       surtitre: "Pizzeria artisanale · Béziers",
-      accroche: "Pâte pétrie ici, produits du coin, et la terrasse sous les platanes des Allées.",
+      accroche: "Pâte pétrie ici, produits du coin, et la terrasse sous les platanes des Allées.", // À VALIDER
       modes: "Sur place · À emporter · En livraison",
+      /** Bouton pause de la fresque animée (libellé fixe, l'état est annoncé par aria-pressed). */
+      pauseVideo: "Mettre en pause l’animation",
     },
+
+    // Notre histoire
     histoire: {
       surtitre: "Notre histoire",
       titre: "Même adresse, nouvelle enseigne.",
+      // Le « ⁠ » (liant invisible) empêche la coupure « Paul- / Riquet » en fin de ligne.
       manifeste:
-        "Au 43 des allées Paul-Riquet, on a rallumé le four sous notre propre nom. Même salle, même terrasse sous les platanes, et une carte qu'on écrit désormais nous-mêmes, avec ce que Béziers et ses coteaux posent sur la table.",
+        "Au 43 des allées Paul-⁠Riquet, on a rallumé le four sous notre propre nom. Même salle, même terrasse sous les platanes, et une carte qu’on écrit désormais nous-mêmes, avec ce que Béziers et ses coteaux posent sur la table.",
       points: [
-        { titre: "La pâte", texte: "Pétrie chaque matin dans la cuisine du 43, et laissée le temps de lever. [À PRÉCISER : durée de maturation]" },
-        { titre: "Les produits", texte: "Olives Lucques, pélardon, cèbes de Lézignan : des fournisseurs du Biterrois. [À PRÉCISER : noms des producteurs]" },
+        // À VALIDER : pâte pétrie chaque matin sur place, durée de maturation
+        { titre: "La pâte", texte: "Pétrie chaque matin dans la cuisine du 43, et laissée le temps de lever. [À PRÉCISER : durée de maturation]" },
+        // À VALIDER : produits et fournisseurs réellement travaillés
+        { titre: "Les produits", texte: "Olives Lucques, pélardon, cèbes de Lézignan : des fournisseurs du Biterrois. [À PRÉCISER : noms des producteurs]" },
         { titre: "La maison", texte: "Une salle sous la fresque du Pont Vieux, une grande terrasse sous les platanes des Allées." },
       ],
     },
+
+    // La carte (fond ciel)
     carte: {
       surtitre: "La carte",
       titre: "Une sélection de la maison",
-      intro: "Quelques pizzas que l'on aime faire goûter. La carte complète, les prix et la commande sont sur notre outil de commande en ligne, toujours à jour.",
+      intro: "Quelques pizzas que l’on aime faire goûter. La carte complète, les prix et la commande sont sur notre outil de commande en ligne, toujours à jour.",
       bouton: "Voir toute la carte et commander",
+      etiquettes: {
+        base: { tomate: "Base tomate", crème: "Base crème" } satisfies Record<Pizza["base"], string>,
+        vegetarienne: "Végétarienne",
+        pimentee: "Pimentée",
+        /** Pastille posée sur la pizza (un mot par ligne). */
+        duMoment: "Du moment",
+      },
+      carrousel: {
+        aria: "Pizzas de la sélection, à faire défiler",
+        position: "Pizza {n} sur {total} : {nom}",
+        precedente: "Pizza précédente",
+        suivante: "Pizza suivante",
+      },
     },
+
+    // Livraison et à emporter
     livraison: {
       surtitre: "Livraison et à emporter",
-      titre: "De l'Orb au Libron, on livre.",
-      intro: "Commandez en ligne : on prépare, un coursier partenaire vous livre chaud. Ou passez la chercher au 43, elle vous attend.",
+      titre: "De l’Orb au Libron, on livre.",
+      intro: "Commandez en ligne : on prépare, un coursier partenaire vous livre chaud. Ou passez la chercher au 43, elle vous attend.",
+      onglets: { aria: "Livraison ou à emporter", livraison: "Livraison", emporter: "À emporter" },
+      communes: {
+        titre: "Les communes livrées",
+        /** Consigne tant qu'aucune commune n'est choisie (annoncée aux lecteurs d'écran). */
+        aide: "Choisissez une commune pour la voir sur la carte.",
+        aideSansCarte: "Nous livrons dans ces communes.",
+        /** Nom des boutons de la liste. */
+        voirSurCarte: "Voir {commune} sur la carte",
+        /** Phrase affichée et annoncée après le choix d'une commune. */
+        annonce: "{commune} est dans notre zone de livraison, à environ {km} km {direction} du 43.",
+        annonceCentre: "{commune} est dans notre zone de livraison, avec le 43 en plein centre.",
+        /** Directions, du nord dans le sens des aiguilles d'une montre. */
+        directions: ["au nord", "au nord-est", "à l’est", "au sud-est", "au sud", "au sud-ouest", "à l’ouest", "au nord-ouest"],
+      },
+      conditions: {
+        minimum: "Minimum de commande",
+        frais: "Frais de livraison",
+        delai: "Délai estimé",
+      },
+      boutonLivraison: "Commander en livraison",
+      emporter: {
+        titre: "À emporter, en trois étapes",
+        etapes: ["Commandez en ligne", "Choisissez votre créneau", "Récupérez-la au 43 : elle vous attend"],
+        bouton: "Commander à emporter",
+        itineraire: "Itinéraire jusqu’au 43",
+      },
+      // Carte de nuit (fond OpenFreeMap)
+      carte: {
+        /** Le restaurant sur la carte et dans la légende. */
+        restaurant: "Le 43",
+        legende: { commune: "Commune livrée", zone: "Zone de livraison" },
+        chargement: "La carte s’allume…",
+        echec: "La carte ne peut pas s’afficher sur cet appareil : toutes les communes livrées figurent dans la liste.",
+        economie: "Économiseur de données activé : la carte n’est pas chargée.",
+        afficher: "Afficher la carte",
+        recentrer: "Revoir toute la zone de livraison",
+        /** Messages de la carte (MapLibre). « Map.Title » est son nom pour les lecteurs d'écran. */
+        locale: {
+          "Map.Title": "Carte de la zone de livraison autour de Béziers",
+          "NavigationControl.ZoomIn": "Zoomer",
+          "NavigationControl.ZoomOut": "Dézoomer",
+          "NavigationControl.ResetBearing": "Remettre le nord en haut",
+          "AttributionControl.ToggleAttribution": "Afficher ou masquer les crédits de la carte",
+          "AttributionControl.MapFeedback": "Signaler une erreur sur la carte",
+          "CooperativeGesturesHandler.WindowsHelpText": "Ctrl + molette pour zoomer sur la carte",
+          "CooperativeGesturesHandler.MacHelpText": "⌘ + molette pour zoomer sur la carte",
+          "CooperativeGesturesHandler.MobileHelpText": "Deux doigts pour déplacer la carte",
+        },
+      },
     },
+
+    // La salle et la terrasse
     salle: {
       surtitre: "La salle et la terrasse",
-      titre: "50 couverts sous la fresque, 100 sous les platanes.",
-      intro: "Une salle aux murs peints de Béziers et de vignes, une terrasse ouverte sur les Allées Paul-Riquet.",
+      /** Une ligne par segment (coupures maîtrisées). {salle} et {terrasse} viennent de `couverts` (plus haut). */
+      titre: ["{salle} couverts sous la fresque,", "{terrasse} sous les platanes."],
+      intro: "Une salle aux murs peints de Béziers et de vignes, une terrasse ouverte sur les Allées Paul-⁠Riquet.",
+      notePhotos: "Photos provisoires : le shooting de la réouverture arrive.",
+      lieux: { salle: "La salle", terrasse: "La terrasse" } satisfies Record<Photo["lieu"], string>,
+      filtres: { tout: "Tout", salle: "La salle", terrasse: "La terrasse" },
+      ariaFiltres: "Filtrer les photos",
+      compte: { une: "{n} photo affichée", plusieurs: "{n} photos affichées" },
+      /** Complément lu après la légende : « Le coin des vignes, agrandir la photo ». */
+      agrandir: "agrandir la photo",
+      visionneuse: { precedente: "Photo précédente", suivante: "Photo suivante", photo: "photo", sur: "sur" },
     },
+
+    // Infos pratiques
     infos: {
       surtitre: "Infos pratiques",
       titre: "Venir au 43",
+      adresse: {
+        titre: "Adresse",
+        titreCarte: "Carte Google Maps du {rue}",
+        carteAfficher: "Afficher la carte interactive",
+        carteMasquer: "Revenir au plan illustré",
+        avertissement: "La carte est fournie par Google, qui peut déposer des cookies.",
+      },
+      /** Libellés du plan illustré des Allées (le numéro vient de l'adresse). */
+      plan: { theatre: "Théâtre", plateau: "Plateau des Poètes", statue: "Riquet" },
+      horaires: {
+        titre: "Horaires",
+        enAttente: "Les horaires de la réouverture seront affichés ici dès qu’ils seront validés.",
+        voirExemple: "Voir l’exemple de mise en page (à valider)",
+        ouvert: "Ouvert · jusqu’à {heure}",
+        ferme: "Fermé",
+        /** {quand} = « » (aujourd'hui), « demain » ou le jour. */
+        fermeRallume: "Fermé · on rallume {quand} à {heure}",
+        demain: "demain",
+        aujourdhui: "(aujourd’hui)",
+      },
+      contact: {
+        titre: "Contact",
+        telephone: "Téléphone",
+        email: "E-mail",
+        paiements: "Paiements acceptés",
+      },
     },
+
+    // Pied de page
     footer: {
       signature: "À bientôt sous les platanes.",
+      titreNavigation: "Sur la page",
+      titreCoordonnees: "Nous trouver",
+      horaires: "Horaires :",
+      titreReseaux: "Nous suivre",
+      mentionsLegales: "Mentions légales",
+      confidentialite: "Confidentialité",
+      hautDePage: "Haut de page",
+      /** Affiché tant que `photos.provisoires` est vrai. */
+      visuelsProvisoires: "Visuels provisoires : photos de la salle retouchées et pizzas générées par IA, en attendant le shooting de la réouverture.",
+      credit: "Site réalisé par",
+      /** Résumé des jours d'ouverture, composé à partir de `horaires.semaine`. */
+      resumeHoraires: {
+        toujoursFerme: "fermé",
+        tousLesJours: "7 jours sur 7",
+        plage: "du {debut} au {fin}",
+        fermeUnJour: "fermé le {jour}",
+        fermePlusieursJours: "fermé {jours}",
+        et: "et",
+      },
+    },
+
+    // Page 404
+    introuvable: {
+      titreOnglet: "Page introuvable",
+      description: "Cette page n’existe pas ou a changé d’adresse. Retrouvez {nom} depuis l’accueil.",
+      surtitre: "Page introuvable",
+      /** Titre : début + mot qui s'allume au survol du bouton + fin. */
+      titreDebut: "Cette allée est",
+      titreMot: "éteinte",
+      titreFin: ".",
+      texte: "La page que vous cherchez n’existe pas ou a changé d’adresse. Rallumez la lumière : le four, lui, est toujours chaud.",
+      bouton: "Revenir à l’accueil",
+    },
+
+    // Pages légales (le texte juridique lui-même est dans src/app/mentions-legales et src/app/confidentialite)
+    pagesLegales: {
+      miseAJour: "Dernière mise à jour :",
+      retour: "Revenir à l’accueil",
+      mentions: {
+        titre: "Mentions légales",
+        surtitre: "Informations légales",
+        description: "Éditeur, hébergeur et informations légales du site de {nom}, {adresse}.",
+        chapo: "Conformément à la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l’économie numérique, voici qui édite et qui héberge ce site.",
+        avertissement: {
+          titre: "Document provisoire",
+          texte: "Les informations en pointillés restent à fournir. L’ensemble de cette page est à relire et à valider par l’exploitant avant la mise en ligne.",
+        },
+      },
+      confidentialite: {
+        titre: "Politique de confidentialité",
+        surtitre: "Vos données",
+        description: "Données personnelles et cookies sur le site de {nom} : aucun cookie de suivi, aucun compte, et le détail de chaque service tiers.",
+        chapo: "En bref : ce site ne dépose aucun cookie de suivi, ne vous demande de créer aucun compte et ne collecte lui-même aucune donnée vous concernant. Le fond de carte de la section Livraison vient d’OpenFreeMap, sans cookie. Les autres services (réservation, commande, carte Google) ne reçoivent des informations que si vous choisissez de les ouvrir.",
+        avertissement: {
+          titre: "Projet à valider",
+          texte: "Cette politique est un projet rédigé avec le site. Elle doit être relue et validée par l’exploitant avant la mise en ligne.",
+        },
+      },
     },
   },
 
@@ -191,6 +449,7 @@ export const site = {
    * Pizzas mises en avant (exemples à valider avec le pizzaïolo)
    * La carte complète n'est PAS dupliquée ici : elle vit dans Obypay.
    * --------------------------------------------------------------------- */
+  // À VALIDER : noms, garnitures et pastilles des 6 pizzas
   pizzas: [
     {
       id: "passejada",
@@ -209,7 +468,7 @@ export const site = {
     {
       id: "lou-camel",
       nom: "Lou Camel",
-      description: "Tomate, mozzarella, saucisse d'agneau épicée, poivrons grillés, oignons rouges",
+      description: "Tomate, mozzarella, saucisse d’agneau épicée, poivrons grillés, oignons rouges",
       base: "tomate",
       image: "/images/pizzas/lou-camel.webp",
       pimentee: true,
@@ -217,7 +476,7 @@ export const site = {
     {
       id: "plateau-des-poetes",
       nom: "Plateau des Poètes",
-      description: "Tomate, mozzarella, légumes grillés du marché, roquette, brebis, huile d'olive",
+      description: "Tomate, mozzarella, légumes grillés du marché, roquette, brebis, huile d’olive",
       base: "tomate",
       image: "/images/pizzas/plateau-des-poetes.webp",
       vegetarienne: true,
@@ -246,47 +505,53 @@ export const site = {
     galerie: [
       {
         src: "/images/salle/salle-fresque-beziers.jpg",
-        alt: "La salle principale : tables en chêne clair sous une grande fresque de Béziers, avec la cathédrale Saint-Nazaire et le Pont Vieux",
+        alt: "La salle principale : tables en chêne clair sous une grande fresque de Béziers, avec la cathédrale Saint-Nazaire et le Pont Vieux",
         legende: "La fresque du Pont Vieux",
         lieu: "salle",
-        cadrage: "50% 45%",
+        cadrage: "50% 80%",
       },
       {
         src: "/images/salle/salle-vignes.jpg",
-        alt: "Le coin des vignes : une fresque de vignoble, un cadre végétal en chêne et des tables dressées",
+        alt: "Le coin des vignes : une fresque de vignoble, un cadre végétal en chêne et des tables dressées",
         legende: "Le coin des vignes",
         lieu: "salle",
-        cadrage: "45% 50%",
+        cadrage: "35% 85%",
       },
       {
         src: "/images/salle/salle-cadres-vegetaux.jpg",
         alt: "Deux cadres végétaux en chêne clair au-dessus de tables pour deux, sous des ampoules à filament",
         legende: "Les murs de mousse",
         lieu: "salle",
-        cadrage: "55% 45%",
+        cadrage: "56% 82%",
       },
       {
         src: "/images/salle/facade-nuit.jpg",
         alt: "La devanture du 43 le soir, enseigne bleu nuit et or, et les tables de la terrasse sur les Allées",
         legende: "La terrasse, le soir",
         lieu: "terrasse",
-        cadrage: "50% 70%",
+        cadrage: "50% 100%",
       },
     ] satisfies Photo[],
+    /** Les deux arches de « Notre histoire » : chemins de deux photos de la galerie ci-dessus. */
+    histoire: {
+      grande: "/images/salle/salle-cadres-vegetaux.jpg",
+      petite: "/images/salle/salle-vignes.jpg",
+    },
     /** Visuels générés par IA ou retouchés : mention « visuels provisoires » affichée en pied de page. */
     provisoires: true,
   },
 
   /* ------------------------------------------------------------------------
    * Hero : fresque animée (vidéo en boucle) et ligne d'horizon détourée
+   * ⚠ Droits : la fresque est reproduite et animée. Faire confirmer par écrit
+   * l'autorisation de son auteur (voir legal.credits.fresque).
    * --------------------------------------------------------------------- */
   hero: {
     videoMp4: "/video/fresque-hero.mp4",
     videoWebm: "/video/fresque-hero.webm",
     poster: "/images/hero/fresque-poster.jpg",
     horizon: "/images/hero/fresque-horizon.webp",
-    pizza: "/images/pizzas/passejada.webp",
-    alt: "La fresque de la salle : la cathédrale Saint-Nazaire sur sa colline, le Pont Vieux et l'Orb, animés comme un matin d'été",
+    alt: "La fresque de la salle : la cathédrale Saint-Nazaire sur sa colline, le Pont Vieux et l’Orb, animés comme un matin d’été",
   },
 
   /* ------------------------------------------------------------------------
@@ -294,8 +559,11 @@ export const site = {
    * --------------------------------------------------------------------- */
   seo: {
     titre: "La Pizzeria des Allées · Pizzeria artisanale à Béziers",
+    /** 155 caractères au plus (au-delà, Google coupe), avec « pizzeria » et « Béziers ». */
     description:
-      "Pizzeria artisanale au 43 Allées Paul Riquet à Béziers : pizzas au feu, produits du Biterrois, grande terrasse. Sur place, à emporter ou en livraison à Béziers et alentours.",
+      "Pizzeria artisanale à Béziers, 43 Allées Paul Riquet : pâte maison, produits du Biterrois, grande terrasse. Sur place, à emporter ou en livraison.", // À VALIDER
+    /** Complément du grand titre, lu par les lecteurs d'écran et les moteurs (invisible à l'écran). */
+    complementTitre: ", pizzeria à Béziers",
     motsCles: [
       "pizzeria Béziers",
       "pizza Béziers",
@@ -304,7 +572,17 @@ export const site = {
       "pizza à emporter Béziers",
       "restaurant terrasse Béziers",
     ],
-    fourchettePrix: "€€",
+    fourchettePrix: "€€", // À VALIDER
+    cuisines: ["Pizza", "Cuisine méditerranéenne"],
+    /** Image des partages (réseaux sociaux, messageries) : 1200 × 630, dans /public/images/partage/. */
+    image: {
+      src: "/images/partage/la-pizzeria-des-allees.jpg",
+      largeur: 1200,
+      hauteur: 630,
+      alt: "La Pizzeria des Allées, pizzeria artisanale au 43 Allées Paul Riquet à Béziers : la fresque de la cathédrale Saint-Nazaire et du Pont Vieux, une pizza et le logo bleu nuit et or",
+    },
+    /** Date de la dernière mise à jour du contenu de l'accueil (plan du site), au format AAAA-MM-JJ. */
+    derniereMiseAJour: "2026-09-25",
   },
 
   /* ------------------------------------------------------------------------
@@ -319,10 +597,45 @@ export const site = {
     tva: "[À CONFIRMER]",
     directeurPublication: "[À CONFIRMER]",
     concepteur: "[NOM DU CONCEPTEUR DU SITE]",
+    /** Date des pages légales (« Dernière mise à jour » et plan du site), au format AAAA-MM-JJ. */
+    miseAJour: "2026-09-25",
+    /** Vérifié le 25/09/2026 sur vercel.com/legal (adresse) et vercel.com/legal/dmca-policy (téléphone). */
     hebergeur: {
       nom: "Vercel Inc.",
       adresse: "440 N Barranca Ave #4133, Covina, CA 91723, États-Unis",
+      telephone: "+1 559 288 7060",
       site: "https://vercel.com",
+    },
+    /** Obligatoire pour la vente en ligne aux particuliers (click & collect, livraison) : article L.612-1 du Code de la consommation. */
+    mediateur: {
+      nom: "[MÉDIATEUR À DÉSIGNER]",
+      site: "[LIEN À VENIR]",
+    },
+    /** Politiques de confidentialité des services tiers (vérifiées le 25/09/2026). */
+    politiques: {
+      thefork: "https://www.thefork.fr/legal",
+      obypay: "https://obypay.com/declaration-de-confidentialite-ue/",
+      google: "https://policies.google.com/privacy?hl=fr",
+      openFreeMap: "https://openfreemap.org/privacy/",
+      vercel: "https://vercel.com/legal/privacy-notice",
+    },
+    cnilPlainte: "https://www.cnil.fr/fr/plaintes",
+    /** Durées de conservation annoncées dans la politique de confidentialité. */
+    conservation: {
+      contact: "3 ans à compter de notre dernier échange", // À VALIDER
+      // Journaux d'exécution Vercel : 1 h (offre Hobby), 1 jour (Pro), 30 jours (Observability Plus). À ajuster selon l'offre.
+      journaux: "1 jour au plus",
+    },
+    credits: {
+      /** ⚠ Autorisation écrite de l'auteur à obtenir (reproduction de la fresque ET version animée du hero). */
+      fresque: { libelle: "Fresque de la salle", texte: "[AUTEUR DE LA FRESQUE À CRÉDITER], reproduite avec autorisation [À CONFIRMER]" },
+      /** Texte affiché tant que `photos.provisoires` est vrai ; ensuite, `photographe`. */
+      visuelsProvisoires:
+        "les visuels présentés sont provisoires. Certains ont été générés ou retouchés numériquement à partir de la salle et de sa fresque, en attendant le reportage photo prévu à la réouverture. Ils seront remplacés et leurs auteurs crédités ici.",
+      photographe: "[À CONFIRMER]",
+      polices: "Besley et Figtree, sous licence SIL Open Font License, hébergées avec le site.",
+      pictogrammes: "Lucide, sous licence ISC.",
+      carte: "fond OpenFreeMap, © OpenMapTiles, données © contributeurs OpenStreetMap (licence ODbL).",
     },
   },
 } as const;

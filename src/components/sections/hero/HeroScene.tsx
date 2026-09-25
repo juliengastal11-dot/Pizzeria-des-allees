@@ -7,8 +7,8 @@ const Progression = createContext<MotionValue<number> | null>(null);
 
 /**
  * La section du hero : elle mesure son propre défilement (0 en haut de page,
- * 1 quand son bas passe le haut de l'écran) et le partage à la fenêtre,
- * à la pizza et au pont.
+ * 1 quand son bas passe le haut de l'écran) et le partage à la fenêtre
+ * et au pont.
  */
 export function HeroScene({ titreId, className, children }: { titreId: string; className?: string; children: ReactNode }) {
   const ref = useRef<HTMLElement>(null);

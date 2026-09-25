@@ -6,8 +6,9 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
 import { useLenis } from "lenis/react";
 import { BoutonCommander, BoutonReserver } from "@/components/actions/Boutons";
-import { useActions } from "@/components/providers/ActionsProvider";
+import { useActions, useEtatActions } from "@/components/providers/ActionsProvider";
 import { site } from "@/config/site";
+import { remplir } from "@/lib/textes";
 import { MenuPlein } from "./MenuPlein";
 import { SECTIONS, ancre, type IdSection } from "./navigation";
 
@@ -16,6 +17,8 @@ const ressortCapsule = { type: "spring", stiffness: 380, damping: 36 } as const;
 const entree = [0.22, 1, 0.36, 1] as const;
 // Boutons compacts de la capsule (44 px de haut)
 const compact = "h-11 min-h-11! px-4! text-[0.9375rem]!";
+const { actions } = site.textes;
+const nomAccueil = remplir(site.navigation.lienAccueil, { nom: site.nom });
 
 /** Section de l'accueil qui traverse le milieu de l'écran. */
 function useSectionActive(surAccueil: boolean): IdSection | null {
@@ -49,7 +52,7 @@ function focusClavierDans(el: HTMLElement | null) {
   return !!el && actif instanceof HTMLElement && el.contains(actif) && actif.matches(":focus-visible");
 }
 
-function BoutonMenu({ ouvert, controle, onClick }: { ouvert: boolean; controle: string; onClick: () => void }) {
+function BoutonMenu({ ouvert, controle, onClick }: { ouvert: boolean; controle?: string; onClick: () => void }) {
   return (
     <motion.button
       type="button"
@@ -65,14 +68,14 @@ function BoutonMenu({ ouvert, controle, onClick }: { ouvert: boolean; controle: 
         <span className="h-[1.5px] w-4 rounded-full bg-current" />
         <span className="h-[1.5px] w-2.5 origin-left rounded-full bg-current transition-transform duration-300 ease-out group-hover:scale-x-[1.6]" />
       </span>
-      Menu
+      {site.navigation.menu}
     </motion.button>
   );
 }
 
 function LienLogo({ taille, className }: { taille: number; className?: string }) {
   return (
-    <a href={ancre("accueil")} aria-label={`${site.nom}, accueil`} className={className}>
+    <a href={ancre("accueil")} aria-label={nomAccueil} className={className}>
       <Image src={site.logo.src} alt="" width={taille} height={taille} className="shrink-0" style={{ width: taille, height: taille }} />
     </a>
   );
@@ -86,7 +89,8 @@ function LienLogo({ taille, className }: { taille: number; className?: string })
  *   section en cours) ; Commander / Réserver n'y paraissent qu'une fois ceux du hero sortis de l'écran.
  */
 export function Header() {
-  const { ctaHeroVisibles, setMenuOuvert } = useActions();
+  const { setMenuOuvert } = useActions();
+  const { ctaHeroVisibles } = useEtatActions();
   const surAccueil = usePathname() === "/";
   const ctaDansHeader = !(surAccueil && ctaHeroVisibles);
   const section = useSectionActive(surAccueil);
@@ -96,6 +100,9 @@ export function Header() {
   const sens = useRef<{ vers: "haut" | "bas"; depuis: number }>({ vers: "haut", depuis: 0 });
 
   const [menu, setMenu] = useState(false);
+  // Le menu plein écran n'est monté qu'à sa première ouverture
+  const [menuMonte, setMenuMonte] = useState(false);
+  const controleMenu = menuMonte ? idMenu : undefined;
   const [fond, setFond] = useState(false);
   const [masque, setMasque] = useState(false);
 
@@ -112,6 +119,7 @@ export function Header() {
   });
 
   const ouvrir = () => {
+    setMenuMonte(true);
     setMenu(true);
     setMasque(false);
     setMenuOuvert(true);
@@ -154,14 +162,14 @@ export function Header() {
             transition={{ duration: 0.35 }}
           />
           <div className="relative flex h-16 items-center justify-between gap-3 px-4">
-            <a href={ancre("accueil")} aria-label={`${site.nom}, accueil`} className="flex min-h-11 items-center gap-2.5 rounded-full">
+            <a href={ancre("accueil")} aria-label={nomAccueil} className="flex min-h-11 items-center gap-2.5 rounded-full">
               <Image src={site.logo.src} alt="" width={42} height={42} className="size-[42px] shrink-0" />
               <span aria-hidden className="font-display text-[1.02rem] font-semibold leading-[1.02] text-calcaire max-[359px]:hidden">
                 <span className="block">{site.nomLignes[0]}</span>
                 <span className="block">{site.nomLignes[1]}</span>
               </span>
             </a>
-            <BoutonMenu ouvert={menu} controle={idMenu} onClick={ouvrir} />
+            <BoutonMenu ouvert={menu} controle={controleMenu} onClick={ouvrir} />
           </div>
         </motion.div>
 
@@ -175,7 +183,7 @@ export function Header() {
           >
             <motion.div layout="position" className="flex items-center gap-1">
               <LienLogo taille={40} className="grid size-11 shrink-0 place-items-center rounded-full" />
-              <nav aria-label="Navigation principale" className="hidden lg:block">
+              <nav aria-label={site.navigation.ariaPrincipale} className="hidden lg:block">
                 <ul className="flex items-center">
                   {SECTIONS.map((s) => {
                     const actif = section === s.id;
@@ -209,13 +217,15 @@ export function Header() {
                   key="cta"
                   layout="position"
                   className="flex items-center gap-1.5 pl-1"
-                  initial={{ opacity: 0, x: 14 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  // Les CTA ne partent jamais de l'invisible (direction artistique, §6)
+                  initial={{ opacity: 0.4, x: 14, scale: 0.96 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
                   exit={{ opacity: 0, x: 14 }}
                   transition={{ duration: 0.35, ease: entree }}
                 >
                   <BoutonReserver variante="contour" className={compact}>
-                    Réserver<span className="sr-only"> une table</span>
+                    {actions.reserverCourt}
+                    <span className="sr-only">{` ${actions.reserverComplement}`}</span>
                   </BoutonReserver>
                   <BoutonCommander variante="or" className={compact} />
                 </motion.div>
@@ -223,13 +233,13 @@ export function Header() {
             </AnimatePresence>
 
             <motion.div layout="position" className="lg:hidden">
-              <BoutonMenu ouvert={menu} controle={idMenu} onClick={ouvrir} />
+              <BoutonMenu ouvert={menu} controle={controleMenu} onClick={ouvrir} />
             </motion.div>
           </motion.div>
         </div>
       </header>
 
-      <MenuPlein id={idMenu} ouvert={menu} onFermer={fermer} />
+      {menuMonte && <MenuPlein id={idMenu} ouvert={menu} onFermer={fermer} />}
     </>
   );
 }

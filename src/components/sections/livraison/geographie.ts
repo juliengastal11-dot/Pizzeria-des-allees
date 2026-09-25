@@ -1,58 +1,141 @@
 /**
- * Schéma de la zone de livraison (pas à l'échelle).
- * Boîte 0-100 : x vers l'est, y vers le sud. Les noms suivent `site.livraison.communes` :
- * une commune absente d'ici reste dans la liste, sans point sur le schéma.
+ * Géographie réelle de la zone de livraison.
+ * Coordonnées officielles (geo.api.gouv.fr pour les communes, adresse.data.gouv.fr pour le 43).
+ *
+ * ⚠ Les clés suivent `site.livraison.communes` : ajouter une commune dans src/config/site.ts
+ * demande d'ajouter ici ses coordonnées (longitude, latitude). Sans elles, la commune reste
+ * dans la liste mais n'a pas de point sur la carte et n'entre pas dans le tracé de la zone.
+ * La position du restaurant, elle, est dans site.adresse.geo.
  */
 
-export type Cote = "droite" | "gauche" | "dessous";
+import { site } from "@/config/site";
+
+/** [longitude, latitude] en degrés décimaux (WGS 84). */
+export type Coordonnees = readonly [lon: number, lat: number];
+
+/** Côté de l'étiquette par rapport au point, choisi pour éviter les chevauchements sur mobile. */
+export type Cote = "droite" | "gauche" | "dessus" | "dessous";
 
 export type Lieu = {
-  x: number;
-  y: number;
-  /** Côté de l'étiquette, choisi pour éviter les chevauchements sur mobile. */
+  coord: Coordonnees;
   cote: Cote;
-  /** Largeur max de l'étiquette (em) pour la couper après un trait d'union. */
-  largeur?: number;
-  /** Décalage vertical de l'étiquette (px). */
-  dy?: number;
-  /** Courbure du trajet depuis le 43 (0,18 par défaut ; négatif = de l'autre côté). */
-  courbe?: number;
+  /** Étiquette sur plusieurs lignes (sinon une seule ligne, jamais coupée au trait d'union). */
+  lignes?: readonly string[];
 };
+
+/** Le 43, 43 Allées Paul Riquet (site.adresse.geo). */
+export const RESTAURANT: Coordonnees = [site.adresse.geo.longitude, site.adresse.geo.latitude];
 
 export const LIEUX: Partial<Record<string, Lieu>> = {
-  Corneilhan: { x: 30, y: 8, cote: "droite" },
-  "Lignan-sur-Orb": { x: 18, y: 22, cote: "droite", dy: -5 },
-  Béziers: { x: 42, y: 38, cote: "droite" },
-  "Boujan-sur-Libron": { x: 66, y: 24, cote: "droite", largeur: 6.5 },
-  "Villeneuve-lès-Béziers": { x: 60, y: 60, cote: "dessous", largeur: 6.2 },
-  Sauvian: { x: 36, y: 76, cote: "gauche" },
-  Sérignan: { x: 58, y: 88, cote: "droite", courbe: -0.08 },
+  Béziers: { coord: [3.2342, 43.3481], cote: "droite" },
+  "Villeneuve-lès-Béziers": { coord: [3.2909, 43.3178], cote: "gauche" },
+  "Boujan-sur-Libron": { coord: [3.2628, 43.3803], cote: "droite", lignes: ["Boujan-", "sur-Libron"] },
+  "Lignan-sur-Orb": { coord: [3.1728, 43.383], cote: "droite" },
+  Sauvian: { coord: [3.2541, 43.2885], cote: "gauche" },
+  Sérignan: { coord: [3.3011, 43.271], cote: "gauche" },
+  Corneilhan: { coord: [3.1927, 43.4026], cote: "droite" },
 };
 
-/** Le 43, au cœur de Béziers. */
-export const RESTAURANT = { x: 42, y: 38 } as const;
+/* ------------------------------------------------------------------------
+ * Calculs (projection locale en kilomètres autour du 43 : largement assez
+ * précise à l'échelle d'une vingtaine de kilomètres)
+ * --------------------------------------------------------------------- */
 
-/** L'Orb : du nord-ouest, par Lignan, à l'ouest de Béziers, entre Sauvian et Villeneuve, vers Sérignan. */
-export const ORB = "M 5 -2 C 9 8, 13 15, 18 22 S 27 35, 32 41 S 40 56, 46 66 S 51 82, 53 90 S 55 98, 56 102";
+const KM_PAR_DEGRE_LAT = 110.574;
+const KM_PAR_DEGRE_LON = 111.32 * Math.cos((RESTAURANT[1] * Math.PI) / 180);
 
-/** Le Libron : à l'est, du nord au sud, par Boujan. */
-export const LIBRON = "M 72 -2 C 70 8, 67 16, 66 24 S 72 38, 77 48 S 86 64, 89 78 S 92 94, 93 102";
+type Plan = { x: number; y: number };
 
-export const RIVIERES = [
-  { nom: "Orb", x: 36, y: 50, cote: "gauche" },
-  { nom: "Libron", x: 78, y: 46, cote: "droite" },
-] as const satisfies readonly { nom: string; x: number; y: number; cote: Cote }[];
-
-/** Courbe douce du 43 vers une commune (légèrement bombée, comme une route). */
-export function trajet({ x, y, courbe = 0.18 }: Lieu): string {
-  const { x: x0, y: y0 } = RESTAURANT;
-  const dx = x - x0;
-  const dy = y - y0;
-  const cx = x0 + dx / 2 - dy * courbe;
-  const cy = y0 + dy / 2 + dx * courbe;
-  return `M ${x0} ${y0} Q ${cx.toFixed(2)} ${cy.toFixed(2)} ${x} ${y}`;
+function versPlan([lon, lat]: Coordonnees): Plan {
+  return { x: (lon - RESTAURANT[0]) * KM_PAR_DEGRE_LON, y: (lat - RESTAURANT[1]) * KM_PAR_DEGRE_LAT };
 }
 
-export function distance(x: number, y: number): number {
-  return Math.hypot(x - RESTAURANT.x, y - RESTAURANT.y);
+function versCoord({ x, y }: Plan): [number, number] {
+  return [RESTAURANT[0] + x / KM_PAR_DEGRE_LON, RESTAURANT[1] + y / KM_PAR_DEGRE_LAT];
+}
+
+/** Distance à vol d'oiseau, en kilomètres. */
+export function distanceKm(a: Coordonnees, b: Coordonnees): number {
+  const p = versPlan(a);
+  const q = versPlan(b);
+  return Math.hypot(q.x - p.x, q.y - p.y);
+}
+
+/** « au nord », « au nord-est »… (site.textes.livraison.communes.directions), dans le sens des aiguilles d'une montre. */
+const DIRECTIONS: readonly string[] = site.textes.livraison.communes.directions;
+
+/** Direction de `b` vue depuis `a`, en toutes lettres (« au sud-est »). */
+export function direction(a: Coordonnees, b: Coordonnees): string {
+  const p = versPlan(a);
+  const q = versPlan(b);
+  const cap = (Math.atan2(q.x - p.x, q.y - p.y) * 180) / Math.PI; // 0 = nord, 90 = est
+  return DIRECTIONS[Math.round(((cap + 360) % 360) / 45) % 8];
+}
+
+/** Enveloppe convexe (chaîne monotone d'Andrew), sens trigonométrique. */
+function enveloppe(points: Plan[]): Plan[] {
+  const tries = [...points].sort((a, b) => a.x - b.x || a.y - b.y);
+  if (tries.length < 3) return tries;
+  const croix = (o: Plan, a: Plan, b: Plan) => (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+  const bas: Plan[] = [];
+  for (const p of tries) {
+    while (bas.length >= 2 && croix(bas[bas.length - 2], bas[bas.length - 1], p) <= 0) bas.pop();
+    bas.push(p);
+  }
+  const haut: Plan[] = [];
+  for (const p of [...tries].reverse()) {
+    while (haut.length >= 2 && croix(haut[haut.length - 2], haut[haut.length - 1], p) <= 0) haut.pop();
+    haut.push(p);
+  }
+  return [...bas.slice(0, -1), ...haut.slice(0, -1)];
+}
+
+/**
+ * Contour de la zone de livraison : l'enveloppe des communes et du 43, élargie de `margeKm`
+ * avec des angles arrondis (tampon lisse, comme un bassin). Anneau GeoJSON fermé.
+ */
+export function zoneLivraison(points: readonly Coordonnees[], margeKm = 2.2): [number, number][] {
+  const coque = enveloppe([RESTAURANT, ...points].map(versPlan));
+  const n = coque.length;
+  const anneau: [number, number][] = [];
+  const normale = (a: Plan, b: Plan) => {
+    const l = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+    return Math.atan2(-(b.x - a.x) / l, (b.y - a.y) / l); // normale extérieure (sens trigonométrique)
+  };
+  for (let i = 0; i < n; i++) {
+    const avant = coque[(i - 1 + n) % n];
+    const ici = coque[i];
+    const apres = coque[(i + 1) % n];
+    const debut = normale(avant, ici);
+    let fin = normale(ici, apres);
+    while (fin < debut) fin += 2 * Math.PI;
+    const pas = Math.max(2, Math.ceil((fin - debut) / (Math.PI / 18)));
+    for (let k = 0; k <= pas; k++) {
+      const t = debut + ((fin - debut) * k) / pas;
+      anneau.push(versCoord({ x: ici.x + margeKm * Math.cos(t), y: ici.y + margeKm * Math.sin(t) }));
+    }
+  }
+  anneau.push(anneau[0]);
+  return anneau;
+}
+
+/** Trajet légèrement bombé du 43 vers une commune, comme une route (LineString GeoJSON). */
+export function trajet(vers: Coordonnees, courbure = 0.16, segments = 40): [number, number][] {
+  const a = versPlan(RESTAURANT);
+  const b = versPlan(vers);
+  const c = { x: (a.x + b.x) / 2 - (b.y - a.y) * courbure, y: (a.y + b.y) / 2 + (b.x - a.x) * courbure };
+  const ligne: [number, number][] = [];
+  for (let i = 0; i <= segments; i++) {
+    const t = i / segments;
+    const u = 1 - t;
+    ligne.push(versCoord({ x: u * u * a.x + 2 * u * t * c.x + t * t * b.x, y: u * u * a.y + 2 * u * t * c.y + t * t * b.y }));
+  }
+  return ligne;
+}
+
+/** Emprise [ouest, sud, est, nord] d'un ensemble de points. */
+export function emprise(points: readonly Coordonnees[]): [number, number, number, number] {
+  const lons = points.map((p) => p[0]);
+  const lats = points.map((p) => p[1]);
+  return [Math.min(...lons), Math.min(...lats), Math.max(...lons), Math.max(...lats)];
 }

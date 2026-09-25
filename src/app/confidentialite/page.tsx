@@ -4,37 +4,24 @@ import Link from "next/link";
 import { LienExterne, LienValeur, Liste, PageTexte, Point, SectionTexte } from "@/components/layout/PageTexte";
 import { Valeur } from "@/components/ui/Valeur";
 import { adresseComplete, site } from "@/config/site";
+import { partage } from "@/lib/metadonnees";
+import { remplir } from "@/lib/textes";
+
+/*
+ * Les données variables (dates, adresses des politiques tiers, durées de
+ * conservation, CNIL) viennent de site.legal ; les titres et avertissements de
+ * site.textes.pagesLegales. Texte à relire par l'exploitant avant la mise en ligne.
+ */
+const T = site.textes.pagesLegales.confidentialite;
+const { legal } = site;
+const description = remplir(T.description, { nom: site.nom });
 
 export const metadata: Metadata = {
-  title: "Politique de confidentialité",
-  description: `Données personnelles et cookies sur le site de ${site.nom} : aucun cookie de suivi, aucun compte, services tiers chargés seulement à votre demande.`,
+  title: T.titre,
+  description,
   alternates: { canonical: "/confidentialite" },
+  ...partage({ titre: `${T.titre} · ${site.nom}`, description, chemin: "/confidentialite" }),
 };
-
-const MISE_A_JOUR = { iso: "2026-09-25", libelle: "25 septembre 2026" };
-
-/** Politiques des services tiers (vérifiées le 25/09/2026, sauf `aVerifier`). */
-const POLITIQUES = {
-  thefork: { url: "https://www.thefork.fr/legal", aVerifier: true },
-  obypay: { url: "https://obypay.com/declaration-de-confidentialite-ue/", aVerifier: false },
-  google: { url: "https://policies.google.com/privacy?hl=fr", aVerifier: false },
-  vercel: { url: "https://vercel.com/legal/privacy-policy", aVerifier: false },
-};
-const CNIL_PLAINTE = "https://www.cnil.fr/fr/plaintes";
-
-function Politique({ politique, children }: { politique: { url: string; aVerifier: boolean }; children: ReactNode }) {
-  return (
-    <>
-      <LienExterne href={politique.url}>{children}</LienExterne>
-      {politique.aVerifier && (
-        <>
-          {" "}
-          <Valeur valeur="[À VÉRIFIER]" className="text-[0.875rem]" />
-        </>
-      )}
-    </>
-  );
-}
 
 /** Un service tiers : ce qui le déclenche, ce qu'il reçoit, ses propres règles. */
 function Service({ usage, nom, children, politique }: { usage: string; nom: string; children: ReactNode; politique: ReactNode }) {
@@ -55,24 +42,15 @@ function Service({ usage, nom, children, politique }: { usage: string; nom: stri
 export default function Confidentialite() {
   return (
     <PageTexte
-      surtitre="Vos données"
-      titre="Politique de confidentialité"
-      miseAJour={MISE_A_JOUR}
-      chapo={
-        <>
-          En bref&nbsp;: ce site ne dépose aucun cookie de suivi, ne vous demande de créer aucun compte et ne collecte
-          lui-même aucune donnée vous concernant. Seuls les services que vous choisissez d’ouvrir (réservation,
-          commande, carte) reçoivent des informations, selon leurs propres règles.
-        </>
-      }
-      avertissement={{
-        titre: "Projet à valider",
-        texte: <p>Cette politique est un projet rédigé avec le site. Elle doit être relue et validée par l’exploitant avant la mise en ligne.</p>,
-      }}
+      surtitre={T.surtitre}
+      titre={T.titre}
+      miseAJour={legal.miseAJour}
+      chapo={T.chapo}
+      avertissement={{ titre: T.avertissement.titre, texte: <p>{T.avertissement.texte}</p> }}
     >
       <SectionTexte id="responsable" titre="Qui est responsable de vos données">
         <p>
-          <strong>{site.nom}</strong>, exploitée par <Valeur valeur={site.legal.raisonSociale} />, {adresseComplete}.
+          <strong>{site.nom}</strong>, exploitée par <Valeur valeur={legal.raisonSociale} />, {adresseComplete}.
         </p>
         <p>
           Pour toute question sur vos données&nbsp;: <LienValeur valeur={site.email} href={`mailto:${site.email}`} />.
@@ -85,11 +63,16 @@ export default function Confidentialite() {
           <Point>Aucun compte à créer, aucun formulaire à remplir sur le site lui-même.</Point>
           <Point>
             Les polices de caractères et les images sont hébergées avec le site&nbsp;: l’affichage des pages n’envoie
-            aucune requête à Google Fonts ni à un autre service tiers.
+            aucune requête à Google Fonts ni à un autre service tiers, à la seule exception du fond de carte de la
+            section Livraison (voir OpenFreeMap ci-dessous).
           </Point>
           <Point>
             Les liens vers nos réseaux sociaux ouvrent ces services dans un nouvel onglet&nbsp;; aucun de leurs modules
             n’est intégré aux pages.
+          </Point>
+          <Point>
+            Seul le module de réservation de TheFork, si vous ouvrez la fenêtre «&nbsp;Réserver une table&nbsp;», et la
+            carte Google, si vous choisissez de l’afficher, peuvent déposer leurs propres cookies (voir ci-dessous).
           </Point>
         </Liste>
         <p>
@@ -100,29 +83,38 @@ export default function Confidentialite() {
         </p>
       </SectionTexte>
 
-      <SectionTexte id="services" titre="Les services tiers, seulement à votre demande">
+      <SectionTexte id="services" titre="Les services tiers">
         <p>
-          Trois outils extérieurs rendent le site utile. Aucun ne se charge tant que vous ne l’avez pas sollicité, et
-          chacun traite vos données sous sa propre responsabilité.
+          Quatre outils extérieurs rendent le site utile. TheFork, Obypay et Google Maps ne se chargent que si vous
+          les sollicitez. Le fond de carte de la section Livraison (OpenFreeMap) se charge quand cette section
+          approche de l’écran, sans cookie. Chacun traite vos données sous sa propre responsabilité.
         </p>
         <div className="space-y-4">
           <Service
             usage="Réservation"
             nom="TheFork"
-            politique={<Politique politique={POLITIQUES.thefork}>Politique de confidentialité de TheFork</Politique>}
+            politique={
+              <LienExterne href={legal.politiques.thefork}>Mentions légales et déclaration de confidentialité de TheFork</LienExterne>
+            }
           >
             <p>
               Le module de réservation ne se charge que lorsque vous ouvrez la fenêtre «&nbsp;Réserver une
               table&nbsp;». Les informations que vous y saisissez (nom, e-mail, téléphone, date, nombre de couverts)
-              sont transmises à TheFork, qui gère la réservation et nous la communique. TheFork peut déposer ses
-              propres cookies dans cette fenêtre.
+              sont transmises à TheFork, qui gère la réservation et nous la communique, pour l’exécution de votre
+              réservation.
+            </p>
+            <p>
+              <strong>Cookies&nbsp;:</strong> dans cette fenêtre, TheFork peut déposer ses propres cookies
+              (fonctionnement du module et, selon vos choix, mesure d’audience). Ils relèvent de sa déclaration relative
+              à la confidentialité et aux cookies, où vous pouvez les gérer. Rien n’est chargé si vous n’ouvrez pas la
+              fenêtre.
             </p>
           </Service>
 
           <Service
             usage="Commande"
             nom="Obypay"
-            politique={<Politique politique={POLITIQUES.obypay}>Déclaration de confidentialité d’Obypay</Politique>}
+            politique={<LienExterne href={legal.politiques.obypay}>Déclaration de confidentialité d’Obypay</LienExterne>}
           >
             <p>
               Le bouton «&nbsp;Commander&nbsp;» vous emmène sur le site d’Obypay, notre outil de commande et de
@@ -134,24 +126,40 @@ export default function Confidentialite() {
           <Service
             usage="Carte"
             nom="Google Maps"
-            politique={<Politique politique={POLITIQUES.google}>Règles de confidentialité de Google</Politique>}
+            politique={<LienExterne href={legal.politiques.google}>Règles de confidentialité de Google</LienExterne>}
           >
             <p>
-              La carte interactive n’est chargée que si vous cliquez pour l’afficher. Google peut alors recevoir des
-              données de navigation (dont votre adresse IP) et déposer des cookies. Le lien «&nbsp;Itinéraire&nbsp;»
-              ouvre Google Maps dans un nouvel onglet.
+              La carte interactive de la section Infos pratiques n’est chargée que si vous cliquez pour l’afficher.
+              Google peut alors recevoir des données de navigation (dont votre adresse IP) et déposer des cookies. Le
+              lien «&nbsp;Itinéraire&nbsp;» ouvre Google Maps dans un nouvel onglet.
             </p>
+          </Service>
+
+          <Service
+            usage="Carte de livraison"
+            nom="OpenFreeMap"
+            politique={<LienExterne href={legal.politiques.openFreeMap}>Politique de confidentialité d’OpenFreeMap</LienExterne>}
+          >
+            <p>
+              Le fond de la carte des communes livrées est téléchargé depuis les serveurs d’OpenFreeMap quand la
+              section Livraison est sur le point de s’afficher (sur demande seulement si votre appareil économise les
+              données). Comme pour toute ressource web, ces serveurs reçoivent votre adresse IP et des informations
+              techniques (navigateur, page d’origine). OpenFreeMap ne dépose aucun cookie et indique ne pas conserver
+              les adresses IP, sauf en cas d’incident de sécurité (30&nbsp;jours au plus).
+            </p>
+            <p>Base légale&nbsp;: notre intérêt légitime à vous montrer notre zone de livraison.</p>
           </Service>
         </div>
       </SectionTexte>
 
       <SectionTexte id="hebergement" titre="Hébergement et journaux techniques">
         <p>
-          Le site est hébergé par {site.legal.hebergeur.nom} (États-Unis). Pour acheminer les pages et protéger le
-          site, l’hébergeur traite des données techniques de connexion (adresse IP, navigateur, page demandée) pendant
-          une durée limitée. Ces transferts hors de l’Union européenne sont encadrés par les garanties prévues par le
-          RGPD&nbsp;: voir la{" "}
-          <Politique politique={POLITIQUES.vercel}>politique de confidentialité de {site.legal.hebergeur.nom}</Politique>.
+          Le site est hébergé par {legal.hebergeur.nom} (États-Unis). Pour acheminer les pages et protéger le site,
+          l’hébergeur traite des données techniques de connexion (adresse IP, navigateur, page demandée). Les journaux
+          techniques auxquels nous avons accès sont conservés {legal.conservation.journaux}. Ces transferts hors de
+          l’Union européenne sont encadrés par les garanties prévues par le RGPD (cadre de protection des données
+          UE–États-Unis et clauses contractuelles types)&nbsp;: voir la{" "}
+          <LienExterne href={legal.politiques.vercel}>politique de confidentialité de {legal.hebergeur.nom}</LienExterne>.
         </p>
         <p>Base légale&nbsp;: notre intérêt légitime à faire fonctionner et à sécuriser le site.</p>
       </SectionTexte>
@@ -159,9 +167,10 @@ export default function Confidentialite() {
       <SectionTexte id="contact" titre="Quand vous nous écrivez ou nous appelez">
         <p>
           Si vous nous contactez par e-mail ou par téléphone, nous utilisons vos coordonnées uniquement pour vous
-          répondre, et ne les conservons que le temps nécessaire au traitement de votre demande. Elles ne sont ni
-          vendues ni cédées.
+          répondre. Elles ne sont ni vendues ni cédées.
         </p>
+        <p>Base légale&nbsp;: notre intérêt légitime à répondre à vos demandes.</p>
+        <p>Durée de conservation&nbsp;: {legal.conservation.contact}.</p>
       </SectionTexte>
 
       <SectionTexte id="droits" titre="Vos droits">
@@ -175,11 +184,11 @@ export default function Confidentialite() {
         </Liste>
         <p>
           Écrivez-nous à <LienValeur valeur={site.email} href={`mailto:${site.email}`} />. Pour les données traitées
-          par TheFork, Obypay ou Google, vous pouvez aussi vous adresser directement à eux.
+          par TheFork, Obypay, Google ou OpenFreeMap, vous pouvez aussi vous adresser directement à eux.
         </p>
         <p>
           Si vous estimez que vos droits ne sont pas respectés, vous pouvez adresser une réclamation à la{" "}
-          <LienExterne href={CNIL_PLAINTE}>CNIL</LienExterne>.
+          <LienExterne href={legal.cnilPlainte}>CNIL</LienExterne>.
         </p>
       </SectionTexte>
 

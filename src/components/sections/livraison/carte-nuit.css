@@ -1,0 +1,350 @@
+/*
+ * Carte de nuit (MapLibre GL) aux couleurs du site.
+ * Chargée avec la carte seulement (import dynamique), jamais au premier affichage.
+ * Tout est rangé sous .carte-nuit pour ne rien toucher ailleurs.
+ */
+
+.carte-nuit {
+  --cn-halo: #f2d38c;
+  --cn-or-clair: #f4da90;
+  --cn-calcaire: #f1e0c8;
+  --cn-calcaire-clair: #faeedc;
+  --cn-pierre: #d7b08e;
+  --cn-minuit: #060f2e;
+  --cn-grain: #13285a;
+  --cn-filet: #a08049;
+  --cn-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --cn-police: var(--font-figtree), ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --cn-police-titre: var(--font-besley), Georgia, "Times New Roman", serif;
+}
+
+/* La carte hérite de la police du site (les commandes et crédits aussi) */
+.carte-nuit .maplibregl-map {
+  font: 400 0.875rem/1.4 var(--cn-police);
+  background: var(--cn-minuit);
+}
+
+/* Focus clavier du canevas : l'anneau passe sur le panneau (le canevas est rogné par l'arche) */
+.carte-nuit .maplibregl-canvas:focus,
+.carte-nuit .maplibregl-canvas:focus-visible {
+  outline: none;
+}
+
+.carte-nuit:has(.maplibregl-canvas:focus-visible) {
+  outline: 2px solid var(--cn-or-clair);
+  outline-offset: 3px;
+}
+
+/* ------------------------------------------------------------------------
+ * Points de lumière (marqueurs HTML)
+ * --------------------------------------------------------------------- */
+
+.carte-nuit .cn-lieu {
+  width: 0;
+  height: 0;
+}
+
+.carte-nuit .cn-corps {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(0.55);
+  transform-origin: 0 0;
+  transition:
+    opacity 0.55s var(--cn-ease) var(--cn-delai, 0ms),
+    transform 0.55s var(--cn-ease) var(--cn-delai, 0ms);
+}
+
+.carte-nuit [data-allume] .cn-corps {
+  opacity: 1;
+  transform: none;
+}
+
+.carte-nuit .cn-point {
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cn-halo);
+  box-shadow: 0 0 10px 2px rgba(242, 211, 140, 0.55);
+  transition: transform 0.35s var(--cn-ease);
+}
+
+/* Halo renforcé : commune survolée ou choisie */
+.carte-nuit .cn-aura {
+  position: absolute;
+  left: -26px;
+  top: -26px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(242, 211, 140, 0.55) 0%, rgba(242, 211, 140, 0.18) 38%, transparent 68%);
+  opacity: 0;
+  transform: scale(0.4);
+  transition:
+    opacity 0.35s var(--cn-ease),
+    transform 0.35s var(--cn-ease);
+  pointer-events: none;
+}
+
+.carte-nuit .cn-nom {
+  position: absolute;
+  top: 0;
+  white-space: nowrap;
+  font: 600 0.875rem/1.15 var(--cn-police);
+  color: var(--cn-calcaire);
+  text-shadow:
+    0 0 1px var(--cn-minuit),
+    0 0 3px var(--cn-minuit),
+    0 0 8px var(--cn-minuit),
+    0 0 14px var(--cn-minuit);
+  transition: opacity 0.35s var(--cn-ease);
+}
+
+.carte-nuit .cn-nom span {
+  display: block;
+}
+
+.carte-nuit .cn-droite .cn-nom {
+  left: 11px;
+  transform: translateY(-50%);
+}
+
+.carte-nuit .cn-gauche .cn-nom {
+  right: 11px;
+  text-align: right;
+  transform: translateY(-50%);
+}
+
+.carte-nuit .cn-dessous .cn-nom {
+  top: 10px;
+  left: 0;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.carte-nuit .cn-dessus .cn-nom {
+  top: auto;
+  bottom: 10px;
+  left: 0;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+/* Les communes se choisissent aussi d'un clic sur la carte (la liste reste l'accès clavier) */
+.carte-nuit .cn-cliquable .cn-point,
+.carte-nuit .cn-cliquable .cn-nom {
+  cursor: pointer;
+}
+
+.carte-nuit .cn-cliquable .cn-point::after {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+}
+
+.carte-nuit .est-survole .cn-aura {
+  opacity: 0.7;
+  transform: scale(0.8);
+}
+
+.carte-nuit .est-choisi .cn-aura {
+  opacity: 1;
+  transform: none;
+}
+
+.carte-nuit .est-choisi .cn-point {
+  transform: scale(1.45);
+}
+
+.carte-nuit .est-choisi .cn-nom {
+  color: var(--cn-or-clair);
+}
+
+/* Une commune choisie : les autres s'effacent un peu */
+.carte-nuit [data-choix] .cn-lieu:not(.est-choisi):not(.cn-43) .cn-nom {
+  opacity: 0.55;
+}
+
+/* Le 43 : la lumière la plus vive */
+.carte-nuit .cn-43 .cn-point {
+  left: -6px;
+  top: -6px;
+  width: 12px;
+  height: 12px;
+  background: var(--cn-calcaire-clair);
+  box-shadow:
+    0 0 0 3px rgba(242, 211, 140, 0.38),
+    0 0 22px 8px rgba(242, 211, 140, 0.6);
+}
+
+.carte-nuit .cn-43 .cn-aura {
+  opacity: 0.8;
+  transform: none;
+}
+
+.carte-nuit .cn-43 .cn-nom {
+  font: italic 600 1rem/1 var(--cn-police-titre);
+  color: var(--cn-or-clair);
+}
+
+.carte-nuit .cn-43.cn-gauche .cn-nom {
+  right: 14px;
+}
+
+/* Une seule onde à l'allumage, jamais en boucle */
+.carte-nuit .cn-onde {
+  position: absolute;
+  left: -8px;
+  top: -8px;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--cn-halo);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.carte-nuit [data-allume] .cn-onde {
+  animation: cn-onde 1.9s var(--cn-ease) 0.3s 1 both;
+}
+
+@keyframes cn-onde {
+  from {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(6);
+  }
+}
+
+/* ------------------------------------------------------------------------
+ * Commandes (zoom, recentrer) et crédits
+ * --------------------------------------------------------------------- */
+
+.carte-nuit .maplibregl-ctrl-bottom-left .maplibregl-ctrl {
+  margin: 0 0 18px 18px;
+}
+
+.carte-nuit .maplibregl-ctrl-group {
+  overflow: hidden;
+  border: 1px solid var(--cn-filet);
+  border-radius: 999px;
+  background: rgba(19, 40, 90, 0.92);
+  box-shadow: 0 6px 18px rgba(6, 15, 46, 0.45);
+}
+
+.carte-nuit .maplibregl-ctrl-group button {
+  width: 44px;
+  height: 44px;
+  background-color: transparent;
+}
+
+.carte-nuit .maplibregl-ctrl-group button + button {
+  border-top: 1px solid rgba(160, 128, 73, 0.55);
+}
+
+.carte-nuit .maplibregl-ctrl button:not(:disabled):hover {
+  background-color: rgba(241, 224, 200, 0.1);
+}
+
+.carte-nuit .maplibregl-ctrl-group button:focus {
+  box-shadow: none;
+}
+
+.carte-nuit .maplibregl-ctrl-group button:focus-visible {
+  outline: 2px solid var(--cn-or-clair);
+  outline-offset: -4px;
+  border-radius: 999px;
+  box-shadow: none;
+}
+
+.carte-nuit .maplibregl-ctrl button .maplibregl-ctrl-icon {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+}
+
+.carte-nuit .maplibregl-ctrl button.maplibregl-ctrl-zoom-in .maplibregl-ctrl-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F1E0C8' stroke-width='2.2' stroke-linecap='round'%3E%3Cpath d='M12 5.5v13M5.5 12h13'/%3E%3C/svg%3E");
+}
+
+.carte-nuit .maplibregl-ctrl button.maplibregl-ctrl-zoom-out .maplibregl-ctrl-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F1E0C8' stroke-width='2.2' stroke-linecap='round'%3E%3Cpath d='M5.5 12h13'/%3E%3C/svg%3E");
+}
+
+/* Recentrer : quatre coins, comme un cadrage */
+.carte-nuit .maplibregl-ctrl button.cn-recentrer .maplibregl-ctrl-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F1E0C8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 9V6a2 2 0 0 1 2-2h3M15 4h3a2 2 0 0 1 2 2v3M20 15v3a2 2 0 0 1-2 2h-3M9 20H6a2 2 0 0 1-2-2v-3'/%3E%3Ccircle cx='12' cy='12' r='2.2' fill='%23F2D38C' stroke='none'/%3E%3C/svg%3E");
+}
+
+/* Crédits en bas à droite, sur toute la largeur laissée libre par les boutons (une ligne dès que possible) */
+.carte-nuit .maplibregl-ctrl-bottom-right {
+  left: 80px;
+}
+
+.carte-nuit .maplibregl-ctrl-bottom-right .maplibregl-ctrl-attrib {
+  max-width: calc(100% - 20px);
+  margin: 0 20px 18px 0;
+}
+
+.carte-nuit .maplibregl-ctrl-attrib {
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: rgba(6, 15, 46, 0.86);
+  color: var(--cn-pierre);
+  font: 400 0.75rem/1.35 var(--cn-police);
+  text-align: right;
+}
+
+.carte-nuit .maplibregl-ctrl-attrib a {
+  color: var(--cn-pierre);
+  text-decoration: underline;
+  text-decoration-color: rgba(215, 176, 142, 0.45);
+  text-underline-offset: 2px;
+}
+
+.carte-nuit .maplibregl-ctrl-attrib a:hover {
+  color: var(--cn-or-clair);
+  text-decoration-color: currentColor;
+}
+
+.carte-nuit .maplibregl-ctrl-attrib a:focus-visible {
+  outline: 2px solid var(--cn-or-clair);
+  outline-offset: 1px;
+  border-radius: 3px;
+}
+
+/* Message des gestes coopératifs (« Ctrl + molette », « deux doigts ») */
+.carte-nuit .maplibregl-cooperative-gesture-screen {
+  padding: 2rem;
+  background: rgba(6, 15, 46, 0.72);
+  color: var(--cn-calcaire);
+  font: 600 1.0625rem/1.35 var(--cn-police);
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------------
+ * Mouvement réduit : pas d'onde, pas d'échelle, un simple fondu
+ * --------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .carte-nuit .cn-onde {
+    display: none;
+  }
+
+  .carte-nuit .cn-corps {
+    transform: none;
+    transition: opacity 0.3s linear;
+  }
+
+  .carte-nuit .cn-point,
+  .carte-nuit .cn-aura {
+    transition: none;
+  }
+}

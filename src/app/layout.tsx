@@ -8,7 +8,9 @@ import { Footer } from "@/components/layout/Footer";
 import { BarreMobile } from "@/components/layout/BarreMobile";
 import { site } from "@/config/site";
 import { restaurantJsonLd } from "@/lib/jsonld";
+import { partage } from "@/lib/metadonnees";
 import { getSiteUrl } from "@/lib/site-url";
+import { estBrouillon } from "./brouillon";
 
 // Besley : une Clarendon, la lettre des devantures peintes et des étiquettes de vin.
 const besley = Besley({
@@ -35,18 +37,19 @@ export const metadata: Metadata = {
   keywords: [...site.seo.motsCles],
   applicationName: site.nom,
   alternates: { canonical: "/" },
-  openGraph: {
-    type: "website",
-    locale: "fr_FR",
-    siteName: site.nom,
-    title: site.seo.titre,
-    description: site.seo.description,
-    url: "/",
-  },
-  twitter: { card: "summary_large_image", title: site.seo.titre, description: site.seo.description },
+  ...partage({ titre: site.seo.titre, description: site.seo.description, chemin: "/" }),
   formatDetection: { telephone: true, address: true },
-  robots: { index: true, follow: true },
+  // Brouillon (domaine à venir ou prévisualisation) : noindex, levé dès que site.urlSite est renseigné
+  robots: estBrouillon()
+    ? { index: false, follow: false, googleBot: { index: false, follow: false } }
+    : { index: true, follow: true },
 };
+
+/*
+ * Sans JavaScript, les états de départ des animations (posés en style en ligne
+ * par Motion) ne seraient jamais levés : on les neutralise pour que tout se lise.
+ */
+const SANS_JS = "[style*='opacity:0']{opacity:1!important;transform:none!important}";
 
 export const viewport: Viewport = {
   themeColor: "#051a4b",
@@ -64,8 +67,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           href="#contenu"
           className="fixed left-3 top-3 z-[100] -translate-y-24 rounded-full bg-or px-5 py-3 font-semibold text-nuit transition-transform focus:translate-y-0"
         >
-          Aller au contenu
+          {site.navigation.allerAuContenu}
         </a>
+        <noscript>
+          <style>{SANS_JS}</style>
+        </noscript>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: restaurantJsonLd() }} />
         <Providers>
           <Header />

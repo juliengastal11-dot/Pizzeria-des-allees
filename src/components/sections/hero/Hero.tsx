@@ -3,7 +3,6 @@ import { MapPin } from "lucide-react";
 import { adresseComplete, estPlaceholder, site } from "@/config/site";
 import { HeroScene } from "./HeroScene";
 import { HeroFenetre } from "./HeroFenetre";
-import { HeroPizza } from "./HeroPizza";
 import { PontLumineux } from "./PontLumineux";
 import styles from "./hero.module.css";
 
@@ -14,11 +13,12 @@ const delai = (secondes: number) => ({ "--delai": `${secondes}s` }) as CSSProper
 
 /**
  * Hero « Les Quinze Arches » : une fenêtre en arche ouverte sur la fresque
- * animée de la salle, le nom qui se lève derrière Saint-Nazaire, la Passejada
- * qui sort du tableau, et le Pont Vieux lumineux qui porte Commander et Réserver.
+ * animée de la salle, le nom qui se lève derrière Saint-Nazaire, et le Pont
+ * Vieux dessiné au trait dont deux arches sont Commander et Réserver.
  *
- * Mobile : surtitre, arche, pont, texte. Ordinateur : texte à gauche, arche à
- * droite, pont sur toute la largeur.
+ * Mobile : surtitre, arche, pont, texte (en-tête, arche et arches-boutons dans
+ * le premier écran). Ordinateur : texte à gauche, arche à droite, pont sur
+ * toute la largeur de l'écran.
  */
 export function Hero() {
   const { surtitre, accroche, modes } = site.textes.hero;
@@ -33,7 +33,7 @@ export function Hero() {
   return (
     <HeroScene
       titreId={TITRE_ID}
-      className="relative isolate overflow-x-clip bg-nuit pb-20 pt-[calc(4.75rem_+_env(safe-area-inset-top))] md:pt-24 lg:pb-24 lg:pt-[6.5rem]"
+      className="relative isolate z-[1] -mb-6 overflow-x-clip bg-nuit pb-4 pt-[calc(4.75rem_+_env(safe-area-inset-top))] md:-mb-10 md:pt-24 lg:-mb-20 lg:pt-[5.75rem]"
     >
       <div
         className={[
@@ -51,21 +51,14 @@ export function Hero() {
           {surtitre}
         </p>
 
-        {/* La fenêtre en arche, 3:4 ; la pizza déborde de son coin bas droit */}
-        <div
-          className={[
-            "relative mx-auto mt-4 w-full max-w-[28rem] [grid-area:arche] sm:max-w-[26rem] lg:mt-0 lg:max-w-none",
-            "[--arche-h:clamp(26rem,min(78svh,calc(100svh_-_16.5rem)),45rem)]",
-            "aspect-[3/4] lg:aspect-auto lg:h-(--arche-h) lg:w-[calc(var(--arche-h)_*_0.75)]",
-          ].join(" ")}
-        >
+        {/* La fenêtre en arche, 3:4, dimensionnée sur la hauteur d'écran */}
+        <div className={`${styles.cadre} relative mx-auto mt-4 [grid-area:arche] lg:mt-0`}>
           <HeroFenetre titreId={TITRE_ID} />
-          <HeroPizza className="-bottom-[7%] -right-[5%] z-10 w-[clamp(120px,38%,230px)] lg:-bottom-[6%] lg:-right-[11%]" />
         </div>
 
-        <PontLumineux className="-mx-5 mt-11 [grid-area:pont] sm:mx-0 lg:mt-12" />
+        <PontLumineux className="mt-3 [grid-area:pont] md:mt-5 lg:mt-4" />
 
-        <div className="mt-7 [grid-area:texte] sm:mx-auto sm:max-w-xl sm:text-center lg:mx-0 lg:mt-6 lg:max-w-lg lg:text-left">
+        <div className="mt-2 [grid-area:texte] sm:mx-auto sm:max-w-xl sm:text-center lg:mx-0 lg:mt-6 lg:max-w-lg lg:text-left">
           <p
             className={`${styles.monte} font-display text-[1.3rem] italic leading-snug text-calcaire md:text-[1.5rem] lg:text-[clamp(1.6rem,0.8rem_+_1.5vw,2.4rem)]`}
             style={delai(0.55)}
@@ -88,7 +81,7 @@ export function Hero() {
               className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full text-[0.9375rem] text-pierre underline-offset-4 transition-colors hover:text-calcaire hover:underline"
             >
               {adresse}
-              <span className="sr-only"> (itinéraire, nouvel onglet)</span>
+              <span className="sr-only">{` ${site.textes.actions.itineraireNouvelOnglet}`}</span>
             </a>
           ) : (
             <p className="mt-4 inline-flex min-h-11 items-center gap-2 text-[0.9375rem] text-pierre">{adresse}</p>

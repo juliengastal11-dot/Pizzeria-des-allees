@@ -1,15 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type RefObject } from "react";
+import Link from "next/link";
 import { ArrowUpRight, Phone } from "lucide-react";
 import { Fenetre } from "@/components/ui/Fenetre";
 import { estPlaceholder, site } from "@/config/site";
+
+const TEXTES = site.textes.actions.fenetreReservation;
+
+const lien = "inline-flex min-h-11 items-center gap-1.5 py-2 font-semibold text-or-clair underline-offset-4 hover:underline";
+
+type Props = { ouvert: boolean; onFermer: () => void; retour?: RefObject<HTMLElement | null> };
 
 /**
  * Réservation TheFork : le widget n'est chargé qu'à l'ouverture de la fenêtre
  * (aucun contenu tiers ni cookie tant que le visiteur ne le demande pas).
  */
-export function DialogueReservation({ ouvert, onFermer }: { ouvert: boolean; onFermer: () => void }) {
+export function DialogueReservation({ ouvert, onFermer, retour }: Props) {
   const [charge, setCharge] = useState(false);
   // Le widget reste monté après la première ouverture (pas de rechargement à chaque fois)
   const [demande, setDemande] = useState(false);
@@ -18,40 +25,38 @@ export function DialogueReservation({ ouvert, onFermer }: { ouvert: boolean; onF
   const telReel = !estPlaceholder(site.telephone);
 
   return (
-    <Fenetre ouvert={ouvert} onFermer={onFermer} titre="Réserver une table" large>
-      <div className="relative h-[min(70svh,40rem)] bg-calcaire-clair" data-surface="clair">
+    <Fenetre ouvert={ouvert} onFermer={onFermer} titre={TEXTES.titre} retour={retour} large>
+      {/* Hauteur : ce qui reste entre le titre et les liens de secours, qui restent visibles sans défiler */}
+      <div className="relative h-[min(calc(92svh-13.5rem),40rem)] min-h-80 bg-calcaire-clair" data-surface="clair">
         {!charge && (
           <p className="absolute inset-0 grid place-items-center px-6 text-center text-eau" role="status">
-            Chargement du module de réservation…
+            {TEXTES.chargement}
           </p>
         )}
         {demande && (
           <iframe
             src={site.liens.reserver}
-            title="Réservation en ligne avec TheFork"
+            title={TEXTES.titreIframe}
             className="relative size-full border-0"
             onLoad={() => setCharge(true)}
             allow="payment"
           />
         )}
       </div>
-      <div className="flex flex-col gap-3 px-5 py-4 text-sm text-pierre sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        <p>Module fourni par TheFork.</p>
-        <div className="flex flex-wrap gap-x-5 gap-y-2">
-          <a
-            href={site.liens.reserver}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 font-semibold text-or-clair underline-offset-4 hover:underline"
-          >
-            Ouvrir dans un nouvel onglet
+      <div className="flex flex-col gap-2 px-5 py-3 text-sm text-pierre sm:px-6">
+        <p className="pt-1">
+          {TEXTES.fournisseur}{" "}
+          <Link href="/confidentialite" className="font-semibold text-calcaire underline underline-offset-4 hover:text-or-clair">
+            {TEXTES.confidentialite}
+          </Link>
+        </p>
+        <div className="flex flex-wrap gap-x-5">
+          <a href={site.liens.reserver} target="_blank" rel="noopener noreferrer" className={lien}>
+            {TEXTES.ouvrirOnglet}
             <ArrowUpRight aria-hidden className="size-4" />
           </a>
           {telReel && (
-            <a
-              href={`tel:${site.telephone.replace(/\s/g, "")}`}
-              className="inline-flex items-center gap-1.5 font-semibold text-or-clair underline-offset-4 hover:underline"
-            >
+            <a href={`tel:${site.telephone.replace(/\s/g, "")}`} className={`${lien} tabular-nums`}>
               <Phone aria-hidden className="size-4" />
               {site.telephone}
             </a>

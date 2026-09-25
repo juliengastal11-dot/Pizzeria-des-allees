@@ -21,7 +21,7 @@ export function formatHeure(hhmm: string): string {
 }
 
 export function formatCreneaux(creneaux: readonly Creneau[]): string {
-  if (creneaux.length === 0) return "Fermé";
+  if (creneaux.length === 0) return site.textes.infos.horaires.ferme;
   return creneaux.map((c) => `${formatHeure(c.ouverture)} – ${formatHeure(c.fermeture)}`).join(" · ");
 }
 

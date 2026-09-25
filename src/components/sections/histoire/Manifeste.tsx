@@ -5,11 +5,6 @@ import { motion, useScroll, useTransform, type MotionValue } from "motion/react"
 import { normaliserMot } from "./outils";
 import { MOUVEMENT_REDUIT, useMedia } from "./useMedia";
 
-// Mot « éteint » (5,9:1 sur nuit), puis calcaire ; les mots clés s'allument en or clair.
-const ETEINT = "#9099b2";
-const CALCAIRE = "#f1e0c8";
-const OR_CLAIR = "#f4da90";
-
 const MOTS_CLES = new Set(["beziers", "allee", "allees", "platane", "platanes"]);
 
 // Chaque mot s'allume sur 20 % de la course ; le dernier démarre à 80 %.
@@ -19,7 +14,10 @@ const DUREE_MOT = 0.2;
 type Props = { texte: string; className?: string };
 
 /**
- * Manifeste révélé mot à mot au défilement : chaque mot passe de « éteint » à calcaire.
+ * Manifeste révélé mot à mot au défilement : chaque mot, d'abord « éteint »
+ * (#9099b2, 5,9:1 sur nuit), s'allume en calcaire (les mots clés en or clair).
+ * L'allumage est une copie du mot posée dessus dont seule l'opacité varie :
+ * aucune couleur animée, le texte reste lisible à chaque instant.
  * Les lecteurs d'écran reçoivent la phrase entière une seule fois (copie sr-only).
  */
 export function Manifeste({ texte, className }: Props) {
@@ -45,7 +43,7 @@ export function Manifeste({ texte, className }: Props) {
 
       <p
         ref={ref}
-        className="font-display text-[clamp(1.6rem,1.1rem+2.4vw,2.9rem)] font-medium leading-[1.25] tracking-[-0.01em] md:max-w-[26ch]"
+        className="font-display text-[clamp(1.5rem,1.1rem+1.6vw,2.25rem)] font-medium leading-[1.3] tracking-[-0.01em] text-[#9099b2] md:max-w-[32ch]"
       >
         <span className="sr-only">{texte}</span>
         <span aria-hidden="true">
@@ -75,17 +73,20 @@ function Mot({
   reduire: boolean;
 }) {
   const cle = MOTS_CLES.has(normaliserMot(mot));
-  const cible = cle ? OR_CLAIR : CALCAIRE;
   const debut = total <= 1 ? 0 : (index / (total - 1)) * ETALEMENT;
   const fin = Math.min(1, debut + DUREE_MOT);
-  const couleur = useTransform(progression, [debut, fin], reduire ? [cible, cible] : [ETEINT, cible]);
+  const opacite = useTransform(progression, [debut, fin], reduire ? [1, 1] : [0, 1]);
 
+  // inline-block : un mot composé (« Paul-Riquet ») ne se coupe jamais au trait d'union
   return (
-    <motion.span
-      style={{ color: couleur }}
-      className={cle ? "italic motion-reduce:text-or-clair!" : "motion-reduce:text-calcaire!"}
-    >
+    <span className={`relative inline-block ${cle ? "italic" : ""}`}>
       {mot}
-    </motion.span>
+      <motion.span
+        className={`absolute inset-0 motion-reduce:opacity-100! ${cle ? "text-or-clair" : "text-calcaire"} ${reduire ? "" : "will-change-[opacity]"}`}
+        style={{ opacity: opacite }}
+      >
+        {mot}
+      </motion.span>
+    </span>
   );
 }

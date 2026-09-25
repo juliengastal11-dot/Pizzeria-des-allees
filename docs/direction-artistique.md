@@ -3,15 +3,22 @@
 Piste validée le 25/09/2026 : **« Les Quinze Arches », version nuit**.
 Fond **Bleu des Allées**, encre **Calcaire au soleil**, section **La carte** sur **Ciel de Béziers**.
 Les formes viennent de Béziers : arches inégales du Pont Vieux, ovales des écluses de Fonseranes, ligne de l'Orb.
-La lumière vient de la piste nocturne : le Pont Vieux s'illumine point par point au défilement.
+La lumière vient de la piste nocturne : des lumières s'allument au défilement (pont du hero, pilules Commander / Réserver, plan des Allées, carte de livraison).
 
 ## 1. Règles absolues
 
-- **Aucun élément de Basilic & Co** : ni nom, ni logo, ni textes, ni noms de recettes (Reine, Margherita, Chèvre & Miel, noms de régions…), ni couleurs (vert `#395837`, crème, abricot), ni polices (Lust, Effra), ni feuille de basilic, ni le mot « terroir(s) ».
-- **Tout ce qui est modifiable vit dans `src/config/site.ts`**. Aucun texte, lien, horaire, numéro ou chemin d'image en dur dans les composants. Les valeurs inconnues sont des placeholders `[…]` : les afficher avec `<Valeur valeur={…} />` (pointillés), désactiver les liens correspondants (`estPlaceholder`).
-- **Pas de cookies de suivi**. Google Maps et TheFork ne se chargent qu'à l'action du visiteur.
-- **Mobile d'abord** (390 px). Commander et Réserver toujours accessibles sur mobile.
-- Français partout, typographie française : espace insécable ` ` avant `: ; ! ?` et dans « ». Heures « 18 h 30 ». Aucune des deux polices n'a l'espace fine.
+- **Aucun élément de Basilic & Co** : ni nom, ni logo, ni textes, ni noms de recettes (Reine, Margherita, Chèvre & Miel, noms de régions…), ni couleurs (vert `#395837`, crème, abricot), ni polices (Lust, Effra), ni feuille de basilic, ni le mot « terroir(s) ». ⚠ La fiche TheFork affiche encore l'ancienne enseigne : elle doit être renommée avant la mise en ligne (voir `site.liens.reserver`).
+- **Tout ce qui est modifiable vit dans `src/config/site.ts`** : nom, logo, coordonnées, horaires, liens, photos, pizzas, **tous les textes d'interface** (`site.textes.<section>`, `site.textes.actions`, `site.navigation`, `site.textes.pagesLegales`), SEO (`site.seo`) et données légales (`site.legal`). Aucun texte, lien, horaire, numéro ou chemin d'image en dur dans les composants.
+  - Les valeurs inconnues sont des placeholders `[…]` : les afficher avec `<Valeur valeur={…} />` (ou `<TexteAvecValeurs texte={…} />` pour une phrase qui en contient), désactiver les liens correspondants (`estPlaceholder`).
+  - Les modèles `{mot}` (« Voir {commune} sur la carte ») se remplissent avec `remplir()` de `src/lib/textes.ts`.
+  - Seuls restent dans le code : le texte juridique des pages légales (à faire relire), les noms de jours (`src/lib/horaires.ts`) et les coordonnées des communes de livraison (`src/components/sections/livraison/geographie.ts`).
+- **Pas de cookies de suivi**. Google Maps (carte des Infos) et TheFork ne se chargent qu'à l'action du visiteur. Seul le fond de carte OpenFreeMap de la section Livraison se charge de lui-même, à l'approche de la section (sans cookie ; l'IP est transmise au serveur de tuiles, c'est écrit dans `/confidentialite`).
+- **Mobile d'abord** (390 px, écran utile réel ≈ 390 × 664 avec les barres de Safari). Commander et Réserver toujours accessibles sur mobile.
+- Français partout, typographie française :
+  - espace insécable avant `: ; ! ?` et dans « », entre un nombre et son unité ; dans `site.ts`, l'écrire ` ` ;
+  - apostrophe typographique `’` ; heures « 18 h 30 » ;
+  - aucune des deux polices n'a l'espace fine (U+202F) ni le trait d'union insécable (U+2011) : pour empêcher « Paul- / Riquet », écrire `Paul-⁠Riquet` (liant invisible) ;
+  - `typographie()` (`src/lib/textes.ts`) corrige en filet de sécurité les titres et chapôs (`SectionTitre`).
 
 ## 2. Couleurs (tokens Tailwind 4, définis dans `src/app/globals.css`)
 
@@ -35,13 +42,14 @@ La lumière vient de la piste nocturne : le Pont Vieux s'illumine point par poin
 | `vigne` | #6B7020 | Dessins seulement, jamais d'interface | — |
 
 Mot « éteint » (manifeste non révélé) : `#9099B2` (5,9:1 sur nuit). Jamais d'opacité faible sur du texte lisible.
+Pilules translucides de la barre mobile (variante `voile` : `minuit/70`, contour `calcaire/25`) : texte calcaire ≥ 5,5:1 au-dessus de n'importe quelle section.
 
 ## 3. Typographie
 
 - **Besley** (`font-display`) : titres, 600-700, italique pour les accroches et le mot mis en valeur. Casse normale, jamais de capitales (elles appartiennent au logo).
 - **Figtree** (`font-sans`) : texte 400, libellés et boutons 600-650.
 - Échelle : H1 hero clamp(2.6rem → 5.5rem) ; H2 clamp(2.1rem → 3.9rem) (voir `SectionTitre`) ; texte 17 px ; petit texte ≥ 14 px ; surtitres `.surtitre` (13 px, capitales, +0,14 em).
-- `text-wrap: balance` sur les titres (déjà global). Chiffres tabulaires (`tabular-nums`) pour horaires et prix.
+- `text-wrap: balance` sur les titres (déjà global). Pour maîtriser une coupure, un titre de `site.ts` peut être un tableau de segments (une ligne chacun, ex. le titre de la Salle). Chiffres tabulaires (`tabular-nums`) pour horaires et prix.
 
 ## 4. Formes
 
@@ -54,35 +62,41 @@ Mot « éteint » (manifeste non révélé) : `#9099B2` (5,9:1 sur nuit). Jamais
 
 ## 5. Ordre et fonds des sections
 
-1. `Hero` — nuit (fenêtre en arche sur la fresque animée + Pont Vieux lumineux avec les CTA)
-2. `Histoire` (#histoire) — nuit
+1. `Hero` — nuit. **Plus de pizza** (demande du client) : la fenêtre en arche sur la fresque animée (le nom se lève derrière Saint-Nazaire, bouton pause de la vidéo en bas à gauche), et dessous le **Pont Vieux dessiné au trait** (un SVG serveur par format, calculé dans `hero/trace.ts` depuis les réglages de `hero/geometrie.ts`). **Deux arches du pont sont les boutons** Commander (or clair, point de lumière) et Réserver (calcaire) : aucun bouton dessiné, l'ouverture de l'arche est la zone cliquable et se remplit de lumière au survol et au focus (`hero/ArchesBoutons.tsx`, `pont.module.css`). Les lumières du pont s'allument jusqu'à Commander à l'arrivée, puis au défilement.
+2. `Histoire` (#histoire) — nuit. Manifeste qui s'allume mot à mot, deux arches de la salle (`site.photos.histoire`), trois engagements.
 3. `Carte` (#carte) — ciel (vague nuit→ciel en haut, ciel→nuit en bas), `data-surface="clair"`
-4. `Livraison` (#livraison) — nuit
-5. `Salle` (#salle) — minuit (plafond d'où pendent les ampoules)
+4. `Livraison` (#livraison) — nuit. **Carte de nuit réelle** (MapLibre + tuiles OpenFreeMap, style `public/map/style-nuit.json`) : la zone livrée paraît éclairée, chaque commune est un point de lumière, le 43 la plus vive ; la liste « Voir … sur la carte » cadre le trajet depuis le 43. Onglet « À emporter » : trois écluses qui se remplissent.
+5. `Salle` (#salle) — minuit. Voûte en anse de panier d'où pendent les ampoules, galerie en arches inégales, vague de l'Orb vers les infos.
 6. `Fidelite` — masquée tant que `site.fidelite.actif` est faux
-7. `Infos` (#infos) — nuit, cartes calcaire-clair
+7. `Infos` (#infos) — nuit, cartes calcaire-clair ; plan illustré des Allées la nuit (le 43 s'allume en or).
 8. `Footer` — minuit, bord supérieur au profil du Pont Vieux
+
+Sur mobile, la **barre Commander / Réserver** est faite de **deux pilules flottantes translucides** (`BarreMobile`) qui **s'allument avec le défilement** : de 0 en haut de page à 1 en bas (Commander prend l'or, Réserver un halo froid ; seule l'opacité de calques superposés varie). Elle se retire tant que les arches-boutons du hero sont à l'écran, devant un bloc qui réunit déjà les deux boutons (`[data-cta-bloc]`, carte Contact) et pendant qu'une fenêtre est ouverte.
 
 ## 6. Mouvement (Motion 13 : `import { … } from "motion/react"`)
 
-- `MotionConfig reducedMotion="user"` est posé dans `Providers` : les transformations sont coupées automatiquement si l'appareil demande moins d'animations. Pour les effets liés au défilement (`useScroll`/`useTransform`), tester `useReducedMotion()` et figer l'état final.
+- `MotionConfig reducedMotion="user"` est posé dans `Providers` : les transformations sont coupées automatiquement si l'appareil demande moins d'animations.
+- **Mouvement réduit sans écart d'hydratation** : ne jamais lire `useReducedMotion()` au rendu pour un style visible côté serveur. Utiliser le hook `useMedia(MOUVEMENT_REDUIT)` de `src/components/ui/useMedia.ts` (`useSyncExternalStore`, faux au serveur) ou les variantes CSS `motion-reduce:` / `@media (prefers-reduced-motion: reduce)`. Pour les effets liés au défilement (`useScroll`/`useTransform`), figer l'état final (tout allumé).
 - **transform et opacity uniquement** (pas de width/height/top/filter animés, pas de `backdrop-filter`, pas de `filter: blur` au défilement).
-- Apparitions `whileInView` avec `viewport={{ once: true }}`. CTA, prix, horaires, adresse : jamais partir d'une opacité nulle.
-- Aucune boucle autonome visible plus de 5 s sans lien avec le défilement (WCAG 2.2.2), à l'exception de la vidéo du hero (décorative, `aria-hidden`, coupée en mouvement réduit).
+- Apparitions : le serveur rend l'état final (lisible sans JS et avant l'hydratation) ; après le montage, un bloc encore sous la ligne de flottaison est placé dans son état de départ puis révélé (`preparerApparition`, `src/components/ui/apparition.ts`). CTA, prix, horaires, adresse : jamais partir d'une opacité nulle.
+- Aucune boucle autonome visible plus de 5 s sans moyen de l'arrêter (WCAG 2.2.2). La vidéo du hero a un **bouton pause** (`aria-pressed`, libellé fixe `site.textes.hero.pauseVideo`) ; elle ne joue pas en mouvement réduit.
 - Ressorts : boutons `stiffness 500 / damping 30` ; entrées `ease [0.22, 1, 0.36, 1]`.
-- Lenis est actif (molette) : ne rien animer en `scroll-behavior: smooth` en plus.
+- Lenis n'est actif qu'avec une souris ou un pavé tactile (`DefilementDoux`, pointeur fin) ; au doigt, défilement natif. Ne rien animer en `scroll-behavior: smooth` en plus.
 
 ## 7. Accessibilité
 
-- Un seul H1 (hero). Sections avec `aria-labelledby` vers leur H2.
+- Un seul H1 (hero), complété pour les lecteurs d'écran et les moteurs par `site.seo.complementTitre` (« , pizzeria à Béziers »). Sections avec `aria-labelledby` vers leur H2.
 - Images : `alt` depuis la config ; décor en `alt=""` / `aria-hidden`.
-- Focus visible (global). Zones tactiles ≥ 44 px. Onglets en `role="tablist"` avec flèches clavier.
-- Fenêtres : composant `Fenetre` (dialog natif : piège du focus, Échap, retour du focus).
+- Focus visible (global) et jamais masqué par la barre mobile (`scroll-padding-bottom` sous md). Zones tactiles ≥ 44 px. Onglets en `role="tablist"` avec flèches clavier.
+- Fenêtres : composant `Fenetre` (dialog natif : piège du focus, Échap, retour du focus au bouton d'origine, même devenu inerte).
+- Carte de livraison : la liste des communes est l'alternative textuelle (boutons « Voir … sur la carte » + phrase annoncée en `aria-live`) ; la carte a un nom (`Map.Title`) et des boutons de 44 px.
 
 ## 8. Performance
 
 - `next/image` partout (`sizes` précis). `preload` **uniquement** sur le poster du hero. Tout le reste en lazy (défaut).
-- Vidéo du hero : `muted autoPlay loop playsInline preload="metadata"`, WebM puis MP4, posée sur le poster ; non chargée si mouvement réduit ou `navigator.connection.saveData` ; mise en pause hors écran.
+- Vidéo du hero : `muted loop playsInline preload="none"`, **sans autoPlay**. `play()` n'est appelé qu'après l'événement `load` et un `requestIdleCallback`, si le hero est à l'écran et que le réseau le permet (ni `saveData`, ni 2G/3G) ; jamais en mouvement réduit ; en pause hors écran ou à la demande.
+- Carte de livraison : MapLibre et ses CSS ne se chargent qu'à l'approche de la section (`import()` déclenché à 600 px) ; avec l'économiseur de données, seulement au clic « Afficher la carte ». Le travailleur MapLibre est lancé depuis un blob : une future CSP devra autoriser `worker-src blob:` et `https://tiles.openfreemap.org` (`connect-src`, `img-src`).
+- Fenêtres (réservation, commande) et menu plein écran ne sont montés qu'à leur première ouverture.
 - Pas de nouvelle dépendance sans raison. Icônes : `lucide-react` (vérifier que l'icône existe dans `node_modules/lucide-react`).
 
 ## 9. Briques existantes (à réutiliser, ne pas modifier sans raison)
@@ -90,15 +104,20 @@ Mot « éteint » (manifeste non révélé) : `#9099B2` (5,9:1 sur nuit). Jamais
 | Fichier | Rôle |
 |---|---|
 | `src/config/site.ts` | Configuration unique, `estPlaceholder`, `adresseComplete`, `JOURS`, types `Pizza`, `Photo`, `Jour`, `Creneau` |
+| `src/lib/textes.ts` | `remplir` (modèles `{mot}`), `typographie`, `morceaux` (placeholders dans une phrase), `dateLisible` |
+| `src/lib/metadonnees.ts` | `partage()` : Open Graph et Twitter complets d'une page (image de partage comprise) |
 | `src/lib/horaires.ts` | `formatCreneaux`, `libelleJour`, `statutOuverture` (client), `maintenantABeziers` |
-| `src/components/actions/Boutons.tsx` | `<BoutonCommander variante forme anneau sansIcone className>` et `<BoutonReserver …>` — variantes `or`, `contour`, `nuit`, `contour-nuit` ; formes `pilule`, `arche`, `libre` |
-| `src/components/providers/ActionsProvider.tsx` | `useActions()` : `ouvrirReservation`, `ouvrirCommandeBientot`, `ctaHeroVisibles`/`setCtaHeroVisibles`, `fenetreOuverte`, `setMenuOuvert` |
+| `src/components/actions/Boutons.tsx` | `<BoutonCommander variante forme anneau sansIcone className>` et `<BoutonReserver …>` — variantes `or`, `contour`, `nuit`, `contour-nuit`, `voile` ; formes `pilule`, `arche`, `libre` |
+| `src/components/providers/ActionsProvider.tsx` | `useActions()` (stable) : `ouvrirReservation`, `ouvrirCommandeBientot`, `setCtaHeroVisibles`, `setMenuOuvert` ; `useEtatActions()` : `ctaHeroVisibles`, `fenetreOuverte` |
 | `src/components/ui/Fenetre.tsx` | Fenêtre modale accessible |
-| `src/components/ui/Valeur.tsx` | Affiche une valeur de config, en pointillés si placeholder |
-| `src/components/ui/Reveal.tsx` | Apparition au défilement |
-| `src/components/ui/SectionTitre.tsx` | Surtitre + H2 masqué + chapô (`surface="clair"` sur fond ciel) |
+| `src/components/ui/Valeur.tsx` | `Valeur` (valeur de config, en pointillés si placeholder) et `TexteAvecValeurs` |
+| `src/components/ui/useMedia.ts` | `useMedia(requête)` sûr à l'hydratation, `MOUVEMENT_REDUIT` |
+| `src/components/ui/Reveal.tsx`, `apparition.ts` | Apparition au défilement, sans état invisible au rendu serveur |
+| `src/components/ui/SectionTitre.tsx` | Surtitre + H2 masqué + chapô (`surface="clair"` sur fond ciel) ; titre en chaîne ou en segments |
 | `src/components/ui/OrbVague.tsx` | Séparateur vague de l'Orb (`haut`, `bas` = couleurs CSS, ex. `var(--color-nuit)`) |
 | `src/components/ui/ArcheImage.tsx` | Photo en arche qui « s'ouvre » |
+| `src/components/sections/hero/geometrie.ts` | Réglages du pont (portées, piles, reflets, lumières, allumage) et du titre du hero |
+| `src/components/sections/livraison/geographie.ts` | Coordonnées des communes livrées, zone, trajets, distances |
 
 ## 10. Conventions de code
 

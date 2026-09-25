@@ -5,15 +5,13 @@ import { SectionTitre } from "@/components/ui/SectionTitre";
 import { CarrouselPizzas } from "./carte/CarrouselPizzas";
 import { CielDecor } from "./carte/CielDecor";
 
-// `note` est prévue dans la config ; à défaut, phrase par défaut.
-const textes: typeof site.textes.carte & { note?: string } = site.textes.carte;
-const note = textes.note ?? "La carte complète et les prix à jour sont sur notre outil de commande.";
-
 /**
  * La carte : une sélection de pizzas posées sur des arches, sur le Ciel de Béziers.
  * Tous les textes sont en bleu nuit (6,9:1 sur ciel), jamais en calcaire.
+ * Le chapô dit déjà où trouver la carte complète : le bouton se suffit à lui-même.
  */
 export function Carte() {
+  const textes = site.textes.carte;
   return (
     <section id="carte" aria-labelledby="carte-titre" data-surface="clair" className="relative isolate bg-ciel text-nuit">
       <OrbVague haut="var(--color-nuit)" bas="var(--color-ciel)" />
@@ -38,7 +36,6 @@ export function Carte() {
           <BoutonCommander variante="nuit" forme="arche" className="min-h-14! px-8! shadow-[0_18px_36px_-18px_rgba(5,26,75,0.7)]">
             {textes.bouton}
           </BoutonCommander>
-          <p className="mt-4 max-w-[36ch] text-[0.9375rem] leading-relaxed text-nuit/80">{note}</p>
         </div>
       </div>
 

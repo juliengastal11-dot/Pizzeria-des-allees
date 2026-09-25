@@ -4,28 +4,32 @@ import { ArrowUp, ArrowUpRight, Clock, MapPin, Phone } from "lucide-react";
 import { BoutonCommander, BoutonReserver } from "@/components/actions/Boutons";
 import { Valeur } from "@/components/ui/Valeur";
 import { JOURS, adresseComplete, estPlaceholder, site, type Jour } from "@/config/site";
+import { remplir } from "@/lib/textes";
 import { IconeFacebook, IconeInstagram } from "./IconesReseaux";
 import { PontVieux } from "./PontVieux";
 import { SECTIONS, ancre } from "./navigation";
 
+const { footer: T, actions } = site.textes;
+const R = T.resumeHoraires;
+
 /** « lundi », « lundi et mardi », « lundi, mardi et mercredi » */
 function enumerer(mots: string[]): string {
-  return mots.length < 2 ? mots.join("") : `${mots.slice(0, -1).join(", ")} et ${mots[mots.length - 1]}`;
+  return mots.length < 2 ? mots.join("") : `${mots.slice(0, -1).join(", ")} ${R.et} ${mots[mots.length - 1]}`;
 }
 
-/** Résumé court des jours d'ouverture, ex. « du mardi au dimanche, fermé le lundi ». */
+/** Résumé court des jours d'ouverture, ex. « du mardi au dimanche, fermé le lundi » (modèles : site.textes.footer.resumeHoraires). */
 function resumeHoraires(): string {
   const ouvert = (j: Jour) => site.horaires.semaine[j].length > 0;
   const ouverts = JOURS.filter(ouvert);
   const fermes = JOURS.filter((j) => !ouvert(j));
-  if (ouverts.length === 0) return "fermé";
-  if (fermes.length === 0) return "7 jours sur 7";
-  const fermeture = fermes.length === 1 ? `fermé le ${fermes[0]}` : `fermé ${enumerer(fermes)}`;
+  if (ouverts.length === 0) return R.toujoursFerme;
+  if (fermes.length === 0) return R.tousLesJours;
+  const fermeture = fermes.length === 1 ? remplir(R.fermeUnJour, { jour: fermes[0] }) : remplir(R.fermePlusieursJours, { jours: enumerer(fermes) });
   // Plage continue, éventuellement à cheval sur deux semaines
   const debut = JOURS.findIndex((j, i) => ouvert(j) && !ouvert(JOURS[(i + 6) % 7]));
   let n = 0;
   while (n < 7 && ouvert(JOURS[(debut + n) % 7])) n++;
-  if (n === ouverts.length) return `du ${JOURS[debut]} au ${JOURS[(debut + n - 1) % 7]}, ${fermeture}`;
+  if (n === ouverts.length) return `${remplir(R.plage, { debut: JOURS[debut], fin: JOURS[(debut + n - 1) % 7] })}, ${fermeture}`;
   return `${enumerer(ouverts)}, ${fermeture}`;
 }
 
@@ -47,7 +51,7 @@ export function Footer() {
     <footer className="relative bg-minuit text-calcaire">
       <PontVieux />
 
-      <div className="relative mx-auto max-w-6xl px-5 pb-[calc(7.5rem+env(safe-area-inset-bottom))] pt-12 md:px-8 md:pb-12 md:pt-16">
+      <div className="relative mx-auto max-w-6xl px-5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-12 md:px-8 md:pb-12 md:pt-16">
         {/* Lueur des réverbères sur l'eau */}
         <div
           aria-hidden
@@ -60,7 +64,8 @@ export function Footer() {
             <p className="mt-7 max-w-[15ch] font-display text-[clamp(2rem,1.3rem+3.2vw,3.5rem)] font-medium italic leading-[1.04] tracking-[-0.01em] text-or-clair">
               {site.textes.footer.signature}
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            {/* Bloc repéré par la barre mobile, qui se retire quand il est à l'écran */}
+            <div data-cta-bloc className="mt-8 flex flex-wrap gap-3">
               <BoutonCommander variante="or" />
               <BoutonReserver variante="contour" />
             </div>
@@ -69,7 +74,7 @@ export function Footer() {
           <div className="grid gap-10 sm:grid-cols-[auto_1fr] sm:gap-12">
             <nav aria-labelledby="pied-sections">
               <p id="pied-sections" className="surtitre text-pierre">
-                Sur la page
+                {T.titreNavigation}
               </p>
               <ul className="mt-3">
                 {SECTIONS.map((s) => (
@@ -90,7 +95,7 @@ export function Footer() {
             </nav>
 
             <div className="rounded-[2.5rem_2.5rem_1.25rem_1.25rem] border border-filet/50 bg-grain/60 p-6 sm:p-7">
-              <p className="surtitre text-pierre">Nous trouver</p>
+              <p className="surtitre text-pierre">{T.titreCoordonnees}</p>
               <address className="mt-3 space-y-1 not-italic">
                 <a
                   href={site.liens.itineraire}
@@ -102,13 +107,13 @@ export function Footer() {
                   <span>
                     {adresseComplete}
                     <span className="mt-1 flex items-center gap-1 text-sm font-semibold text-or-clair">
-                      Itinéraire
+                      {actions.itineraire}
                       <ArrowUpRight
                         aria-hidden
                         className="size-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                       />
                     </span>
-                    <span className="sr-only"> (nouvel onglet)</span>
+                    <span className="sr-only">{` ${actions.nouvelOnglet}`}</span>
                   </span>
                 </a>
                 {telReel ? (
@@ -128,13 +133,13 @@ export function Footer() {
                 <p className="flex min-h-11 items-center gap-3">
                   <Clock aria-hidden className="size-5 shrink-0 text-or" />
                   <span>
-                    {"Horaires : "}
-                    {site.horaires.aConfirmer ? <Valeur valeur="[À CONFIRMER]" /> : resumeHoraires()}
+                    {`${T.horaires} `}
+                    {site.horaires.aConfirmer ? <Valeur valeur={site.horaires.mentionAConfirmer} /> : resumeHoraires()}
                   </span>
                 </p>
               </address>
 
-              <p className="surtitre mt-6 text-pierre">Nous suivre</p>
+              <p className="surtitre mt-6 text-pierre">{T.titreReseaux}</p>
               <ul className="mt-2 flex flex-col gap-1">
                 {reseaux.map(({ nom, url, Icone }) => (
                   <li key={nom}>
@@ -160,7 +165,7 @@ export function Footer() {
                           <Icone className="size-5" />
                         </span>
                         {nom}
-                        <span className="sr-only"> (nouvel onglet)</span>
+                        <span className="sr-only">{` ${actions.nouvelOnglet}`}</span>
                       </a>
                     )}
                   </li>
@@ -175,12 +180,12 @@ export function Footer() {
             <ul className="flex flex-wrap gap-x-6">
               <li>
                 <Link href="/mentions-legales" className={lienDiscret}>
-                  Mentions légales
+                  {T.mentionsLegales}
                 </Link>
               </li>
               <li>
                 <Link href="/confidentialite" className={lienDiscret}>
-                  Confidentialité
+                  {T.confidentialite}
                 </Link>
               </li>
             </ul>
@@ -191,17 +196,15 @@ export function Footer() {
               >
                 <ArrowUp className="size-4" />
               </span>
-              Haut de page
+              {T.hautDePage}
             </a>
           </div>
           <div className="mt-3 space-y-1.5">
             {site.photos.provisoires && (
-              <p>
-                {"Visuels provisoires : photos de la salle retouchées et pizzas générées par IA, en attendant le shooting de la réouverture."}
-              </p>
+              <p>{T.visuelsProvisoires}</p>
             )}
             <p>
-              Site réalisé par <Valeur valeur={site.legal.concepteur} />
+              {T.credit} <Valeur valeur={site.legal.concepteur} />
             </p>
             <p>
               © {annee} {site.nom}

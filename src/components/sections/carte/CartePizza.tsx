@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useId, useRef, useState, type RefObject } from "react";
+import { memo, useId, useRef, useState, type RefObject } from "react";
 import { motion, useScroll, useTransform, type Variants } from "motion/react";
 import { Flame } from "lucide-react";
-import type { Pizza } from "@/config/site";
+import { site, type Pizza } from "@/config/site";
 import { Valeur } from "@/components/ui/Valeur";
 import { BadgeDuMoment } from "./BadgeDuMoment";
 
@@ -14,7 +14,8 @@ const ARCHE_FILET = "calc(50cqw - 0.5rem) calc(50cqw - 0.5rem) 1.25rem 1.25rem";
 
 // Apparition échelonnée (lue depuis la liste parente : "cache" → "visible").
 const ENTREE: Variants = {
-  cache: { opacity: 0, y: 36 },
+  // Jamais invisible (ni avant l'hydratation, ni sans JS) : la carte monte et s'éclaire à peine.
+  cache: { opacity: 0.85, y: 40 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
@@ -23,6 +24,8 @@ const ENTREE: Variants = {
 };
 
 const RESSORT = { type: "spring", stiffness: 220, damping: 15 } as const;
+
+const ETIQUETTES = site.textes.carte.etiquettes;
 
 const PASTILLE = "inline-flex min-h-8 items-center gap-1.5 rounded-full px-3.5 text-[0.875rem] font-semibold leading-none text-nuit";
 
@@ -39,9 +42,10 @@ type Props = {
 
 /**
  * Une pizza posée sur une arche de pierre claire : l'image ronde déborde
- * du sommet de l'arche, le nom et la garniture sont dessous.
+ * du sommet de l'arche, le nom et la garniture sont dessous. Mémoïsée : le
+ * carrousel se re-rend à chaque carte centrée, les cartes n'ont pas à suivre.
  */
-export function CartePizza({ pizza, index, defileur, roule, survolActif }: Props) {
+export const CartePizza = memo(function CartePizza({ pizza, index, defileur, roule, survolActif }: Props) {
   const ref = useRef<HTMLLIElement>(null);
   const titreId = useId();
   const [survol, setSurvol] = useState(false);
@@ -116,12 +120,12 @@ export function CartePizza({ pizza, index, defileur, roule, survolActif }: Props
             </p>
           )}
           <ul className="mt-auto flex flex-wrap justify-center gap-2 pt-5">
-            <li className={`${PASTILLE} bg-ciel-pale`}>Base {pizza.base}</li>
-            {pizza.vegetarienne && <li className={`${PASTILLE} ring-1 ring-inset ring-nuit/35`}>Végétarienne</li>}
+            <li className={`${PASTILLE} bg-ciel-pale`}>{ETIQUETTES.base[pizza.base]}</li>
+            {pizza.vegetarienne && <li className={`${PASTILLE} ring-1 ring-inset ring-nuit/35`}>{ETIQUETTES.vegetarienne}</li>}
             {pizza.pimentee && (
               <li className={`${PASTILLE} bg-or-clair`}>
                 <Flame aria-hidden className="size-3.5 shrink-0" strokeWidth={2.4} />
-                Pimentée
+                {ETIQUETTES.pimentee}
               </li>
             )}
           </ul>
@@ -129,4 +133,4 @@ export function CartePizza({ pizza, index, defileur, roule, survolActif }: Props
       </article>
     </motion.li>
   );
-}
+});

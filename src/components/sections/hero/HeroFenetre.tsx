@@ -1,15 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useState, useSyncExternalStore, type CSSProperties } from "react";
-import { motion, useReducedMotion, useTransform } from "motion/react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import { motion, useTransform } from "motion/react";
+import { Pause, Play } from "lucide-react";
 import { site } from "@/config/site";
 import { useProgressionHero } from "./HeroScene";
 import { CIEL_FRESQUE, PAYSAGE, TITRE } from "./geometrie";
+import { MOUVEMENT_REDUIT, useMedia } from "@/components/ui/useMedia";
+import { useVideoPermise } from "./media";
 import styles from "./hero.module.css";
 
 /** Poster, vidéo et horizon partagent le même cadrage : mêmes tailles, même object-cover. */
-const TAILLES = "(min-width: 1024px) 540px, 92vw";
+const TAILLES = "(min-width: 1024px) 540px, (min-width: 640px) 416px, 92vw";
 
 const variablesTitre = {
   "--titre-taille": TITRE.taille,
@@ -31,10 +34,14 @@ const variablesTitre = {
  */
 export function HeroFenetre({ titreId }: { titreId: string }) {
   const progression = useProgressionHero();
-  const reduire = useReducedMotion();
+  // Faux au serveur et à l'hydratation : aucun écart, puis la vraie préférence
+  const reduire = useMedia(MOUVEMENT_REDUIT);
+  const videoPermise = useVideoPermise();
+  const [enPause, setEnPause] = useState(false);
   const yPaysage = useTransform(progression, [0, 1], ["0%", PAYSAGE.yFin]);
   const echellePaysage = useTransform(progression, [0, 1], [1, PAYSAGE.echelleFin]);
   const yTitre = useTransform(progression, [0, 1], ["0%", TITRE.finDefilement]);
+  const video = videoPermise && !reduire;
 
   return (
     <div className={`${styles.arche} relative isolate size-full overflow-hidden`} style={{ background: CIEL_FRESQUE }}>
@@ -45,11 +52,12 @@ export function HeroFenetre({ titreId }: { titreId: string }) {
           style={{ y: reduire ? 0 : yPaysage, scale: reduire ? 1 : echellePaysage }}
         >
           <Image src={site.hero.poster} alt={site.hero.alt} fill preload sizes={TAILLES} className="object-cover" />
-          <VideoFresque />
+          {video && <VideoFresque enPause={enPause} />}
           <motion.div className="absolute inset-0" style={{ y: reduire ? 0 : yTitre }}>
             <h1 id={titreId} className={styles.titre} style={variablesTitre}>
               <span className={styles.ligne}>{site.nomLignes[0]}</span>{" "}
               <span className={`${styles.ligne} ${styles.ligne2}`}>{site.nomLignes[1]}</span>
+              <span className="sr-only">{site.seo.complementTitre}</span>
             </h1>
           </motion.div>
           <Image
@@ -62,50 +70,94 @@ export function HeroFenetre({ titreId }: { titreId: string }) {
           />
         </motion.div>
       </div>
+
+      {/* WCAG 2.2.2 : la boucle peut être arrêtée (bouton absent quand la vidéo ne joue pas) */}
+      {video && (
+        <button
+          type="button"
+          aria-pressed={enPause}
+          aria-label={site.textes.hero.pauseVideo}
+          onClick={() => setEnPause((v) => !v)}
+          className="absolute bottom-3 left-3 z-10 grid size-10 place-items-center rounded-full border border-calcaire/40 bg-minuit/70 text-calcaire transition-colors before:absolute before:-inset-1 before:rounded-full before:content-[''] hover:border-calcaire/80 hover:bg-minuit/90 sm:bottom-4 sm:left-4"
+        >
+          {enPause ? (
+            <Play aria-hidden className="size-4 translate-x-px" strokeWidth={2.2} />
+          ) : (
+            <Pause aria-hidden className="size-4" strokeWidth={2.2} />
+          )}
+        </button>
+      )}
     </div>
   );
 }
 
-const sansAbonnement = () => () => {};
-
-function economieDeDonnees() {
-  const connexion = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-  return connexion?.saveData === true;
-}
-
 /**
  * La vidéo en boucle (8 s), posée sur le poster. Jamais rendue côté serveur,
- * ni en mouvement réduit, ni en mode économie de données. En pause hors écran.
+ * ni en mouvement réduit, ni sur un réseau lent. Rien n'est téléchargé
+ * (preload="none", pas d'autoplay) avant que la page ait fini de charger et
+ * que le hero soit à l'écran ; en pause hors écran ou à la demande.
  */
-function VideoFresque() {
-  const reduire = useReducedMotion();
-  // Côté serveur et à l'hydratation : pas de vidéo (le poster suffit)
-  const economie = useSyncExternalStore(sansAbonnement, economieDeDonnees, () => true);
+function VideoFresque({ enPause }: { enPause: boolean }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  const etat = useRef({ visible: false, prete: false, enPause });
   const [lecture, setLecture] = useState(false);
 
-  const brancher = useCallback((video: HTMLVideoElement | null) => {
+  const synchroniser = useCallback(() => {
+    const video = ref.current;
     if (!video) return;
-    video.muted = true;
-    const observateur = new IntersectionObserver(([entree]) => {
-      if (entree?.isIntersecting) video.play().catch(() => {});
-      else video.pause();
-    });
-    observateur.observe(video);
-    return () => observateur.disconnect();
+    const { visible, prete, enPause: arret } = etat.current;
+    if (visible && prete && !arret) video.play().catch(() => {});
+    else if (!video.paused) video.pause();
   }, []);
 
-  if (reduire || economie) return null;
+  useEffect(() => {
+    etat.current.enPause = enPause;
+    synchroniser();
+  }, [enPause, synchroniser]);
+
+  useEffect(() => {
+    const video = ref.current;
+    if (!video) return;
+    video.muted = true;
+    let actif = true;
+
+    const observateur = new IntersectionObserver(([entree]) => {
+      etat.current.visible = !!entree?.isIntersecting;
+      synchroniser();
+    });
+    observateur.observe(video);
+
+    // Après le chargement de la page, au premier moment calme : la vidéo ne concurrence pas le poster
+    const autoriser = () => {
+      const plusTard = (f: () => void) => {
+        if ("requestIdleCallback" in window) window.requestIdleCallback(f, { timeout: 2000 });
+        else setTimeout(f, 300);
+      };
+      plusTard(() => {
+        if (!actif) return;
+        etat.current.prete = true;
+        synchroniser();
+      });
+    };
+    if (document.readyState === "complete") autoriser();
+    else window.addEventListener("load", autoriser, { once: true });
+
+    return () => {
+      actif = false;
+      observateur.disconnect();
+      window.removeEventListener("load", autoriser);
+    };
+  }, [synchroniser]);
 
   return (
     <video
-      ref={brancher}
+      ref={ref}
       aria-hidden
       tabIndex={-1}
       muted
-      autoPlay
       loop
       playsInline
-      preload="metadata"
+      preload="none"
       disablePictureInPicture
       disableRemotePlayback
       onPlaying={() => setLecture(true)}

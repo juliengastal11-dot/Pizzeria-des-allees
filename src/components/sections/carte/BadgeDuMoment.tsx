@@ -1,6 +1,11 @@
 "use client";
 
+import { Fragment } from "react";
 import { motion } from "motion/react";
+import { site } from "@/config/site";
+
+/** « Du moment » : un mot par ligne dans la pastille. */
+const MOTS = site.textes.carte.etiquettes.duMoment.split(" ");
 
 /** Contour festonné à `lobes` demi-cercles, dans un carré de 100 × 100. */
 function feston(lobes = 12, rayon = 40, centre = 50): string {
@@ -54,9 +59,12 @@ export function BadgeDuMoment() {
         />
       </svg>
       <span className="relative text-center font-display text-[0.95rem] font-semibold italic leading-[1.02]">
-        Du
-        <br />
-        moment
+        {MOTS.map((mot, i) => (
+          <Fragment key={i}>
+            {i > 0 && <br />}
+            {mot}
+          </Fragment>
+        ))}
       </span>
     </motion.p>
   );

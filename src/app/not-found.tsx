@@ -3,10 +3,17 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import * as motion from "motion/react-client";
 import { site } from "@/config/site";
+import { remplir } from "@/lib/textes";
+
+const T = site.textes.introuvable;
 
 export const metadata: Metadata = {
-  title: "Page introuvable",
-  description: `Cette page n’existe pas ou a changé d’adresse. Retrouvez ${site.nom} depuis l’accueil.`,
+  title: T.titreOnglet,
+  description: remplir(T.description, { nom: site.nom }),
+  // Next ajoute lui-même « noindex » aux pages 404 : pas de seconde balise robots héritée du layout,
+  // et pas de canonical vers l'accueil.
+  robots: null,
+  alternates: { canonical: null },
 };
 
 /*
@@ -39,20 +46,19 @@ export default function PageIntrouvable() {
         <Ampoule />
       </motion.div>
 
-      <p className="surtitre mt-8 text-pierre">Page introuvable</p>
+      <p className="surtitre mt-8 text-pierre">{T.surtitre}</p>
       <h1
         id="titre-introuvable"
         className="mt-4 max-w-[14ch] text-[clamp(2.5rem,1.6rem+4vw,4.75rem)] font-semibold tracking-[-0.02em] text-calcaire"
       >
-        Cette allée est{" "}
+        {T.titreDebut}{" "}
         <em className="text-[#9099B2] transition-colors duration-500 group-has-[a:hover]/allee:text-or-clair group-has-[a:focus-visible]/allee:text-or-clair group-has-[a:active]/allee:text-or-clair">
-          éteinte
+          {T.titreMot}
         </em>
-        .
+        {T.titreFin}
       </h1>
       <p className="mx-auto mt-6 max-w-[40ch] text-[1.0625rem] leading-relaxed text-pierre">
-        La page que vous cherchez n’existe pas ou a changé d’adresse. Rallumez la lumière&nbsp;: le four, lui, est
-        toujours chaud.
+        {T.texte}
       </p>
 
       <Link
@@ -64,7 +70,7 @@ export default function PageIntrouvable() {
           strokeWidth={2.2}
           className="size-[1.1em] shrink-0 transition-transform duration-200 group-hover:-translate-x-0.5"
         />
-        Revenir à l’accueil
+        {T.bouton}
       </Link>
     </section>
   );

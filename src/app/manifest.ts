@@ -8,8 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
     name: site.nom,
-    // « La Pizzeria des Allées » → « Pizzeria des Allées » (tient sous l'icône)
-    short_name: site.nom.replace(/^La\s+/, ""),
+    short_name: site.nomCourt,
     description: site.seo.description,
     lang: "fr",
     dir: "ltr",

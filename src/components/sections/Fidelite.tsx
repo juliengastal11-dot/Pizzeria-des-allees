@@ -17,7 +17,7 @@ export function Fidelite() {
   return (
     <section aria-labelledby="fidelite-titre" className="bg-nuit px-5 pt-16 md:px-8 md:pt-24">
       <h2 id="fidelite-titre" className="sr-only">
-        Programme de fidélité
+        {site.fidelite.titre}
       </h2>
       <Entree className="mx-auto max-w-4xl">
         <div
@@ -35,16 +35,16 @@ export function Fidelite() {
               rel="noopener noreferrer"
               className="group inline-flex min-h-12 shrink-0 items-center gap-2 rounded-full bg-nuit px-6 font-semibold text-calcaire transition-colors duration-200 hover:bg-grain"
             >
-              Rejoindre
+              {site.fidelite.bouton}
               <ArrowUpRight
                 aria-hidden
                 className="size-[1em] transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
               />
-              <span className="sr-only"> (nouvel onglet)</span>
+              <span className="sr-only">{` ${site.textes.actions.nouvelOnglet}`}</span>
             </a>
           ) : (
             <span className="inline-flex min-h-12 shrink-0 items-center gap-2 px-4 font-semibold text-eau">
-              Rejoindre <Valeur valeur={url} className="text-sm" />
+              {site.fidelite.bouton} <Valeur valeur={url} className="text-sm" />
             </span>
           )}
         </div>

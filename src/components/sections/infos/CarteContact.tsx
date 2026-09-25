@@ -5,6 +5,8 @@ import { Valeur } from "@/components/ui/Valeur";
 import { BoutonCommander, BoutonReserver } from "@/components/actions/Boutons";
 import { Paiements } from "@/components/sections/infos/Paiements";
 
+const TEXTES = site.textes.infos.contact;
+
 const lien =
   "inline-flex min-h-11 items-center underline decoration-eau/50 decoration-1 underline-offset-4 transition-colors hover:decoration-nuit [overflow-wrap:anywhere]";
 
@@ -34,10 +36,10 @@ export function CarteContact() {
       className="h-full rounded-[2.5rem] bg-calcaire-clair p-6 text-nuit shadow-[0_40px_80px_-40px_rgba(6,15,46,0.9)] sm:p-8"
     >
       <h3 id="infos-contact" className="font-display text-[1.75rem] font-semibold leading-none">
-        Contact
+        {TEXTES.titre}
       </h3>
       <ul className="mt-5 space-y-3">
-        <Ligne icone={<Phone className="size-5" strokeWidth={2.1} />} libelle="Téléphone">
+        <Ligne icone={<Phone className="size-5" strokeWidth={2.1} />} libelle={TEXTES.telephone}>
           {estPlaceholder(telephone) ? (
             <Valeur valeur={telephone} />
           ) : (
@@ -46,7 +48,7 @@ export function CarteContact() {
             </a>
           )}
         </Ligne>
-        <Ligne icone={<Mail className="size-5" strokeWidth={2.1} />} libelle="E-mail">
+        <Ligne icone={<Mail className="size-5" strokeWidth={2.1} />} libelle={TEXTES.email}>
           {estPlaceholder(email) ? (
             <Valeur valeur={email} />
           ) : (
@@ -63,7 +65,7 @@ export function CarteContact() {
       </div>
 
       <div className="mt-7 border-t border-dashed border-eau/35 pt-6">
-        <h4 className="font-display text-xl font-semibold leading-tight">Paiements acceptés</h4>
+        <h4 className="font-display text-xl font-semibold leading-tight">{TEXTES.paiements}</h4>
         <Paiements className="mt-4" />
       </div>
     </article>

@@ -10,38 +10,37 @@ import {
   Point,
   SectionTexte,
 } from "@/components/layout/PageTexte";
-import { Valeur } from "@/components/ui/Valeur";
-import { adresseComplete, site } from "@/config/site";
+import { TexteAvecValeurs, Valeur } from "@/components/ui/Valeur";
+import { adresseComplete, estPlaceholder, site } from "@/config/site";
+import { partage } from "@/lib/metadonnees";
+import { remplir } from "@/lib/textes";
+
+/*
+ * Les données variables (société, hébergeur, médiateur, crédits, dates) viennent
+ * de site.legal ; les titres et avertissements de site.textes.pagesLegales.
+ * Le texte juridique ci-dessous est à relire par l'exploitant avant la mise en ligne.
+ */
+const T = site.textes.pagesLegales.mentions;
+const { legal } = site;
+const description = remplir(T.description, { nom: site.nom, adresse: adresseComplete });
 
 export const metadata: Metadata = {
-  title: "Mentions légales",
-  description: `Éditeur, hébergeur et informations légales du site de ${site.nom}, ${adresseComplete}.`,
+  title: T.titre,
+  description,
   alternates: { canonical: "/mentions-legales" },
+  ...partage({ titre: `${T.titre} · ${site.nom}`, description, chemin: "/mentions-legales" }),
 };
 
-const { legal } = site;
 const telephoneHref = `tel:${site.telephone.replace(/[^\d+]/g, "")}`;
 
 export default function MentionsLegales() {
   return (
     <PageTexte
-      surtitre="Informations légales"
-      titre="Mentions légales"
-      chapo={
-        <>
-          Conformément à la loi n°&nbsp;2004-575 du 21&nbsp;juin 2004 pour la confiance dans l’économie numérique, voici qui
-          édite et qui héberge ce site.
-        </>
-      }
-      avertissement={{
-        titre: "Document provisoire",
-        texte: (
-          <p>
-            Les informations en pointillés restent à fournir. L’ensemble de cette page est à relire et à valider par
-            l’exploitant avant la mise en ligne.
-          </p>
-        ),
-      }}
+      surtitre={T.surtitre}
+      titre={T.titre}
+      chapo={T.chapo}
+      miseAJour={legal.miseAJour}
+      avertissement={{ titre: T.avertissement.titre, texte: <p>{T.avertissement.texte}</p> }}
     >
       <SectionTexte id="editeur" titre="Éditeur du site">
         <Fiche>
@@ -88,6 +87,9 @@ export default function MentionsLegales() {
           <Ligne terme="Adresse">
             <address className="not-italic">{legal.hebergeur.adresse}</address>
           </Ligne>
+          <Ligne terme="Téléphone">
+            <LienValeur valeur={legal.hebergeur.telephone} href={`tel:${legal.hebergeur.telephone.replace(/[^\d+]/g, "")}`} />
+          </Ligne>
           <Ligne terme="Site">
             <LienExterne href={legal.hebergeur.site}>{legal.hebergeur.site.replace(/^https?:\/\//, "")}</LienExterne>
           </Ligne>
@@ -107,37 +109,37 @@ export default function MentionsLegales() {
           totale ou partielle, sans autorisation écrite préalable est interdite (articles L.&nbsp;335-2 et suivants du
           Code de la propriété intellectuelle).
         </p>
-        <p>Les œuvres reproduites, notamment la fresque de la salle, restent la propriété de leurs auteurs.</p>
+        <p>
+          Les œuvres reproduites, notamment la fresque de la salle (présentée en photo et en animation sur la page
+          d’accueil), restent la propriété de leurs auteurs.
+        </p>
       </SectionTexte>
 
       <SectionTexte id="credits" titre="Crédits">
         <Liste>
           <Point>
+            <strong>{legal.credits.fresque.libelle}&nbsp;:</strong> <TexteAvecValeurs texte={legal.credits.fresque.texte} />
+          </Point>
+          <Point>
             <strong>Photographies et visuels&nbsp;:</strong>{" "}
-            {site.photos.provisoires ? (
-              <>
-                les visuels présentés sont provisoires. Certains ont été générés ou retouchés numériquement à partir
-                de la salle et de sa fresque, en attendant le reportage photo prévu à la réouverture. Ils seront
-                remplacés et leurs auteurs crédités ici.
-              </>
-            ) : (
-              <Valeur valeur="[À CONFIRMER]" />
-            )}
+            {site.photos.provisoires ? legal.credits.visuelsProvisoires : <Valeur valeur={legal.credits.photographe} />}
           </Point>
           <Point>
-            <strong>Polices&nbsp;:</strong> Besley et Figtree, sous licence SIL Open Font License, hébergées avec le
-            site.
+            <strong>Carte de la zone de livraison&nbsp;:</strong> {legal.credits.carte}
           </Point>
           <Point>
-            <strong>Pictogrammes&nbsp;:</strong> Lucide, sous licence ISC.
+            <strong>Polices&nbsp;:</strong> {legal.credits.polices}
+          </Point>
+          <Point>
+            <strong>Pictogrammes&nbsp;:</strong> {legal.credits.pictogrammes}
           </Point>
         </Liste>
       </SectionTexte>
 
       <SectionTexte id="services-tiers" titre="Services tiers et liens">
         <p>
-          La commande en ligne, la réservation de table et la carte interactive sont assurées par des services
-          extérieurs (Obypay, TheFork, Google Maps), qui restent responsables de leur contenu et de leur
+          La commande en ligne, la réservation de table et les cartes sont assurées par des services extérieurs
+          (Obypay, TheFork, Google Maps, OpenFreeMap), qui restent responsables de leur contenu et de leur
           fonctionnement. Les liens vers d’autres sites s’ouvrent dans un nouvel onglet&nbsp;; nous ne répondons pas de
           leur contenu.
         </p>
@@ -149,7 +151,13 @@ export default function MentionsLegales() {
           médiateur de la consommation (articles L.&nbsp;611-1 et suivants du Code de la consommation).
         </p>
         <p>
-          Médiateur&nbsp;: <Valeur valeur="[MÉDIATEUR À DÉSIGNER]" />
+          Médiateur&nbsp;: <Valeur valeur={legal.mediateur.nom} className="text-calcaire" />
+          {!estPlaceholder(legal.mediateur.nom) && (
+            <>
+              {" "}
+              (<LienExterne href={legal.mediateur.site}>{legal.mediateur.site.replace(/^https?:\/\//, "")}</LienExterne>)
+            </>
+          )}
         </p>
       </SectionTexte>
 

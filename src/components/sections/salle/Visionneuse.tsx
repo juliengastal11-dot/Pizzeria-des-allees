@@ -5,7 +5,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, type Variants } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Fenetre } from "@/components/ui/Fenetre";
-import type { Photo } from "@/config/site";
+import { site, type Photo } from "@/config/site";
 
 type Props = {
   photos: readonly Photo[];
@@ -16,7 +16,8 @@ type Props = {
   titre: string;
 };
 
-const LIEUX: Record<Photo["lieu"], string> = { salle: "La salle", terrasse: "La terrasse" };
+const { lieux } = site.textes.salle;
+const TEXTES = site.textes.salle.visionneuse;
 
 const glisse: Variants = {
   entree: (sens: number) => ({ x: sens * 56, opacity: 0 }),
@@ -31,6 +32,12 @@ export function Visionneuse({ photos, index, onChanger, onFermer, titre }: Props
   // Garde la dernière photo pendant l'animation de fermeture
   const [derniere, setDerniere] = useState(0);
   if (index !== null && index !== derniere) setDerniere(index);
+  // À chaque ouverture, on repart d'un sens neutre (pas celui de la visite précédente)
+  const [etaitOuverte, setEtaitOuverte] = useState(false);
+  if ((index !== null) !== etaitOuverte) {
+    setEtaitOuverte(index !== null);
+    if (index !== null) setSens(1);
+  }
 
   const courant = Math.min(index ?? derniere, Math.max(0, n - 1));
   const photo = photos[courant];
@@ -60,7 +67,9 @@ export function Visionneuse({ photos, index, onChanger, onFermer, titre }: Props
       {photo && (
         <>
           <div className="relative aspect-[16/10] w-full overflow-hidden bg-minuit">
-            <AnimatePresence initial={false} custom={sens}>
+            {/* Nouvelle instance à chaque ouverture : la photo demandée apparaît directement,
+                sans que l'ancienne ne glisse dehors ; les glissés restent pour la navigation. */}
+            <AnimatePresence key={index === null ? "fermee" : "ouverte"} initial={false} custom={sens}>
               <motion.div
                 key={photo.src}
                 custom={sens}
@@ -92,28 +101,28 @@ export function Visionneuse({ photos, index, onChanger, onFermer, titre }: Props
 
           <div className="flex items-center gap-3 px-4 py-4 sm:px-6">
             {plusieurs && (
-              <BoutonNav libelle="Photo précédente" onClick={() => aller(-1)}>
+              <BoutonNav libelle={TEXTES.precedente} onClick={() => aller(-1)}>
                 <ChevronLeft aria-hidden className="size-5" />
               </BoutonNav>
             )}
             <div className="min-w-0 flex-1 text-center" aria-live="polite" aria-atomic="true">
               <p className="font-display text-xl italic leading-snug text-halo">{photo.legende}</p>
               <p className="mt-1 text-sm text-pierre tabular-nums">
-                {LIEUX[photo.lieu]}
+                {lieux[photo.lieu]}
                 {plusieurs && (
                   <>
                     <span aria-hidden> · </span>
-                    <span className="sr-only">, photo </span>
+                    <span className="sr-only">{`, ${TEXTES.photo} `}</span>
                     {courant + 1}
                     <span aria-hidden>{" / "}</span>
-                    <span className="sr-only"> sur </span>
+                    <span className="sr-only">{` ${TEXTES.sur} `}</span>
                     {n}
                   </>
                 )}
               </p>
             </div>
             {plusieurs && (
-              <BoutonNav libelle="Photo suivante" onClick={() => aller(1)}>
+              <BoutonNav libelle={TEXTES.suivante} onClick={() => aller(1)}>
                 <ChevronRight aria-hidden className="size-5" />
               </BoutonNav>
             )}

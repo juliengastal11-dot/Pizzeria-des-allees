@@ -1,13 +1,12 @@
-/** Sections de l'accueil reliées par le menu, dans l'ordre du défilement. */
-export const SECTIONS = [
-  { id: "histoire", libelle: "Notre histoire" },
-  { id: "carte", libelle: "La carte" },
-  { id: "livraison", libelle: "Livraison" },
-  { id: "salle", libelle: "La salle" },
-  { id: "infos", libelle: "Infos pratiques" },
-] as const;
+import { site } from "@/config/site";
 
-export type IdSection = (typeof SECTIONS)[number]["id"];
+export type IdSection = keyof typeof site.navigation.sections;
+
+/** Sections de l'accueil reliées par le menu, dans l'ordre du défilement (libellés : site.navigation.sections). */
+export const SECTIONS = (Object.keys(site.navigation.sections) as IdSection[]).map((id) => ({
+  id,
+  libelle: site.navigation.sections[id],
+}));
 
 /**
  * Lien vers une section de l'accueil, valable depuis toutes les pages :

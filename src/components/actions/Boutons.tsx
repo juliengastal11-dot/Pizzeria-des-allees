@@ -6,7 +6,7 @@ import { ArrowUpRight, CalendarDays, ShoppingBag } from "lucide-react";
 import { useActions } from "@/components/providers/ActionsProvider";
 import { estPlaceholder, site } from "@/config/site";
 
-export type Variante = "or" | "contour" | "nuit" | "contour-nuit";
+export type Variante = "or" | "contour" | "nuit" | "contour-nuit" | "voile";
 export type Forme = "pilule" | "arche" | "libre";
 
 const VARIANTES: Record<Variante, string> = {
@@ -17,6 +17,8 @@ const VARIANTES: Record<Variante, string> = {
   // Bleu plein, pour les sections claires (La carte)
   nuit: "bg-nuit text-calcaire hover:bg-grain",
   "contour-nuit": "border-2 border-nuit text-nuit hover:bg-nuit/10",
+  // Voile minuit translucide (barre mobile) : le texte calcaire garde ≥ 5,5:1 au-dessus de n'importe quelle section
+  voile: "border border-calcaire/25 bg-minuit/70 text-calcaire shadow-[0_8px_24px_rgba(6,15,46,0.35)] hover:bg-minuit/85",
 };
 
 const FORMES: Record<Forme, string> = {
@@ -55,23 +57,23 @@ const pression = { whileHover: { scale: 1.03 }, whileTap: { scale: 0.96 }, trans
  */
 export function BoutonCommander(props: Commun) {
   const { ouvrirCommandeBientot } = useActions();
-  const libelle = props.children ?? "Commander";
+  const libelle = props.children ?? site.textes.actions.commander;
   const icone = !props.sansIcone && <ShoppingBag aria-hidden className="size-[1.1em] shrink-0" strokeWidth={2.2} />;
 
   if (estPlaceholder(site.liens.commander)) {
     return (
-      <motion.button type="button" onClick={ouvrirCommandeBientot} className={classes(props)} {...pression}>
+      <motion.button type="button" onClick={ouvrirCommandeBientot} aria-haspopup="dialog" data-cta="commander" className={classes(props)} {...pression}>
         {icone}
         {libelle}
       </motion.button>
     );
   }
   return (
-    <motion.a href={site.liens.commander} target="_blank" rel="noopener noreferrer" className={classes(props)} {...pression}>
+    <motion.a href={site.liens.commander} target="_blank" rel="noopener noreferrer" data-cta="commander" className={classes(props)} {...pression}>
       {icone}
       {libelle}
       <ArrowUpRight aria-hidden className="size-[1em] shrink-0 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-      <span className="sr-only"> (nouvel onglet)</span>
+      <span className="sr-only">{` ${site.textes.actions.nouvelOnglet}`}</span>
     </motion.a>
   );
 }
@@ -84,11 +86,12 @@ export function BoutonReserver(props: Commun) {
       type="button"
       onClick={ouvrirReservation}
       aria-haspopup="dialog"
+      data-cta="reserver"
       className={classes({ variante: "contour", ...props })}
       {...pression}
     >
       {!props.sansIcone && <CalendarDays aria-hidden className="size-[1.1em] shrink-0" strokeWidth={2.2} />}
-      {props.children ?? "Réserver une table"}
+      {props.children ?? site.textes.actions.reserver}
     </motion.button>
   );
 }

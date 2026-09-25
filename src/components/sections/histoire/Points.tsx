@@ -4,16 +4,16 @@ import { morceaux, typographie } from "./outils";
 
 type Point = { titre: string; texte: string };
 
-/** Les trois engagements : une liste courte, pas des cartes. */
+/** Les trois engagements : une liste courte, pas des cartes (trois colonnes filetées en bureau). */
 export function Points({ points, className }: { points: readonly Point[]; className?: string }) {
   return (
-    <ul className={`max-w-xl ${className ?? ""}`}>
+    <ul className={`max-w-xl lg:grid lg:max-w-none lg:grid-cols-3 ${className ?? ""}`}>
       {points.map((point, i) => (
         <Reveal
           key={point.titre}
           as="li"
           delai={i * 0.12}
-          className="flex items-start gap-5 border-t border-filet/35 py-6 first:border-t-0 first:pt-0 last:pb-0"
+          className="flex items-start gap-5 border-t border-filet/35 py-6 first:border-t-0 first:pt-0 last:pb-0 lg:border-l lg:border-t-0 lg:px-8 lg:py-0 lg:first:border-l-0 lg:first:pl-0 lg:last:pr-0"
         >
           <IconeArche variante={i} className="mt-0.5 h-12 w-10 shrink-0 text-or-clair" />
           <div className="min-w-0">

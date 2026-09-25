@@ -51,6 +51,33 @@
     scroll-padding-top: 5rem;
   }
 
+  /* À partir de la tablette, la gouttière reste réservée quand le défilement est suspendu
+     (fenêtre, menu) : rien ne saute. Sans effet sur les barres de défilement flottantes (mobile, macOS). */
+  @media (width >= 48rem) {
+    html {
+      scrollbar-gutter: stable;
+    }
+  }
+
+  /* Page figée derrière une fenêtre ou le menu (Lenis ne tourne qu'à la souris) */
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+
+  /* Mobile : la barre Commander / Réserver ne doit jamais recouvrir l'élément qui a le focus */
+  @media (width < 48rem) {
+    html {
+      scroll-padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+    }
+  }
+
+  /* Au doigt, sans Lenis : les ancres défilent en douceur nativement */
+  @media (pointer: coarse) and (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
   body {
     background-color: var(--color-nuit);
     color: var(--color-calcaire);
@@ -119,6 +146,78 @@
   /* Arche du Pont Vieux : haut en demi-ellipse, bas légèrement arrondi */
   .arche {
     border-radius: 50% 50% 1.75rem 1.75rem / 38% 38% 1.75rem 1.75rem;
+  }
+
+  /*
+   * Fenêtres modales (composant Fenetre) : sur mobile, une feuille qui monte du
+   * bas ; à partir de sm, une carte qui se pose. Transform et opacity seulement.
+   * La sortie joue grâce à display/overlay en allow-discrete (Chrome, Edge,
+   * Safari 18) ; ailleurs, la fenêtre se ferme simplement sans animation.
+   * « Réduire les animations » : durées ramenées à zéro par la règle globale.
+   */
+  .fenetre {
+    --fenetre-depart: 0 100%;
+    translate: var(--fenetre-depart);
+    transition-property: translate, scale, opacity, overlay, display;
+    transition-duration: 0.24s;
+    transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+    transition-behavior: allow-discrete;
+  }
+
+  .fenetre[open] {
+    translate: 0 0;
+    transition-duration: 0.42s;
+    transition-timing-function: var(--ease-out-soft);
+  }
+
+  .fenetre::backdrop {
+    opacity: 0;
+    transition-property: opacity, overlay, display;
+    transition-duration: 0.24s;
+    transition-behavior: allow-discrete;
+  }
+
+  .fenetre[open]::backdrop {
+    opacity: 1;
+    transition-duration: 0.35s;
+  }
+
+  @media (width >= 40rem) {
+    .fenetre {
+      --fenetre-depart: 0 1.25rem;
+      opacity: 0;
+      scale: 0.97;
+    }
+
+    .fenetre[open] {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+
+  /* Titre de section qui reçoit le focus après un lien du menu : repère pour
+     le lecteur d'écran et point de départ de la tabulation, sans anneau. */
+  [data-cible-menu]:focus {
+    outline: none;
+  }
+}
+
+@starting-style {
+  .fenetre[open] {
+    translate: var(--fenetre-depart);
+  }
+
+  .fenetre[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+@media (width >= 40rem) {
+  @starting-style {
+    .fenetre[open] {
+      opacity: 0;
+      scale: 0.97;
+    }
   }
 }
 

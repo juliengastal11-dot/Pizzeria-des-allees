@@ -24,10 +24,14 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
-    qualities: [60, 75, 85],
-    // Mobile d'abord : téléphones 390 px en 2x/3x, puis tablettes et grands écrans (pas de 3840)
-    deviceSizes: [640, 750, 828, 1080, 1200, 1600, 1920, 2560],
+    // 75 par défaut ; 85 réservé à une photo qui le demanderait explicitement (prop quality)
+    qualities: [75, 85],
+    // Mobile d'abord : téléphones 390 px en 2x/3x, puis tablettes. Rien au-delà de 1536 :
+    // c'est la largeur des plus grandes sources (photos de la salle), le reste serait le même fichier.
+    deviceSizes: [640, 750, 828, 1080, 1200, 1536],
     imageSizes: [48, 64, 96, 128, 256, 384],
+    // Noms de fichiers immuables (voir cacheLong) : les versions optimisées peuvent vivre un an
+    minimumCacheTTL: 31536000,
   },
   async headers() {
     return [

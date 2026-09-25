@@ -3,9 +3,12 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { motion, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import type { Pizza } from "@/config/site";
+import { site, type Pizza } from "@/config/site";
+import { remplir } from "@/lib/textes";
 import { CartePizza } from "./CartePizza";
 import { useEcranLarge, useHydrate } from "./hooks";
+
+const TEXTES = site.textes.carte.carrousel;
 
 // Distance entre deux points de l'indicateur (point de 8 px + écart de 8 px).
 const ECART_POINTS = 16;
@@ -69,7 +72,7 @@ export function CarrouselPizzas({ pizzas, className }: Props) {
         id={idDefileur}
         data-lenis-prevent-horizontal
         role={mobile ? "region" : undefined}
-        aria-label={mobile ? "Pizzas de la sélection, à faire défiler" : undefined}
+        aria-label={mobile ? TEXTES.aria : undefined}
         tabIndex={mobile ? 0 : undefined}
         className="relative snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain pb-8 pt-20 [scrollbar-width:none] focus-visible:[outline-offset:-4px] [&::-webkit-scrollbar]:hidden lg:snap-none lg:overflow-visible lg:pb-0 lg:pt-24"
       >
@@ -103,7 +106,7 @@ export function CarrouselPizzas({ pizzas, className }: Props) {
           </div>
           <BoutonFleche sens="suivant" inactif={actif === n - 1} controle={idDefileur} onClick={() => aller(actif + 1)} />
           <p className="sr-only" aria-live="polite">
-            {`Pizza ${actif + 1} sur ${n} : ${pizzas[actif]?.nom ?? ""}`}
+            {remplir(TEXTES.position, { n: actif + 1, total: n, nom: pizzas[actif]?.nom ?? "" })}
           </p>
         </div>
       )}
@@ -137,7 +140,7 @@ function BoutonFleche({
       className="grid size-11 place-items-center rounded-full border-2 border-nuit text-nuit transition-[background-color,color,opacity] duration-200 hover:bg-nuit hover:text-calcaire aria-disabled:cursor-default aria-disabled:opacity-40 aria-disabled:hover:bg-transparent aria-disabled:hover:text-nuit"
     >
       <Icone aria-hidden className="size-5" strokeWidth={2.2} />
-      <span className="sr-only">{sens === "precedent" ? "Pizza précédente" : "Pizza suivante"}</span>
+      <span className="sr-only">{sens === "precedent" ? TEXTES.precedente : TEXTES.suivante}</span>
     </motion.button>
   );
 }

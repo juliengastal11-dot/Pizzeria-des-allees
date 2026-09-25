@@ -7,6 +7,7 @@ export function restaurantJsonLd() {
   const url = getSiteUrl();
   const reel = (v: string) => (estPlaceholder(v) ? undefined : v);
   const horaires = openingHoursSpecification();
+  const reseaux = [site.reseaux.instagram, site.reseaux.facebook].filter((l) => !estPlaceholder(l));
 
   const data = {
     "@context": "https://schema.org",
@@ -14,10 +15,10 @@ export function restaurantJsonLd() {
     "@id": `${url}/#restaurant`,
     name: site.nom,
     url,
-    image: [`${url}/opengraph-image.jpg`, `${url}${site.photos.galerie[0].src}`],
+    image: [`${url}${site.seo.image.src}`, `${url}${site.photos.galerie[0].src}`],
     logo: `${url}${site.logo.src}`,
     description: site.seo.description,
-    servesCuisine: ["Pizza", "Cuisine méditerranéenne"],
+    servesCuisine: [...site.seo.cuisines],
     priceRange: site.seo.fourchettePrix,
     telephone: reel(site.telephone),
     email: reel(site.email),
@@ -26,10 +27,15 @@ export function restaurantJsonLd() {
       streetAddress: site.adresse.rue,
       postalCode: site.adresse.codePostal,
       addressLocality: site.adresse.ville,
-      addressRegion: "Occitanie",
+      addressRegion: site.adresse.region,
       addressCountry: site.adresse.pays,
     },
-    hasMap: site.liens.itineraire,
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: site.adresse.geo.latitude,
+      longitude: site.adresse.geo.longitude,
+    },
+    hasMap: site.liens.carte,
     acceptsReservations: site.liens.reserver,
     hasMenu: reel(site.liens.commander),
     paymentAccepted: site.paiements.join(", "),
@@ -39,7 +45,7 @@ export function restaurantJsonLd() {
       {
         "@type": "ReserveAction",
         target: { "@type": "EntryPoint", urlTemplate: site.liens.reserver, inLanguage: "fr" },
-        result: { "@type": "FoodEstablishmentReservation", name: "Réserver une table" },
+        result: { "@type": "FoodEstablishmentReservation", name: site.textes.actions.reserver },
       },
       ...(reel(site.liens.commander)
         ? [
@@ -50,7 +56,8 @@ export function restaurantJsonLd() {
           ]
         : []),
     ],
-    sameAs: [site.reseaux.instagram, site.reseaux.facebook].filter((l) => !estPlaceholder(l)),
+    // Omis tant qu'aucun réseau n'est renseigné (pas de tableau vide publié)
+    sameAs: reseaux.length ? reseaux : undefined,
   };
 
   // Échappe « < » pour éviter toute injection dans la balise <script>

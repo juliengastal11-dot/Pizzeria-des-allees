@@ -2,8 +2,9 @@ import type { MetadataRoute } from "next";
 import { site } from "@/config/site";
 import { getSiteUrl } from "@/lib/site-url";
 
-/** Dernière révision des pages légales (voir « Dernière mise à jour » de la politique de confidentialité). */
-const REVISION_LEGALE = new Date("2026-09-25");
+/** Dates fixes tenues dans la configuration (et non la date de la requête) : un vrai signal pour les moteurs. */
+const REVISION_ACCUEIL = new Date(site.seo.derniereMiseAJour);
+const REVISION_LEGALE = new Date(site.legal.miseAJour);
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = getSiteUrl();
@@ -12,10 +13,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: url("/"),
-      lastModified: new Date(),
+      lastModified: REVISION_ACCUEIL,
       changeFrequency: "weekly",
       priority: 1,
-      images: [site.hero.poster, ...site.photos.galerie.map((photo) => photo.src)].map(url),
+      images: [site.seo.image.src, site.hero.poster, ...site.photos.galerie.map((photo) => photo.src)].map(url),
     },
     {
       url: url("/mentions-legales"),

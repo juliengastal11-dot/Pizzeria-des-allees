@@ -2,8 +2,11 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import * as motion from "motion/react-client";
-import { estPlaceholder } from "@/config/site";
+import { estPlaceholder, site } from "@/config/site";
+import { dateLisible } from "@/lib/textes";
 import { Valeur } from "@/components/ui/Valeur";
+
+const { pagesLegales, actions } = site.textes;
 
 /*
  * Mise en page des pages de texte (mentions légales, confidentialité) :
@@ -15,8 +18,8 @@ type Props = {
   titre: string;
   surtitre?: string;
   chapo?: ReactNode;
-  /** Date de mise à jour affichée sous le titre. */
-  miseAJour?: { iso: string; libelle: string };
+  /** Date de mise à jour affichée sous le titre, au format AAAA-MM-JJ. */
+  miseAJour?: string;
   /** Encadré d'avertissement (ex. document provisoire), au-dessus du texte. */
   avertissement?: { titre: string; texte: ReactNode };
   children: ReactNode;
@@ -51,7 +54,7 @@ export function PageTexte({ titre, surtitre, chapo, miseAJour, avertissement, ch
           {chapo && <p className="mx-auto mt-6 max-w-[58ch] text-[1.0625rem] leading-relaxed text-pierre md:text-[1.125rem]">{chapo}</p>}
           {miseAJour && (
             <p className="mt-5 text-[0.9375rem] text-pierre">
-              Dernière mise à jour&nbsp;: <time dateTime={miseAJour.iso}>{miseAJour.libelle}</time>
+              {pagesLegales.miseAJour} <time dateTime={miseAJour}>{dateLisible(miseAJour)}</time>
             </p>
           )}
         </header>
@@ -96,7 +99,7 @@ export function PageTexte({ titre, surtitre, chapo, miseAJour, avertissement, ch
               strokeWidth={2.2}
               className="size-[1.1em] shrink-0 transition-transform duration-200 group-hover:-translate-x-0.5"
             />
-            Revenir à l’accueil
+            {pagesLegales.retour}
           </Link>
         </div>
       </div>
@@ -160,7 +163,7 @@ export function LienExterne({ href, children }: { href: string; children: ReactN
     <a href={href} target="_blank" rel="noopener noreferrer" className="inline">
       {children}
       <ArrowUpRight aria-hidden strokeWidth={2.2} className="ml-0.5 inline size-[0.95em] -translate-y-px align-middle" />
-      <span className="sr-only"> (nouvel onglet)</span>
+      <span className="sr-only">{` ${actions.nouvelOnglet}`}</span>
     </a>
   );
 }

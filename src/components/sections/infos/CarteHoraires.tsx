@@ -2,24 +2,29 @@
 
 import { useId, useState } from "react";
 import { LayoutGroup, motion } from "motion/react";
+import { ChevronDown } from "lucide-react";
 import { JOURS, site, type Jour } from "@/config/site";
+import { remplir } from "@/lib/textes";
 import { formatCreneaux, horairesDuJour, libelleJour, maintenantABeziers, statutOuverture, type Statut } from "@/lib/horaires";
 import { Valeur } from "@/components/ui/Valeur";
 import { useMinuteCourante } from "@/components/sections/infos/useMinuteCourante";
 
+const TEXTES = site.textes.infos.horaires;
+
 /** « 18 h 30 » ne se coupe jamais en fin de ligne. */
 function insecable(texte: string) {
   return texte.replace(/(\d+) h(?: (\d{2}))?/g, (_: string, h: string, m: string | undefined) =>
-    m ? `${h} h ${m}` : `${h} h`,
+    m ? `${h} h ${m}` : `${h} h`,
   );
 }
 
 function texteStatut(statut: Statut, aujourdhui: Jour): string {
-  if (statut.ouvert) return `Ouvert · jusqu'à ${statut.jusqua}`;
-  if (!statut.prochaine) return "Fermé";
+  if (statut.ouvert) return remplir(TEXTES.ouvert, { heure: statut.jusqua });
+  if (!statut.prochaine) return TEXTES.ferme;
   const ecart = (JOURS.indexOf(statut.prochaine.jour) - JOURS.indexOf(aujourdhui) + 7) % 7;
-  const quand = ecart === 0 ? "" : ecart === 1 ? "demain " : `${statut.prochaine.jour} `;
-  return `Fermé · on rallume ${quand}à ${statut.prochaine.heure}`;
+  const quand = ecart === 0 ? "" : ecart === 1 ? TEXTES.demain : statut.prochaine.jour;
+  // Aujourd'hui, {quand} est vide : pas de double espace
+  return remplir(TEXTES.fermeRallume, { quand, heure: statut.prochaine.heure }).replace(/ {2,}/g, " ");
 }
 
 function BadgeStatut({ statut, aujourdhui }: { statut: Statut; aujourdhui: Jour }) {
@@ -78,7 +83,7 @@ function Semaine({ attenue = false, actif = null, aujourdhui = null, onSurvol }:
               {estAujourdhui && (
                 <>
                   <span aria-hidden className="size-2 rounded-full bg-or ring-2 ring-nuit" />
-                  <span className="sr-only"> (aujourd&apos;hui)</span>
+                  <span className="sr-only">{` ${TEXTES.aujourdhui}`}</span>
                 </>
               )}
             </dt>
@@ -101,20 +106,64 @@ function Semaine({ attenue = false, actif = null, aujourdhui = null, onSurvol }:
 }
 
 /**
- * Carte « Horaires ». Tant que `site.horaires.aConfirmer` est vrai : mention
- * [À CONFIRMER] et semaine d'exemple en retrait. Sinon : semaine, jour courant
- * sous une pastille qui suit le survol, et badge Ouvert / Fermé (heure de Béziers,
- * calculée après le montage pour éviter tout écart d'hydratation).
+ * Semaine confirmée : jour courant sous une pastille qui suit le survol, et badge
+ * Ouvert / Fermé (heure de Béziers, lue après le montage pour éviter tout écart
+ * d'hydratation). Monté seulement quand les horaires sont validés : sinon, aucune
+ * minuterie ne tourne pour rien.
  */
-export function CarteHoraires() {
-  const aConfirmer: boolean = site.horaires.aConfirmer;
+function SemaineConfirmee() {
   const minute = useMinuteCourante();
   const [survol, setSurvol] = useState<Jour | null>(null);
   const groupe = useId();
 
-  const instant = aConfirmer || minute === null ? null : new Date(minute * 60_000);
+  const instant = minute === null ? null : new Date(minute * 60_000);
   const aujourdhui = instant ? maintenantABeziers(instant).jour : null;
   const statut = instant ? statutOuverture(instant) : null;
+
+  return (
+    <>
+      <div className="flex min-h-10 flex-wrap items-center gap-x-4 gap-y-3">
+        <h3 id="infos-horaires" className="font-display text-[1.75rem] font-semibold leading-none">
+          {TEXTES.titre}
+        </h3>
+        {statut && aujourdhui && <BadgeStatut statut={statut} aujourdhui={aujourdhui} />}
+      </div>
+      <LayoutGroup id={groupe}>
+        <Semaine actif={survol ?? aujourdhui} aujourdhui={aujourdhui} onSurvol={setSurvol} />
+      </LayoutGroup>
+    </>
+  );
+}
+
+/**
+ * Horaires pas encore validés : « Horaires [À CONFIRMER] » bien en vue, et la
+ * semaine d'exemple (mise en page à valider) repliée, pour qu'aucun client ne
+ * s'y fie.
+ */
+function SemaineAConfirmer() {
+  return (
+    <>
+      <h3 id="infos-horaires" className="flex flex-wrap items-center gap-x-3 gap-y-2 font-display text-[1.75rem] font-semibold leading-none">
+        {TEXTES.titre}
+        <Valeur valeur={site.horaires.mentionAConfirmer} className="font-sans text-[1.0625rem] font-semibold leading-snug" />
+      </h3>
+      <p className="mt-3 text-[0.9375rem] leading-snug text-eau">{TEXTES.enAttente}</p>
+      <details className="group mt-4 rounded-[1.75rem] border border-dashed border-eau/50 open:pb-2">
+        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-[1.75rem] px-4 py-2 text-sm font-semibold text-eau transition-colors hover:text-nuit sm:px-5 [&::-webkit-details-marker]:hidden">
+          {TEXTES.voirExemple}
+          <ChevronDown aria-hidden className="size-4 shrink-0 transition-transform duration-300 group-open:rotate-180" strokeWidth={2.2} />
+        </summary>
+        <div className="px-1 sm:px-2">
+          <Semaine attenue />
+        </div>
+      </details>
+    </>
+  );
+}
+
+/** Carte « Horaires ». */
+export function CarteHoraires() {
+  const aConfirmer: boolean = site.horaires.aConfirmer;
 
   return (
     <article
@@ -122,27 +171,7 @@ export function CarteHoraires() {
       aria-labelledby="infos-horaires"
       className="h-full rounded-[2.5rem] bg-calcaire-clair p-6 text-nuit shadow-[0_40px_80px_-40px_rgba(6,15,46,0.9)] sm:p-8"
     >
-      <div className="flex min-h-10 flex-wrap items-center gap-x-4 gap-y-3">
-        <h3 id="infos-horaires" className="font-display text-[1.75rem] font-semibold leading-none">
-          Horaires
-        </h3>
-        {aConfirmer ? (
-          <Valeur valeur="[À CONFIRMER]" className="text-[1.0625rem] font-semibold" />
-        ) : (
-          statut && aujourdhui && <BadgeStatut statut={statut} aujourdhui={aujourdhui} />
-        )}
-      </div>
-
-      {aConfirmer ? (
-        <figure className="mt-5 rounded-[1.75rem] border border-dashed border-eau/50 px-1 pb-2 pt-4 sm:px-2">
-          <figcaption className="surtitre px-3 text-eau sm:px-4">Exemple à valider</figcaption>
-          <Semaine attenue />
-        </figure>
-      ) : (
-        <LayoutGroup id={groupe}>
-          <Semaine actif={survol ?? aujourdhui} aujourdhui={aujourdhui} onSurvol={setSurvol} />
-        </LayoutGroup>
-      )}
+      {aConfirmer ? <SemaineAConfirmer /> : <SemaineConfirmee />}
     </article>
   );
 }

@@ -18,14 +18,16 @@ export function HalosInfos() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const lent = useTransform(scrollYProgress, [0, 1], [70, -70]);
   const rapide = useTransform(scrollYProgress, [0, 1], [140, -140]);
+  // Calques promus seulement quand le parallaxe tourne : le défilement ne repeint pas la page
+  const calque = reduire ? "" : "will-change-transform";
 
   return (
     <div ref={ref} aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-      <motion.div className="absolute inset-0" style={{ y: reduire ? 0 : lent }}>
+      <motion.div className={`absolute inset-0 ${calque}`} style={{ y: reduire ? 0 : lent }}>
         <div className="absolute -left-48 top-[22%] size-[38rem] rounded-full bg-[radial-gradient(closest-side,rgba(242,211,140,0.09),transparent)]" />
         <div className="absolute -right-40 bottom-[2%] size-[32rem] rounded-full bg-[radial-gradient(closest-side,rgba(136,168,220,0.12),transparent)]" />
       </motion.div>
-      <motion.div className="absolute right-[4%] top-16 hidden h-52 w-[26rem] lg:block" style={{ y: reduire ? 0 : rapide }}>
+      <motion.div className={`absolute right-[4%] top-16 hidden h-52 w-[26rem] lg:block ${calque}`} style={{ y: reduire ? 0 : rapide }}>
         {LUMIERES.map(({ x, y, taille }) => (
           <span
             key={`${x}-${y}`}

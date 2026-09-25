@@ -1,22 +1,35 @@
 "use client";
 
-import { useId, useRef } from "react";
+import { useId, useRef, type CSSProperties } from "react";
 import { motion, useInView, type Variants } from "motion/react";
 
 /**
- * Le plafond de la salle : des ampoules à filament pendues à des fils de
- * longueurs inégales. Elles s'allument une à une quand la section arrive à
- * l'écran ; une seule vacille, une seule fois (WCAG 2.3.1).
- * Mouvement réduit : les ampoules sont allumées d'emblée (classe motion-reduce).
+ * Le plafond de la salle : une voûte en anse de panier (le haut de la section
+ * se courbe vers les murs, filet laiton en guise de moulure) d'où pendent des
+ * ampoules à filament, à des fils de longueurs inégales. Elles s'allument une
+ * à une quand la section arrive à l'écran ; une seule vacille, une seule fois
+ * (WCAG 2.3.1). Mouvement réduit : allumées d'emblée (classes motion-reduce).
  */
 
-// 3 ampoules sur mobile, 5 en desktop (`large` = desktop seulement)
+// Profil de la voûte : superellipse, plate au centre et plongeante vers les murs
+const EXPOSANT = 2.4;
+const voute = (u: number) => 1 - Math.pow(1 - Math.pow(Math.min(1, Math.abs(u)), EXPOSANT), 1 / EXPOSANT);
+
+// Tracé dans une boîte 1000 × 100 étirée sur toute la largeur (0 = sommet, 100 = retombée)
+const POINTS = Array.from({ length: 81 }, (_, i) => {
+  const x = 1000 - i * 12.5;
+  return `${x.toFixed(1)} ${(100 * voute(x / 500 - 1)).toFixed(2)}`;
+});
+const COURBE = `M${POINTS.join(" L")}`;
+const ECOINCONS = `M0 0 H1000 ${COURBE.replace("M", "L")} Z`;
+
+// 3 ampoules sur mobile, 5 en desktop (`large` = desktop seulement) ; `x` en % de la largeur
 const AMPOULES = [
-  { fil: 44, large: true },
-  { fil: 28 },
-  { fil: 18, vacille: true },
-  { fil: 34 },
-  { fil: 50, large: true },
+  { x: 14, fil: 40, large: true },
+  { x: 20, xLarge: 32, fil: 26 },
+  { x: 50, fil: 16, vacille: true },
+  { x: 80, xLarge: 68, fil: 32 },
+  { x: 86, fil: 46, large: true },
 ] as const;
 
 const DELAI = 0.15;
@@ -55,7 +68,8 @@ export function Plafond() {
     <motion.div
       ref={ref}
       aria-hidden
-      className="pointer-events-none absolute inset-x-0 top-0 h-28 md:h-32"
+      // --voute : retombée de la voûte vers les murs
+      className="pointer-events-none absolute inset-x-0 top-0 h-32 [--voute:2.5rem] md:h-36 md:[--voute:4.5rem]"
       initial="eteint"
       animate={allume ? "allume" : "eteint"}
     >
@@ -64,16 +78,28 @@ export function Plafond() {
         variants={chaleur}
         className="absolute left-1/2 top-0 h-[28rem] w-[150%] -translate-x-1/2 bg-[radial-gradient(ellipse_at_top,rgba(242,211,140,0.1),transparent_62%)] motion-reduce:opacity-100! md:w-[110%]"
       />
-      {/* Moulure du plafond */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-filet/50 to-transparent" />
+      {/* La voûte : écoinçons Bleu des Allées au-dessus, moulure laiton le long de l'intrados */}
+      <svg viewBox="0 0 1000 100" preserveAspectRatio="none" className="absolute inset-x-0 top-0 block h-(--voute) w-full" focusable="false">
+        <path d={ECOINCONS} className="fill-nuit" />
+        <path d={COURBE} fill="none" className="stroke-filet" strokeOpacity={0.7} strokeWidth={1} vectorEffect="non-scaling-stroke" />
+      </svg>
 
-      <div className="relative mx-auto flex max-w-6xl justify-around px-5">
-        {AMPOULES.map((a, i) => (
+      {AMPOULES.map((a, i) => {
+        const xLarge = "xLarge" in a ? a.xLarge : a.x;
+        const style = {
+          "--x": `${a.x}%`,
+          "--x-lg": `${xLarge}%`,
+          "--accroche": String(voute(a.x / 50 - 1)),
+          "--accroche-lg": String(voute(xLarge / 50 - 1)),
+        } as CSSProperties;
+        return (
           <motion.div
             key={i}
             custom={i}
             variants={balancement}
-            className={`${"large" in a ? "hidden md:flex" : "flex"} origin-top flex-col items-center`}
+            style={style}
+            // Accroché à la voûte : le haut du fil suit la courbe de l'intrados
+            className={`${"large" in a ? "hidden md:flex" : "flex"} absolute left-(--x) top-[calc(var(--voute)_*_var(--accroche)_-_1px)] -translate-x-1/2 origin-top flex-col items-center md:left-(--x-lg) md:top-[calc(var(--voute)_*_var(--accroche-lg)_-_1px)]`}
           >
             <span className="block h-1.5 w-4 rounded-b-full bg-filet/80" />
             <span className="block w-px bg-pierre/45" style={{ height: a.fil }} />
@@ -86,8 +112,8 @@ export function Plafond() {
               <Ampoule index={i} />
             </div>
           </motion.div>
-        ))}
-      </div>
+        );
+      })}
     </motion.div>
   );
 }
