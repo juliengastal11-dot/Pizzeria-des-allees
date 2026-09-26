@@ -42,6 +42,15 @@ export type Pizza = {
   duMoment?: boolean;
   /** Laisser vide : les prix vivent dans l'outil de commande pour ne jamais être périmés. */
   prix?: string;
+  /**
+   * Tableau vivant (facultatif), sur le mur de cadres : la pizza s'y soulève en
+   * couches puis se repose, une seule fois, quand son cadre passe au milieu de
+   * l'écran. Vidéo carrée, sans son, 5 s au plus, qui commence et finit sur la
+   * même image ; `poster` est cette image (elle remplace l'image détourée dans le
+   * cadre). Le fond de la vidéo est celui du cadre : bleu nuit et lueur ambrée
+   * pour un cadre rond ou ovale.
+   */
+  video?: { mp4: string; poster: string };
 };
 
 export type Photo = {
@@ -297,8 +306,11 @@ export const site = {
           "Complétant notre offre de pizzas de terroirs, nous vous proposons également une sélection de salades fraîches.", // ⚠ voir la note ci-dessus
           "Nos gratins de ravioles sont composés d’ingrédients frais et de saison, chaque recette est un équilibre parfait entre fraîcheur, saveurs et authenticité.",
         ],
-        /** Pizzas exposées sur le mur (identifiants de `pizzas`), dans l'ordre d'accrochage : quatre cadres. */
-        pizzas: ["passejada", "cers", "rosace", "caritats"],
+        /**
+         * Pizzas exposées sur le mur (identifiants de `pizzas`), dans l'ordre d'accrochage : quatre cadres.
+         * Essai du 26/09 : la Chorizana, en tableau vivant, prend le premier cadre (le grand rond) à la place de la Passejada.
+         */
+        pizzas: ["chorizana", "cers", "rosace", "caritats"],
       },
     },
 
@@ -308,6 +320,8 @@ export const site = {
       titre: "Une sélection de la maison",
       intro: "Quelques pizzas que l’on aime faire goûter. La carte complète, les prix et la commande sont sur notre outil de commande en ligne, toujours à jour.",
       bouton: "Voir toute la carte et commander",
+      /** Pizzas présentées dans La carte (identifiants de `pizzas`), dans l'ordre. */
+      pizzas: ["passejada", "cers", "lou-camel", "plateau-des-poetes", "rosace", "caritats"],
       etiquettes: {
         base: { tomate: "Base tomate", crème: "Base crème" } satisfies Record<Pizza["base"], string>,
         vegetarienne: "Végétarienne",
@@ -583,6 +597,15 @@ export const site = {
       base: "crème",
       image: "/images/pizzas/caritats.webp",
       duMoment: true,
+    },
+    {
+      id: "chorizana",
+      nom: "La Chorizana",
+      description: "Tomate, mozzarella, chorizo, fondu d’oignon, origan", // À VALIDER : recette complète
+      base: "tomate",
+      // Vue de trois quarts sur sa pelle, pas vue de dessus : à refaire avant de la présenter dans La carte
+      image: "/images/pizzas/chorizana.webp",
+      video: { mp4: "/video/pizzas/chorizana-tableau.mp4", poster: "/images/pizzas/chorizana-tableau.webp" },
     },
   ] satisfies Pizza[],
 

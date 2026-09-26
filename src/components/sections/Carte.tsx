@@ -1,9 +1,13 @@
-import { site } from "@/config/site";
+import { site, type Pizza } from "@/config/site";
 import { BoutonCommander } from "@/components/actions/Boutons";
 import { OrbVague } from "@/components/ui/OrbVague";
 import { SectionTitre } from "@/components/ui/SectionTitre";
 import { CarrouselPizzas } from "./carte/CarrouselPizzas";
 import { CielDecor } from "./carte/CielDecor";
+
+const catalogue: readonly Pizza[] = site.pizzas;
+/** Les pizzas choisies pour La carte (`textes.carte.pizzas`), dans leur ordre. */
+const SELECTION = site.textes.carte.pizzas.map((id) => catalogue.find((p) => p.id === id)).filter((p): p is Pizza => Boolean(p));
 
 /**
  * La carte : une sélection de pizzas posées sur des arches, sur le Ciel de Béziers.
@@ -30,7 +34,7 @@ export function Carte() {
           />
         </div>
 
-        <CarrouselPizzas pizzas={site.pizzas} className="relative mt-4 md:mt-8" />
+        <CarrouselPizzas pizzas={SELECTION} className="relative mt-4 md:mt-8" />
 
         <div className="relative mx-auto mt-14 flex max-w-xl flex-col items-center px-5 text-center md:mt-20">
           <BoutonCommander variante="nuit" forme="arche" className="min-h-14! px-8! shadow-[0_18px_36px_-18px_rgba(5,26,75,0.7)]">

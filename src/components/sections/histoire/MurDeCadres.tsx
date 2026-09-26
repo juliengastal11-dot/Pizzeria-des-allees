@@ -5,6 +5,7 @@ import type { CSSProperties, RefObject } from "react";
 import { motion, useScroll, useTransform, type MotionValue } from "motion/react";
 import { site, type Pizza } from "@/config/site";
 import { typographie } from "@/lib/textes";
+import { TableauVivant } from "./TableauVivant";
 import { TexteEcrit } from "./TexteEcrit";
 import { MOUVEMENT_REDUIT, useMedia } from "./useMedia";
 
@@ -15,6 +16,7 @@ const TEXTES = site.textes.histoire.mur;
  * formes différentes (ronds, ovales, carrés), accrochés sur deux colonnes
  * irrégulières. Les pizzas y sont exposées en portraits rétroéclairés (une
  * lueur chaude sur le mur autour du cadre, qui s'allume à l'arrivée à l'écran) ;
+ * une pizza qui a une vidéo devient un tableau vivant (voir TableauVivant) ;
  * cinq ardoises portent des phrases qui s'écrivent à la main. Au défilement,
  * chaque cadre glisse à sa propre vitesse (parallaxe), d'autant plus que l'on
  * descend. (Les photos de la salle vivent dans la galerie qui défile, plus bas :
@@ -82,7 +84,9 @@ const FORMES_PIZZA = {
   carre: "aspect-square rounded-[4px]",
 } as const;
 
-/** Une pizza en portrait, dans un cadre rétroéclairé, avec son cartel de laiton. */
+const TAILLES_CADRE = "(min-width: 1024px) 260px, 46vw";
+
+/** Une pizza en portrait (ou en tableau vivant), dans un cadre rétroéclairé, avec son cartel de laiton. */
 function CadrePizza({ pizza, forme }: { pizza: Pizza; forme: keyof typeof FORMES_PIZZA }) {
   const surMat = forme === "carre";
   return (
@@ -96,13 +100,17 @@ function CadrePizza({ pizza, forme }: { pizza: Pizza; forme: keyof typeof FORMES
               : "bg-[radial-gradient(circle_at_50%_47%,rgba(242,211,140,0.72),rgba(233,185,80,0.24)_44%,#0a1846_74%)]"
           }`}
         >
-          <Image
-            src={pizza.image}
-            alt={pizza.description}
-            fill
-            sizes="(min-width: 1024px) 260px, 46vw"
-            className="object-contain p-[8%] drop-shadow-[0_16px_18px_rgba(0,0,0,0.5)]"
-          />
+          {pizza.video ? (
+            <TableauVivant video={pizza.video} alt={pizza.description} sizes={TAILLES_CADRE} />
+          ) : (
+            <Image
+              src={pizza.image}
+              alt={pizza.description}
+              fill
+              sizes={TAILLES_CADRE}
+              className="object-contain p-[8%] drop-shadow-[0_16px_18px_rgba(0,0,0,0.5)]"
+            />
+          )}
         </span>
         <span aria-hidden className={FILET_INTERIEUR} />
       </div>

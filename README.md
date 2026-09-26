@@ -91,6 +91,13 @@ chemin dans `site.ts`, sinon l'ancienne version peut rester affichée.
   `allees-dessin-fixe.svg` (le même, déjà tracé). Ce sont des traits vectoriels tirés d'un dessin au trait :
   pour en changer, produire les deux fichiers ensemble et garder le même rapport 1536 × 1020.
 - Pizzas : PNG ou WebP **détourés en disque** (fond transparent), carrés, 800 px, dans `public/images/pizzas/`.
+  La carte présente les pizzas listées dans `textes.carte.pizzas`, le mur celles de `textes.histoire.mur.pizzas`.
+- Tableau vivant (une pizza du mur qui se soulève en couches puis se repose, champ `video` de la pizza) :
+  MP4 H.264 carré 720 px, sans son, 5 s au plus, qui **commence et finit sur la même image**, dans
+  `public/video/pizzas/` ; `poster` = sa première image (WebP), dans `public/images/pizzas/`. Le fond de la
+  vidéo est celui du cadre (bleu nuit et lueur ambrée pour un rond ou un ovale). Recette de l'essai Chorizana
+  (26/09/2026) : pizza détourée posée sur ce fond, laissant de la place au-dessus d'elle ; Kling 3.0 (Higgsfield, mode pro,
+  sans son) avec cette même image en début et en fin ; compression ffmpeg `-crf 27`, 720 px (~270 Ko).
 - Image de partage (réseaux sociaux) : JPEG 1200 × 630 dans `public/images/partage/`, décrite par `seo.image`.
 - Hero : les vues de la fenêtre en arche sont listées dans `hero.vues` (vidéo en boucle MP4 + WebM
   900 × 1200, 24 i/s, sans son dans `public/video/` ; poster = sa première image, dans `public/images/hero/`).
