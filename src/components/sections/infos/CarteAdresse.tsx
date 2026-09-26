@@ -1,11 +1,9 @@
 "use client";
 
-import { useId, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
-import { ArrowUpRight, Map as MapIcon, Navigation } from "lucide-react";
+import { motion } from "motion/react";
+import { ArrowUpRight, Navigation } from "lucide-react";
 import { site } from "@/config/site";
 import { remplir } from "@/lib/textes";
-import { PlanAllees } from "@/components/sections/infos/PlanAllees";
 
 const { actions } = site.textes;
 const TEXTES = site.textes.infos.adresse;
@@ -16,24 +14,11 @@ const pression = {
   transition: { type: "spring", stiffness: 500, damping: 30 },
 } as const;
 
-const fondu = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-  transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] },
-} as const;
-
 /**
- * Carte « Adresse » au sommet en arche : l'adresse, le plan illustré des Allées
- * (une fenêtre sur la nuit, où la pizzeria s'allume en or) et, seulement si le
- * visiteur le demande, la carte Google Maps (cookies tiers).
- * Mobile : plan à l'horizontale, pour que la carte tienne dans un écran.
+ * Carte « Adresse » au sommet en arche : l'adresse et la carte Google Maps
+ * (cookies tiers, avertissement affiché en dessous).
  */
 export function CarteAdresse() {
-  const [carteVisible, setCarteVisible] = useState(false);
-  const idCadre = useId();
-  const idNote = useId();
-
   return (
     <article
       data-surface="clair"
@@ -50,30 +35,15 @@ export function CarteAdresse() {
         </span>
       </address>
 
-      <div
-        id={idCadre}
-        className={`relative mt-4 w-full overflow-hidden rounded-[1.75rem] bg-nuit md:mt-6 md:aspect-auto md:min-h-[22rem] md:flex-1 lg:min-h-[16rem] ${
-          carteVisible ? "aspect-[4/3]" : "aspect-[432/240]"
-        }`}
-      >
-        <AnimatePresence initial={false} mode="wait">
-          {carteVisible ? (
-            <motion.iframe
-              key="carte"
-              src={site.liens.carteIntegree}
-              title={remplir(TEXTES.titreCarte, { rue: site.adresse.rue })}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              allowFullScreen
-              className="absolute inset-0 size-full border-0"
-              {...fondu}
-            />
-          ) : (
-            <motion.div key="plan" className="absolute inset-0 lg:inset-x-5" {...fondu}>
-              <PlanAllees />
-            </motion.div>
-          )}
-        </AnimatePresence>
+      <div className="relative mt-4 aspect-[4/3] w-full overflow-hidden rounded-[1.75rem] bg-nuit md:mt-6 md:aspect-auto md:min-h-[22rem] md:flex-1 lg:min-h-[16rem]">
+        <iframe
+          src={site.liens.carteIntegree}
+          title={remplir(TEXTES.titreCarte, { rue: site.adresse.rue })}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          allowFullScreen
+          className="absolute inset-0 size-full border-0"
+        />
       </div>
 
       <div className="mt-5 flex w-full flex-wrap items-center justify-center gap-x-5 gap-y-1.5 md:mt-6">
@@ -92,23 +62,8 @@ export function CarteAdresse() {
           />
           <span className="sr-only">{` ${actions.nouvelOnglet}`}</span>
         </motion.a>
-        {/* Action secondaire : un lien-bouton souligné, sans cadre, pour ne pas concurrencer l'itinéraire */}
-        <button
-          type="button"
-          aria-controls={idCadre}
-          aria-describedby={carteVisible ? undefined : idNote}
-          onClick={() => setCarteVisible((v) => !v)}
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-2 font-semibold leading-tight text-encre underline decoration-eau/50 decoration-1 underline-offset-4 transition-colors duration-200 hover:decoration-encre"
-        >
-          <MapIcon aria-hidden className="size-[1.05em] shrink-0" strokeWidth={2.2} />
-          {carteVisible ? TEXTES.carteMasquer : TEXTES.carteAfficher}
-        </button>
       </div>
-      {!carteVisible && (
-        <p id={idNote} className="mt-1 max-w-[34ch] text-sm leading-snug text-eau">
-          {TEXTES.avertissement}
-        </p>
-      )}
+      <p className="mt-1 max-w-[34ch] text-sm leading-snug text-eau">{TEXTES.avertissement}</p>
     </article>
   );
 }

@@ -63,13 +63,13 @@ function BoutonMenu({ ouvert, controle, onClick }: { ouvert: boolean; controle?:
       aria-controls={controle}
       whileTap={{ scale: 0.95 }}
       transition={{ type: "spring", stiffness: 500, damping: 30 }}
-      className="group inline-flex h-11 shrink-0 items-center gap-2.5 rounded-full border-[1.5px] border-calcaire/85 px-4 text-[0.9375rem] font-semibold text-calcaire transition-colors hover:bg-calcaire/10"
+      className="group grid size-11 shrink-0 place-items-center rounded-full border-[1.5px] border-calcaire/85 text-calcaire transition-colors hover:bg-calcaire/10"
     >
       <span aria-hidden className="flex w-4 flex-col gap-[5px]">
         <span className="h-[1.5px] w-4 rounded-full bg-current" />
         <span className="h-[1.5px] w-2.5 origin-left rounded-full bg-current transition-transform duration-300 ease-out group-hover:scale-x-[1.6]" />
       </span>
-      {site.navigation.menu}
+      <span className="sr-only">{site.navigation.menu}</span>
     </motion.button>
   );
 }
@@ -167,9 +167,8 @@ export function Header() {
           <div className="relative flex h-16 items-center justify-between gap-3 px-4">
             <a href={ancre("accueil")} aria-label={nomAccueil} className="flex min-h-11 items-center gap-2.5 rounded-full">
               <Image src={site.logo.src} alt="" width={42} height={42} className="size-[42px] shrink-0" />
-              <span aria-hidden className="font-display text-[1.02rem] font-semibold leading-[1.02] text-calcaire max-[359px]:hidden">
-                <span className="block">{site.nomLignes[0]}</span>
-                <span className="block">{site.nomLignes[1]}</span>
+              <span aria-hidden className="whitespace-nowrap font-display text-[1.02rem] font-semibold leading-[1.02] text-calcaire max-[359px]:hidden">
+                {site.nom}
               </span>
             </a>
             <BoutonMenu ouvert={menu} controle={controleMenu} onClick={ouvrir} />

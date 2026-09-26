@@ -2,21 +2,13 @@
 
 import { useCallback, useState, type PointerEvent } from "react";
 import { motion } from "motion/react";
-import { Coins, ReceiptEuro, Timer } from "lucide-react";
 import { BoutonCommander } from "@/components/actions/Boutons";
-import { Valeur } from "@/components/ui/Valeur";
 import { site } from "@/config/site";
 import { remplir } from "@/lib/textes";
 import { CarteNuit, type EtatCarte } from "./CarteNuit";
 import { direction, distanceKm, LIEUX, RESTAURANT } from "./geographie";
 
 const TEXTES = site.textes.livraison;
-
-const INFOS = [
-  { libelle: TEXTES.conditions.minimum, valeur: site.livraison.minimumCommande, Icone: ReceiptEuro },
-  { libelle: TEXTES.conditions.frais, valeur: site.livraison.frais, Icone: Coins },
-  { libelle: TEXTES.conditions.delai, valeur: site.livraison.delai, Icone: Timer },
-] as const;
 
 const ville: string = site.adresse.ville;
 const communes: readonly string[] = site.livraison.communes;
@@ -77,8 +69,6 @@ export function PanneauLivraison() {
                 </li>
               )}
             </ul>
-            {/* Zone pas encore arrêtée : mention en pointillés, comme les autres valeurs à fournir */}
-            {!zoneDefinie && <p className="placeholder py-0.5">{TEXTES.carte.legende.zoneADefinir}</p>}
           </div>
         </div>
 
@@ -118,21 +108,6 @@ export function PanneauLivraison() {
               );
             })}
           </ul>
-
-          {/* Conditions : lignes à points de conduite, comme sur une carte de restaurant */}
-          <dl className="mt-9 space-y-1 text-left">
-            {INFOS.map(({ libelle, valeur, Icone }) => (
-              <div key={libelle} className="flex items-center gap-2.5 py-2">
-                <dt className="flex min-w-0 flex-1 items-center gap-2 text-[0.9375rem] text-pierre after:h-0 after:min-w-3 after:flex-1 after:translate-y-[0.35em] after:border-b-2 after:border-dotted after:border-filet/70 after:content-['']">
-                  <Icone aria-hidden className="size-[1.15rem] shrink-0 text-or-clair" strokeWidth={2} />
-                  <span className="min-w-0">{libelle}</span>
-                </dt>
-                <dd className="shrink-0 whitespace-nowrap text-[0.9375rem] font-semibold tabular-nums text-calcaire">
-                  <Valeur valeur={valeur} />
-                </dd>
-              </div>
-            ))}
-          </dl>
         </div>
       </div>
 

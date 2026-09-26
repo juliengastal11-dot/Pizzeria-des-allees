@@ -1,6 +1,5 @@
 import type { CSSProperties } from "react";
-import { MapPin } from "lucide-react";
-import { adresseComplete, estPlaceholder, site } from "@/config/site";
+import { site } from "@/config/site";
 import { HeroScene } from "./HeroScene";
 import { HeroFenetre } from "./HeroFenetre";
 import { PontLumineux } from "./PontLumineux";
@@ -21,14 +20,7 @@ const delai = (secondes: number) => ({ "--delai": `${secondes}s` }) as CSSProper
  * toute la largeur de l'écran.
  */
 export function Hero() {
-  const { surtitre, accroche, modes } = site.textes.hero;
-  const itineraire = !estPlaceholder(site.liens.itineraire);
-  const adresse = (
-    <>
-      <MapPin aria-hidden className="size-4 shrink-0 text-or" strokeWidth={2.2} />
-      {adresseComplete}
-    </>
-  );
+  const { accroche } = site.textes.hero;
 
   return (
     <HeroScene
@@ -43,13 +35,6 @@ export function Hero() {
           "lg:[grid-template-areas:'._arche'_'surtitre_arche'_'texte_arche'_'._arche'_'pont_pont']",
         ].join(" ")}
       >
-        <p
-          className={`${styles.monte} surtitre mx-auto w-full max-w-[28rem] text-or-clair [grid-area:surtitre] sm:max-w-none sm:text-center lg:text-left`}
-          style={delai(0.1)}
-        >
-          {surtitre}
-        </p>
-
         {/* La fenêtre en arche, 3:4, dimensionnée sur la hauteur d'écran */}
         <div className={`${styles.cadre} relative mx-auto mt-4 [grid-area:arche] lg:mt-0`}>
           <HeroFenetre titreId={TITRE_ID} />
@@ -64,27 +49,6 @@ export function Hero() {
           >
             {accroche}
           </p>
-          <ul className={`${styles.monte} mt-6 flex flex-wrap gap-2 sm:justify-center lg:justify-start`} style={delai(0.7)}>
-            {modes.split(/\s*·\s*/).map((mode) => (
-              <li key={mode} className="rounded-full border border-filet/70 bg-grain px-3.5 py-1.5 text-sm font-semibold text-pierre">
-                {mode}
-              </li>
-            ))}
-          </ul>
-          {/* L'adresse reste visible d'emblée (pas d'entrée depuis l'invisible) */}
-          {itineraire ? (
-            <a
-              href={site.liens.itineraire}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full text-[0.9375rem] text-pierre underline-offset-4 transition-colors hover:text-calcaire hover:underline"
-            >
-              {adresse}
-              <span className="sr-only">{` ${site.textes.actions.itineraireNouvelOnglet}`}</span>
-            </a>
-          ) : (
-            <p className="mt-4 inline-flex min-h-11 items-center gap-2 text-[0.9375rem] text-pierre">{adresse}</p>
-          )}
         </div>
       </div>
     </HeroScene>

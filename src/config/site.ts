@@ -110,7 +110,7 @@ export const site = {
     /** Position du restaurant (données structurées Google). La carte de livraison utilise la même. */
     geo: { latitude: 43.341425, longitude: 3.218144 },
   },
-  telephone: "[À CONFIRMER]", // format affiché, ex. "04 67 00 00 00"
+  telephone: "04 99 41 86 61",
   email: "[À CONFIRMER]",
 
   /**
@@ -250,7 +250,7 @@ export const site = {
       reserverCourt: "Réserver",
       reserverComplement: "une table",
       groupe: "Commander ou réserver",
-      itineraire: "Itinéraire",
+      itineraire: "M’y rendre",
       nouvelOnglet: "(nouvel onglet)",
       itineraireNouvelOnglet: "(itinéraire, nouvel onglet)",
       fermer: "Fermer",
@@ -285,7 +285,7 @@ export const site = {
       titre: "Même adresse, nouvelle enseigne.",
       // Le « ⁠ » (liant invisible) empêche la coupure « Paul- / Riquet » en fin de ligne.
       manifeste:
-        "Sur les allées Paul-⁠Riquet, on a rallumé le four sous notre propre nom. Même salle, même terrasse sous les platanes, et une carte qu’on écrit désormais nous-mêmes, avec ce que Béziers et ses coteaux posent sur la table.",
+        "Une pâte qui repose vingt-quatre heures, des produits choisis avec soin, et le four qu’on allume chaque jour pour vous : voilà ce qu’on aime servir, sous les platanes des allées Paul-⁠Riquet, en plein cœur de Béziers. Bienvenue chez nous.",
       /**
        * Le mur de cadres : nos pizzas encadrées et rétroéclairées, et cinq ardoises
        * dont les phrases s'écrivent à la main à l'écran (plus de photos : Julien a
@@ -320,7 +320,7 @@ export const site = {
     carte: {
       surtitre: "La carte",
       titre: "Une sélection de la maison",
-      intro: "Quelques pizzas que l’on aime faire goûter. La carte complète, les prix et la commande sont sur notre outil de commande en ligne, toujours à jour.",
+      intro: "Les pizzas incontournables, celles que l’on aime faire goûter. Tapez sur Commander pour découvrir toute notre carte.",
       bouton: "Voir toute la carte et commander",
       /** Pizzas présentées dans La carte (identifiants de `pizzas`), dans l'ordre. */
       pizzas: ["passejada", "cers", "lou-camel", "plateau-des-poetes", "rosace", "caritats"],
@@ -344,7 +344,7 @@ export const site = {
       surtitre: "Livraison et à emporter",
       titre: "Livraison sur Béziers et alentours",
       intro: "Commandez en ligne : on prépare, un coursier partenaire vous livre chaud. Ou passez la chercher à la pizzeria, elle vous attend.",
-      onglets: { aria: "Livraison ou à emporter", livraison: "Livraison", emporter: "À emporter" },
+      onglets: { aria: "Livraison ou à emporter", livraison: "Livraison", emporter: "Click and collect" },
       communes: {
         titre: "Les communes livrées",
         /** Consigne tant qu'aucune commune n'est choisie (annoncée aux lecteurs d'écran). */
@@ -397,9 +397,8 @@ export const site = {
     // La salle et la terrasse
     salle: {
       surtitre: "La salle et la terrasse",
-      /** Une ligne par segment (coupures maîtrisées). {salle} et {terrasse} viennent de `couverts` (plus haut). */
-      titre: ["{salle} couverts sous la fresque,", "{terrasse} sous les platanes."],
-      intro: "Une salle aux murs peints de Béziers et de vignes, une terrasse ouverte sur les Allées Paul-⁠Riquet.",
+      /** Une ligne par segment (coupures maîtrisées). */
+      titre: ["Nous vous accueillons dans notre salle", "et sur notre terrasse, au cœur des allées Paul-⁠Riquet."],
       lieux: { salle: "La salle", terrasse: "La terrasse" } satisfies Record<Photo["lieu"], string>,
       /**
        * Les photos défilent en continu (promenade) ; on peut les arrêter en les survolant, en leur
@@ -487,7 +486,7 @@ export const site = {
 
     // Pied de page
     footer: {
-      signature: "À bientôt sous les platanes.",
+      signature: "Le four est déjà chaud.",
       titreNavigation: "Sur la page",
       titreCoordonnees: "Nous trouver",
       horaires: "Horaires :",

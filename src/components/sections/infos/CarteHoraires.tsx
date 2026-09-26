@@ -6,7 +6,6 @@ import { ChevronDown } from "lucide-react";
 import { JOURS, site, type Jour } from "@/config/site";
 import { remplir } from "@/lib/textes";
 import { formatCreneaux, horairesDuJour, libelleJour, maintenantABeziers, statutOuverture, type Statut } from "@/lib/horaires";
-import { Valeur } from "@/components/ui/Valeur";
 import { useMinuteCourante } from "@/components/sections/infos/useMinuteCourante";
 
 const TEXTES = site.textes.infos.horaires;
@@ -143,11 +142,9 @@ function SemaineConfirmee() {
 function SemaineAConfirmer() {
   return (
     <>
-      <h3 id="infos-horaires" className="flex flex-wrap items-center gap-x-3 gap-y-2 font-display text-[1.75rem] font-semibold leading-none">
+      <h3 id="infos-horaires" className="font-display text-[1.75rem] font-semibold leading-none">
         {TEXTES.titre}
-        <Valeur valeur={site.horaires.mentionAConfirmer} className="font-sans text-[1.0625rem] font-semibold leading-snug" />
       </h3>
-      <p className="mt-3 text-[0.9375rem] leading-snug text-eau">{TEXTES.enAttente}</p>
       <details className="group mt-4 rounded-[1.75rem] border border-dashed border-eau/50 open:pb-2">
         <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-[1.75rem] px-4 py-2 text-sm font-semibold text-eau transition-colors hover:text-encre sm:px-5 [&::-webkit-details-marker]:hidden">
           {TEXTES.voirExemple}

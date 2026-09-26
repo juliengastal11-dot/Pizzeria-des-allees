@@ -74,7 +74,7 @@ export function CarrouselPizzas({ pizzas, className }: Props) {
         role={mobile ? "region" : undefined}
         aria-label={mobile ? TEXTES.aria : undefined}
         tabIndex={mobile ? 0 : undefined}
-        className="relative snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain pb-8 pt-20 [scrollbar-width:none] focus-visible:[outline-offset:-4px] [&::-webkit-scrollbar]:hidden lg:snap-none lg:overflow-visible lg:pb-0 lg:pt-24"
+        className="relative snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain pb-8 pt-28 [scrollbar-width:none] focus-visible:[outline-offset:-4px] [&::-webkit-scrollbar]:hidden lg:snap-none lg:overflow-visible lg:pb-0 lg:pt-24"
       >
         <motion.ul
           initial="cache"

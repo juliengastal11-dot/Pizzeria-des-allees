@@ -5,7 +5,6 @@ import { DessinAllees } from "@/components/sections/salle/DessinAllees";
 import { Plafond } from "@/components/sections/salle/Plafond";
 import { Galerie } from "@/components/sections/salle/Galerie";
 import { AvisGoogle } from "@/components/sections/salle/AvisGoogle";
-import { remplir } from "@/lib/textes";
 
 /**
  * La salle et la terrasse : les Allées Paul-Riquet qui se dessinent en fond,
@@ -15,9 +14,7 @@ import { remplir } from "@/lib/textes";
  * La section se referme sur la ligne de l'Orb, vers les infos pratiques.
  */
 export function Salle() {
-  const { surtitre, titre, intro } = site.textes.salle;
-  // La capacité vient de site.couverts : le titre ne peut pas la contredire
-  const titreComplet = titre.map((ligne) => remplir(ligne, site.couverts));
+  const { surtitre, titre } = site.textes.salle;
 
   return (
     <section id="salle" aria-labelledby="salle-titre" className="relative isolate overflow-clip bg-minuit pt-28 md:pt-36">
@@ -25,7 +22,7 @@ export function Salle() {
       <Plafond />
 
       <div className="relative mx-auto max-w-6xl px-5">
-        <SectionTitre id="salle-titre" surtitre={surtitre} titre={titreComplet} intro={intro} align="centre" />
+        <SectionTitre id="salle-titre" surtitre={surtitre} titre={titre} align="centre" />
 
         <Galerie photos={site.photos.galerie} titreFenetre={surtitre} />
 
