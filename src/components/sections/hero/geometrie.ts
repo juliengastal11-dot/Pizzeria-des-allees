@@ -112,7 +112,7 @@ const MOBILE: VarianteDef = {
   reflet: 0.82,
   feu: { coeur: 1.7, halo: 6.5 },
   ecranReference: 390,
-  libelle: { centre: { commander: 0.3, reserver: 0.2 } },
+  libelle: { centre: { commander: 0.3, reserver: 0.3 } },
 };
 
 /** Tablette et ordinateur (≥ 768 px) : le pont traverse tout l'écran. */

@@ -95,7 +95,8 @@ export function ArchesBoutons({ commander, reserver }: { commander: Mesures; res
         style={variables(reserver)}
       >
         <span className={styles.libelle}>
-          {TEXTES.reserverCourt} <span className={styles.suite}>{TEXTES.reserverComplement}</span>
+          {TEXTES.reserverCourt}
+          <span className="sr-only">{` ${TEXTES.reserverComplement}`}</span>
         </span>
       </button>
     </div>

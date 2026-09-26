@@ -311,11 +311,6 @@
   vertical-align: -0.1em;
 }
 
-/* « Réserver » / « une table » sur deux lignes au téléphone */
-.suite {
-  display: block;
-}
-
 @media (min-width: 48rem) {
   .arche {
     left: var(--l-x);
@@ -327,9 +322,6 @@
   }
   .libelle {
     bottom: var(--l-c);
-  }
-  .suite {
-    display: inline;
   }
 }
 
