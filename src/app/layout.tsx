@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Besley, Figtree } from "next/font/google";
+import { Besley, Cormorant_Garamond, Figtree, Playfair_Display, Raleway } from "next/font/google";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 import { Providers } from "@/components/providers/Providers";
@@ -24,6 +24,33 @@ const besley = Besley({
 const figtree = Figtree({
   subsets: ["latin"],
   variable: "--font-figtree",
+  display: "swap",
+});
+
+/*
+ * Deux essais de palette (« Émeraude », « Ivoire ») proposent une autre typographie :
+ * un serif éditorial pour les titres, un sans-serif fin et aéré pour le texte courant.
+ * Chargées ici comme Besley/Figtree ; seules les palettes concernées les activent
+ * (globals.css), donc rien ne change pour les autres tant qu'elles ne sont pas choisies.
+ */
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-playfair",
+  display: "swap",
+});
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
+
+const raleway = Raleway({
+  subsets: ["latin"],
+  variable: "--font-raleway",
   display: "swap",
 });
 
@@ -61,11 +88,21 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="fr" className={`${besley.variable} ${figtree.variable}`}>
+    <html
+      lang="fr"
+      className={`${besley.variable} ${figtree.variable} ${playfair.variable} ${cormorant.variable} ${raleway.variable}`}
+      suppressHydrationWarning
+    >
       <body className="min-h-svh bg-nuit text-calcaire">
+        {/* Palette d'essai choisie dans ce navigateur (voir SelecteurPalette) : posée avant la première peinture. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var p=localStorage.getItem("palette-essai");if(p)document.documentElement.dataset.palette=p;}catch(e){}`,
+          }}
+        />
         <a
           href="#contenu"
-          className="fixed left-3 top-3 z-[100] -translate-y-24 rounded-full bg-or px-5 py-3 font-semibold text-nuit transition-transform focus:translate-y-0"
+          className="fixed left-3 top-3 z-[100] -translate-y-24 rounded-full bg-or px-5 py-3 font-semibold text-encre transition-transform focus:translate-y-0"
         >
           {site.navigation.allerAuContenu}
         </a>

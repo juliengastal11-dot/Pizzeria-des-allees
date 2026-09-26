@@ -13,7 +13,7 @@ const lien =
 function Ligne({ icone, libelle, children }: { icone: ReactNode; libelle: string; children: ReactNode }) {
   return (
     <li className="flex items-center gap-3.5">
-      <span aria-hidden className="grid h-11 w-13 shrink-0 place-items-center rounded-[50%] bg-ciel-pale text-nuit">
+      <span aria-hidden className="grid h-11 w-13 shrink-0 place-items-center rounded-[50%] bg-ciel-pale text-encre">
         {icone}
       </span>
       <div className="min-w-0">
@@ -33,7 +33,7 @@ export function CarteContact() {
     <article
       data-surface="clair"
       aria-labelledby="infos-contact"
-      className="h-full rounded-[2.5rem] bg-calcaire-clair p-6 text-nuit shadow-[0_40px_80px_-40px_rgba(6,15,46,0.9)] sm:p-8"
+      className="h-full rounded-[2.5rem] bg-calcaire-clair p-6 text-encre shadow-[0_40px_80px_-40px_rgba(6,15,46,0.9)] sm:p-8"
     >
       <h3 id="infos-contact" className="font-display text-[1.75rem] font-semibold leading-none">
         {TEXTES.titre}

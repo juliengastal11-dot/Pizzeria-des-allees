@@ -22,7 +22,7 @@ export function Fidelite() {
       <Entree className="mx-auto max-w-4xl">
         <div
           data-surface="clair"
-          className="flex flex-col items-center gap-4 rounded-[2.5rem] bg-calcaire-clair px-6 py-6 text-center text-nuit sm:flex-row sm:rounded-full sm:py-3 sm:pl-3 sm:pr-3 sm:text-left"
+          className="flex flex-col items-center gap-4 rounded-[2.5rem] bg-calcaire-clair px-6 py-6 text-center text-encre sm:flex-row sm:rounded-full sm:py-3 sm:pl-3 sm:pr-3 sm:text-left"
         >
           <span aria-hidden className="grid h-12 w-14 shrink-0 place-items-center rounded-[50%] bg-nuit text-or-clair">
             <Gift className="size-5" strokeWidth={2.1} />

@@ -57,7 +57,7 @@ type PropsSemaine = {
 
 function Semaine({ attenue = false, actif = null, aujourdhui = null, onSurvol }: PropsSemaine) {
   return (
-    <dl className={`mt-3 text-[0.9375rem] sm:text-base ${attenue ? "text-eau" : "text-nuit"}`} onPointerLeave={() => onSurvol?.(null)}>
+    <dl className={`mt-3 text-[0.9375rem] sm:text-base ${attenue ? "text-eau" : "text-encre"}`} onPointerLeave={() => onSurvol?.(null)}>
       {JOURS.map((jour) => {
         const creneaux = horairesDuJour(jour);
         const estAujourdhui = jour === aujourdhui;
@@ -149,7 +149,7 @@ function SemaineAConfirmer() {
       </h3>
       <p className="mt-3 text-[0.9375rem] leading-snug text-eau">{TEXTES.enAttente}</p>
       <details className="group mt-4 rounded-[1.75rem] border border-dashed border-eau/50 open:pb-2">
-        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-[1.75rem] px-4 py-2 text-sm font-semibold text-eau transition-colors hover:text-nuit sm:px-5 [&::-webkit-details-marker]:hidden">
+        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-[1.75rem] px-4 py-2 text-sm font-semibold text-eau transition-colors hover:text-encre sm:px-5 [&::-webkit-details-marker]:hidden">
           {TEXTES.voirExemple}
           <ChevronDown aria-hidden className="size-4 shrink-0 transition-transform duration-300 group-open:rotate-180" strokeWidth={2.2} />
         </summary>
@@ -169,7 +169,7 @@ export function CarteHoraires() {
     <article
       data-surface="clair"
       aria-labelledby="infos-horaires"
-      className="h-full rounded-[2.5rem] bg-calcaire-clair p-6 text-nuit shadow-[0_40px_80px_-40px_rgba(6,15,46,0.9)] sm:p-8"
+      className="h-full rounded-[2.5rem] bg-calcaire-clair p-6 text-encre shadow-[0_40px_80px_-40px_rgba(6,15,46,0.9)] sm:p-8"
     >
       {aConfirmer ? <SemaineAConfirmer /> : <SemaineConfirmee />}
     </article>

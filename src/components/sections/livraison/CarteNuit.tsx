@@ -132,7 +132,7 @@ export function CarteNuit({ choix, demande, survol, onChoisir, onEtat }: Props) 
         }`}
       >
         <div aria-hidden className="pointer-events-none absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_48%_46%,rgba(242,211,140,0.12),transparent_62%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_48%_46%,rgb(from_var(--color-halo)_r_g_b_/_0.12),transparent_62%)]" />
           {[78, 58, 38].map((taille) => (
             <div
               key={taille}
@@ -140,7 +140,7 @@ export function CarteNuit({ choix, demande, survol, onChoisir, onEtat }: Props) 
               style={{ width: `${taille}%` }}
             />
           ))}
-          <div className="absolute left-[46%] top-[46%] size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-calcaire-clair shadow-[0_0_0_3px_rgba(242,211,140,0.35),0_0_22px_8px_rgba(242,211,140,0.55)]" />
+          <div className="absolute left-[46%] top-[46%] size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-calcaire-clair shadow-[0_0_0_3px_rgb(from_var(--color-halo)_r_g_b_/_0.35),0_0_22px_8px_rgb(from_var(--color-halo)_r_g_b_/_0.55)]" />
         </div>
 
         {message ? (

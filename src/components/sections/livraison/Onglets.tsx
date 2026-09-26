@@ -77,7 +77,7 @@ export function Onglets({ entete }: { entete: ReactNode }) {
                   whileTap={{ scale: 0.96 }}
                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
                   className={`relative inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full px-5 text-[0.9375rem] font-semibold transition-colors duration-200 sm:flex-none ${
-                    actif ? "text-nuit" : "text-calcaire hover:text-or-clair"
+                    actif ? "text-encre" : "text-calcaire hover:text-or-clair"
                   }`}
                 >
                   {/* Onglet actif en calcaire : l'or reste réservé aux boutons Commander */}

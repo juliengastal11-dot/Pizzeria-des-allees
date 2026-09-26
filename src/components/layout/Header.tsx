@@ -10,6 +10,7 @@ import { useActions, useEtatActions } from "@/components/providers/ActionsProvid
 import { site } from "@/config/site";
 import { remplir } from "@/lib/textes";
 import { MenuPlein } from "./MenuPlein";
+import { SelecteurPalette } from "./SelecteurPalette";
 import { SECTIONS, ancre, type IdSection } from "./navigation";
 
 const ressort = { type: "spring", stiffness: 420, damping: 42 } as const;
@@ -140,6 +141,8 @@ export function Header() {
           if (e.target instanceof HTMLElement && e.target.matches(":focus-visible")) setMasque(false);
         }}
       >
+        <SelecteurPalette />
+
         {/* Mobile */}
         <motion.div
           className="pointer-events-auto relative pt-[env(safe-area-inset-top)] md:hidden"

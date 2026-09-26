@@ -17,7 +17,7 @@ const SELECTION = site.textes.carte.pizzas.map((id) => catalogue.find((p) => p.i
 export function Carte() {
   const textes = site.textes.carte;
   return (
-    <section id="carte" aria-labelledby="carte-titre" data-surface="clair" className="relative isolate bg-ciel text-nuit">
+    <section id="carte" aria-labelledby="carte-titre" data-surface="clair" className="relative isolate bg-ciel text-encre">
       <OrbVague haut="var(--color-minuit)" bas="var(--color-ciel)" />
 
       <div className="relative pb-20 pt-10 md:pb-28 md:pt-16">

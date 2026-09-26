@@ -18,7 +18,7 @@ export function Paiements({ className }: { className?: string }) {
       {site.paiements.map((moyen) => (
         <li
           key={moyen}
-          className="inline-flex min-h-12 items-center gap-2 rounded-[50%] bg-ciel-pale px-6 py-2 text-[0.9375rem] font-semibold text-nuit"
+          className="inline-flex min-h-12 items-center gap-2 rounded-[50%] bg-ciel-pale px-6 py-2 text-[0.9375rem] font-semibold text-encre"
         >
           <IconePaiement libelle={moyen} />
           {moyen}

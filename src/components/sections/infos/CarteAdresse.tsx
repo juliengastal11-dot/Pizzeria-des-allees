@@ -38,7 +38,7 @@ export function CarteAdresse() {
     <article
       data-surface="clair"
       aria-labelledby="infos-adresse"
-      className="flex h-full flex-col items-center rounded-[50%_50%_2.5rem_2.5rem/8rem_8rem_2.5rem_2.5rem] bg-calcaire-clair px-5 pb-6 pt-11 text-center text-nuit shadow-[0_40px_80px_-40px_rgba(6,15,46,0.9)] sm:px-8 md:rounded-[50%_50%_2.5rem_2.5rem/9rem_9rem_2.5rem_2.5rem] md:pt-16 lg:rounded-[50%_50%_2.5rem_2.5rem/13rem_13rem_2.5rem_2.5rem] lg:pb-9 lg:pt-20"
+      className="flex h-full flex-col items-center rounded-[50%_50%_2.5rem_2.5rem/8rem_8rem_2.5rem_2.5rem] bg-calcaire-clair px-5 pb-6 pt-11 text-center text-encre shadow-[0_40px_80px_-40px_rgba(6,15,46,0.9)] sm:px-8 md:rounded-[50%_50%_2.5rem_2.5rem/9rem_9rem_2.5rem_2.5rem] md:pt-16 lg:rounded-[50%_50%_2.5rem_2.5rem/13rem_13rem_2.5rem_2.5rem] lg:pb-9 lg:pt-20"
     >
       <h3 id="infos-adresse" className="surtitre text-eau">
         {TEXTES.titre}
@@ -98,7 +98,7 @@ export function CarteAdresse() {
           aria-controls={idCadre}
           aria-describedby={carteVisible ? undefined : idNote}
           onClick={() => setCarteVisible((v) => !v)}
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-2 font-semibold leading-tight text-nuit underline decoration-eau/50 decoration-1 underline-offset-4 transition-colors duration-200 hover:decoration-nuit"
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-2 font-semibold leading-tight text-encre underline decoration-eau/50 decoration-1 underline-offset-4 transition-colors duration-200 hover:decoration-encre"
         >
           <MapIcon aria-hidden className="size-[1.05em] shrink-0" strokeWidth={2.2} />
           {carteVisible ? TEXTES.carteMasquer : TEXTES.carteAfficher}

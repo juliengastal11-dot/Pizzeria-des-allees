@@ -32,7 +32,7 @@ const FESTON = feston();
 export function BadgeDuMoment() {
   return (
     <motion.p
-      className="absolute right-[1.5cqw] top-[4cqw] z-10 grid size-[5.5rem] place-items-center text-nuit"
+      className="absolute right-[1.5cqw] top-[4cqw] z-10 grid size-[5.5rem] place-items-center text-encre"
       initial={{ scale: 0.55, rotate: -38 }}
       whileInView={{ scale: 1, rotate: -12 }}
       viewport={{ once: true, amount: 0.9 }}
@@ -42,7 +42,7 @@ export function BadgeDuMoment() {
         <path
           d={FESTON}
           fill="var(--color-or-clair)"
-          stroke="var(--color-nuit)"
+          stroke="var(--color-encre)"
           strokeWidth="1.6"
           strokeLinejoin="round"
         />
@@ -51,7 +51,7 @@ export function BadgeDuMoment() {
           cy="50"
           r="32"
           fill="none"
-          stroke="var(--color-nuit)"
+          stroke="var(--color-encre)"
           strokeOpacity="0.45"
           strokeWidth="1.2"
           strokeDasharray="1.5 3.5"

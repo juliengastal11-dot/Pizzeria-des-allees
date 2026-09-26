@@ -137,7 +137,7 @@ function BoutonFleche({
       }}
       whileTap={inactif ? undefined : { scale: 0.9 }}
       transition={{ type: "spring", stiffness: 500, damping: 30 }}
-      className="grid size-11 place-items-center rounded-full border-2 border-nuit text-nuit transition-[background-color,color,opacity] duration-200 hover:bg-nuit hover:text-calcaire aria-disabled:cursor-default aria-disabled:opacity-40 aria-disabled:hover:bg-transparent aria-disabled:hover:text-nuit"
+      className="grid size-11 place-items-center rounded-full border-2 border-encre text-encre transition-[background-color,color,opacity] duration-200 hover:bg-nuit hover:text-calcaire aria-disabled:cursor-default aria-disabled:opacity-40 aria-disabled:hover:bg-transparent aria-disabled:hover:text-encre"
     >
       <Icone aria-hidden className="size-5" strokeWidth={2.2} />
       <span className="sr-only">{sens === "precedent" ? TEXTES.precedente : TEXTES.suivante}</span>

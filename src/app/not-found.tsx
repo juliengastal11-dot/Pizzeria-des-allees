@@ -63,7 +63,7 @@ export default function PageIntrouvable() {
 
       <Link
         href="/"
-        className="group mt-10 inline-flex min-h-12 items-center gap-2 rounded-full bg-or px-7 font-semibold text-nuit transition-colors duration-200 hover:bg-or-clair"
+        className="group mt-10 inline-flex min-h-12 items-center gap-2 rounded-full bg-or px-7 font-semibold text-encre transition-colors duration-200 hover:bg-or-clair"
       >
         <ArrowLeft
           aria-hidden

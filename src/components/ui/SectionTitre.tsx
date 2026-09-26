@@ -44,10 +44,10 @@ export function SectionTitre({ surtitre, titre, intro, id, surface = "sombre", a
 
   return (
     <div className={`${align === "centre" ? "mx-auto text-center" : ""} max-w-3xl ${className ?? ""}`}>
-      <p className={`surtitre ${clair ? "text-nuit" : "text-pierre"}`}>
+      <p className={`surtitre ${clair ? "text-encre" : "text-pierre"}`}>
         {typographie(surtitre)}
       </p>
-      <h2 ref={refTitre} id={id} className={`mt-4 text-[clamp(2.1rem,1.4rem+3.4vw,3.9rem)] font-semibold tracking-[-0.018em] ${clair ? "text-nuit" : "text-calcaire"}`}>
+      <h2 ref={refTitre} id={id} className={`mt-4 text-[clamp(2.1rem,1.4rem+3.4vw,3.9rem)] font-semibold tracking-[-0.018em] ${clair ? "text-encre" : "text-calcaire"}`}>
         {lignes.map((ligne, i) => (
           <Fragment key={i}>
             {/* Espace entre les lignes pour le nom accessible (sans effet visuel entre deux blocs) */}
@@ -61,7 +61,7 @@ export function SectionTitre({ surtitre, titre, intro, id, surface = "sombre", a
         ))}
       </h2>
       {intro && (
-        <p className={`mt-5 max-w-[62ch] text-[1.0625rem] leading-relaxed ${align === "centre" ? "mx-auto" : ""} ${clair ? "text-nuit/90" : "text-pierre"}`}>
+        <p className={`mt-5 max-w-[62ch] text-[1.0625rem] leading-relaxed ${align === "centre" ? "mx-auto" : ""} ${clair ? "text-encre/90" : "text-pierre"}`}>
           {typographie(intro)}
         </p>
       )}

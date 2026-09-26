@@ -16,6 +16,7 @@ import {
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./carte-nuit.css";
 import { emprise, RESTAURANT, trajet, zoneLivraison, type Coordonnees, type Lieu } from "./geographie";
+import { couleursPaletteCarte, EVENEMENT_PALETTE } from "@/lib/palette-essai";
 
 export type CommuneCarte = { nom: string; lieu: Lieu };
 
@@ -42,10 +43,6 @@ export type CarteNuitGL = {
 };
 
 const STYLE = "/map/style-nuit.json";
-const HALO = "#F2D38C";
-const OR = "#E9B950";
-const OR_CLAIR = "#F4DA90";
-const MINUIT = "#060F2E";
 const AVANT_LIBELLES = "highway_name_other";
 const VIDE: GeoJSON.FeatureCollection = { type: "FeatureCollection", features: [] };
 
@@ -247,6 +244,7 @@ export async function creerCarte(o: OptionsCarte): Promise<CarteNuitGL> {
 
   /** Contour de la zone de livraison, qui s'éclaire à l'allumage (seulement si la zone est arrêtée). */
   function ajouterZone() {
+    const { halo, or, orClair, minuit } = couleursPaletteCarte();
     const contour = zoneLivraison(points);
     carte.addSource("zone", {
       type: "geojson",
@@ -278,7 +276,7 @@ export async function creerCarte(o: OptionsCarte): Promise<CarteNuitGL> {
         id: "zone-nuit",
         type: "fill",
         source: "hors-zone",
-        paint: { "fill-color": MINUIT, "fill-opacity": 0, "fill-opacity-transition": transition },
+        paint: { "fill-color": minuit, "fill-opacity": 0, "fill-opacity-transition": transition },
       },
       AVANT_LIBELLES,
     );
@@ -287,7 +285,7 @@ export async function creerCarte(o: OptionsCarte): Promise<CarteNuitGL> {
         id: "zone-fond",
         type: "fill",
         source: "zone",
-        paint: { "fill-color": OR, "fill-opacity": 0, "fill-opacity-transition": transition },
+        paint: { "fill-color": or, "fill-opacity": 0, "fill-opacity-transition": transition },
       },
       AVANT_LIBELLES,
     );
@@ -297,7 +295,7 @@ export async function creerCarte(o: OptionsCarte): Promise<CarteNuitGL> {
         type: "line",
         source: "zone",
         layout: { "line-join": "round" },
-        paint: { "line-color": HALO, "line-width": 12, "line-blur": 10, "line-opacity": 0, "line-opacity-transition": transition },
+        paint: { "line-color": halo, "line-width": 12, "line-blur": 10, "line-opacity": 0, "line-opacity-transition": transition },
       },
       AVANT_LIBELLES,
     );
@@ -308,7 +306,7 @@ export async function creerCarte(o: OptionsCarte): Promise<CarteNuitGL> {
         source: "zone",
         layout: { "line-join": "round" },
         paint: {
-          "line-color": OR_CLAIR,
+          "line-color": orClair,
           "line-width": 1.6,
           "line-dasharray": [2.4, 2.2],
           "line-opacity": 0,
@@ -329,13 +327,14 @@ export async function creerCarte(o: OptionsCarte): Promise<CarteNuitGL> {
 
     if (o.zone) ajouterZone();
 
+    const { halo } = couleursPaletteCarte();
     carte.addSource("trajet", { type: "geojson", data: VIDE });
     carte.addLayer({
       id: "trajet-lueur",
       type: "line",
       source: "trajet",
       layout: { "line-cap": "round", "line-join": "round" },
-      paint: { "line-color": HALO, "line-width": 10, "line-blur": 8, "line-opacity": 0, "line-opacity-transition": { duration: reduit ? 0 : 450, delay: 0 } },
+      paint: { "line-color": halo, "line-width": 10, "line-blur": 8, "line-opacity": 0, "line-opacity-transition": { duration: reduit ? 0 : 450, delay: 0 } },
     });
     carte.addLayer({
       id: "trajet-points",
@@ -343,7 +342,7 @@ export async function creerCarte(o: OptionsCarte): Promise<CarteNuitGL> {
       source: "trajet",
       layout: { "line-cap": "round", "line-join": "round" },
       paint: {
-        "line-color": HALO,
+        "line-color": halo,
         "line-width": 3.2,
         "line-dasharray": [0, 2.1],
         "line-opacity": 0,
@@ -362,6 +361,19 @@ export async function creerCarte(o: OptionsCarte): Promise<CarteNuitGL> {
     if (!pret && /worker|webgl|style/i.test(message)) o.surEchec();
   });
   carte.on("webglcontextlost", () => o.surEchec());
+
+  // Essai de palettes (temporaire) : la carte est en WebGL, elle ne suit pas les jetons CSS toute seule.
+  const surChangementPalette = () => {
+    if (!pret) return;
+    const { halo, or, orClair, minuit } = couleursPaletteCarte();
+    if (carte.getLayer("zone-nuit")) carte.setPaintProperty("zone-nuit", "fill-color", minuit);
+    if (carte.getLayer("zone-fond")) carte.setPaintProperty("zone-fond", "fill-color", or);
+    if (carte.getLayer("zone-lueur")) carte.setPaintProperty("zone-lueur", "line-color", halo);
+    if (carte.getLayer("zone-contour")) carte.setPaintProperty("zone-contour", "line-color", orClair);
+    if (carte.getLayer("trajet-lueur")) carte.setPaintProperty("trajet-lueur", "line-color", halo);
+    if (carte.getLayer("trajet-points")) carte.setPaintProperty("trajet-points", "line-color", halo);
+  };
+  window.addEventListener(EVENEMENT_PALETTE, surChangementPalette);
 
   // Largeur qui change (rotation, onglet réaffiché) : on recadre sans animation
   let largeur = o.conteneur.clientWidth;
@@ -415,6 +427,7 @@ export async function creerCarte(o: OptionsCarte): Promise<CarteNuitGL> {
     },
     detruire() {
       vue.disconnect();
+      window.removeEventListener(EVENEMENT_PALETTE, surChangementPalette);
       for (const m of marqueurs) m.remove();
       carte.remove();
     },

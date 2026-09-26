@@ -11,12 +11,12 @@ export type Forme = "pilule" | "arche" | "libre";
 
 const VARIANTES: Record<Variante, string> = {
   // Or plein, texte bleu (9,2:1). `anneau` ajoute un cerclage bleu sur fond clair.
-  or: "bg-or text-nuit hover:bg-or-clair",
+  or: "bg-or text-encre hover:bg-or-clair",
   // Contour calcaire sur fond bleu
   contour: "border-[1.5px] border-calcaire/85 text-calcaire hover:bg-calcaire/10",
   // Bleu plein, pour les sections claires (La carte)
-  nuit: "bg-nuit text-calcaire hover:bg-grain",
-  "contour-nuit": "border-2 border-nuit text-nuit hover:bg-nuit/10",
+  nuit: "bg-encre text-nacre hover:bg-grain",
+  "contour-nuit": "border-2 border-encre text-encre hover:bg-encre/10",
   // Voile minuit translucide (barre mobile) : le texte calcaire garde ≥ 5,5:1 au-dessus de n'importe quelle section
   voile: "border border-calcaire/25 bg-minuit/70 text-calcaire shadow-[0_8px_24px_rgba(6,15,46,0.35)] hover:bg-minuit/85",
 };

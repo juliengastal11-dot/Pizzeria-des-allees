@@ -5,14 +5,15 @@
  */
 
 .carte-nuit {
-  --cn-halo: #f2d38c;
-  --cn-or-clair: #f4da90;
-  --cn-calcaire: #f1e0c8;
-  --cn-calcaire-clair: #faeedc;
-  --cn-pierre: #d7b08e;
-  --cn-minuit: #060f2e;
-  --cn-grain: #13285a;
-  --cn-filet: #a08049;
+  /* Alias vers les jetons du site (voir globals.css) : suit l'essai de palettes sans JS. */
+  --cn-halo: var(--color-halo);
+  --cn-or-clair: var(--color-or-clair);
+  --cn-calcaire: var(--color-calcaire);
+  --cn-calcaire-clair: var(--color-calcaire-clair);
+  --cn-pierre: var(--color-pierre);
+  --cn-minuit: var(--color-minuit);
+  --cn-grain: var(--color-grain);
+  --cn-filet: var(--color-filet);
   --cn-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --cn-police: var(--font-figtree), ui-sans-serif, system-ui, "Segoe UI", sans-serif;
   --cn-police-titre: var(--font-besley), Georgia, "Times New Roman", serif;
@@ -68,7 +69,7 @@
   height: 8px;
   border-radius: 50%;
   background: var(--cn-halo);
-  box-shadow: 0 0 10px 2px rgba(242, 211, 140, 0.55);
+  box-shadow: 0 0 10px 2px rgb(from var(--cn-halo) r g b / 0.55);
   transition: transform 0.35s var(--cn-ease);
 }
 
@@ -80,7 +81,12 @@
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(242, 211, 140, 0.55) 0%, rgba(242, 211, 140, 0.18) 38%, transparent 68%);
+  background: radial-gradient(
+    circle,
+    rgb(from var(--cn-halo) r g b / 0.55) 0%,
+    rgb(from var(--cn-halo) r g b / 0.18) 38%,
+    transparent 68%
+  );
   opacity: 0;
   transform: scale(0.4);
   transition:
@@ -177,8 +183,8 @@
   height: 12px;
   background: var(--cn-calcaire-clair);
   box-shadow:
-    0 0 0 3px rgba(242, 211, 140, 0.38),
-    0 0 22px 8px rgba(242, 211, 140, 0.6);
+    0 0 0 3px rgb(from var(--cn-halo) r g b / 0.38),
+    0 0 22px 8px rgb(from var(--cn-halo) r g b / 0.6);
 }
 
 .carte-nuit .cn-pizzeria .cn-aura {
@@ -235,8 +241,8 @@
   overflow: hidden;
   border: 1px solid var(--cn-filet);
   border-radius: 999px;
-  background: rgba(19, 40, 90, 0.92);
-  box-shadow: 0 6px 18px rgba(6, 15, 46, 0.45);
+  background: rgb(from var(--cn-grain) r g b / 0.92);
+  box-shadow: 0 6px 18px rgb(from var(--cn-minuit) r g b / 0.45);
 }
 
 .carte-nuit .maplibregl-ctrl-group button {
@@ -246,11 +252,11 @@
 }
 
 .carte-nuit .maplibregl-ctrl-group button + button {
-  border-top: 1px solid rgba(160, 128, 73, 0.55);
+  border-top: 1px solid rgb(from var(--cn-filet) r g b / 0.55);
 }
 
 .carte-nuit .maplibregl-ctrl button:not(:disabled):hover {
-  background-color: rgba(241, 224, 200, 0.1);
+  background-color: rgb(from var(--cn-calcaire) r g b / 0.1);
 }
 
 .carte-nuit .maplibregl-ctrl-group button:focus {
@@ -296,7 +302,7 @@
 .carte-nuit .maplibregl-ctrl-attrib {
   padding: 3px 11px;
   border-radius: 999px;
-  background: rgba(6, 15, 46, 0.86);
+  background: rgb(from var(--cn-minuit) r g b / 0.86);
   color: var(--cn-pierre);
   font: 400 0.75rem/1.35 var(--cn-police);
   text-align: right;
@@ -305,7 +311,7 @@
 .carte-nuit .maplibregl-ctrl-attrib a {
   color: var(--cn-pierre);
   text-decoration: underline;
-  text-decoration-color: rgba(215, 176, 142, 0.45);
+  text-decoration-color: rgb(from var(--cn-pierre) r g b / 0.45);
   text-underline-offset: 2px;
 }
 
@@ -323,7 +329,7 @@
 /* Message des gestes coopératifs (« Ctrl + molette », « deux doigts ») */
 .carte-nuit .maplibregl-cooperative-gesture-screen {
   padding: 2rem;
-  background: rgba(6, 15, 46, 0.72);
+  background: rgb(from var(--cn-minuit) r g b / 0.72);
   color: var(--cn-calcaire);
   font: 600 1.0625rem/1.35 var(--cn-police);
   text-align: center;
