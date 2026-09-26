@@ -307,10 +307,12 @@ export const site = {
           "Nos gratins de ravioles sont composés d’ingrédients frais et de saison, chaque recette est un équilibre parfait entre fraîcheur, saveurs et authenticité.",
         ],
         /**
-         * Pizzas exposées sur le mur (identifiants de `pizzas`), dans l'ordre d'accrochage : quatre cadres.
-         * Essai du 26/09 : la Chorizana, en tableau vivant, prend le premier cadre (le grand rond) à la place de la Passejada.
+         * Pizzas exposées sur le mur (identifiants de `pizzas`), dans l'ordre d'accrochage : quatre pelles.
+         * La Chorizana en tableau vivant (26/09) est mise de côté pour le moment : sa photo, prise de trois
+         * quarts sur sa propre pelle, dépasse du cercle de la pelle illustrée et laisse voir son fond bleu
+         * derrière. À reprendre une fois une vidéo/photo vue de dessus disponible (voir `pizzas.chorizana`).
          */
-        pizzas: ["chorizana", "cers", "rosace", "caritats"],
+        pizzas: ["passejada", "cers", "rosace", "caritats"],
       },
     },
 
