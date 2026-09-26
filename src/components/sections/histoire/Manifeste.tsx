@@ -1,9 +1,9 @@
 "use client";
 
-import { Fragment, useRef } from "react";
+import { Fragment, useRef, type RefObject } from "react";
 import { motion, useScroll, useTransform, type MotionValue } from "motion/react";
 import { normaliserMot } from "./outils";
-import { MOUVEMENT_REDUIT, useMedia } from "./useMedia";
+import { BUREAU, MOUVEMENT_REDUIT, useMedia } from "./useMedia";
 
 const MOTS_CLES = new Set(["beziers", "allee", "allees", "platane", "platanes"]);
 
@@ -11,7 +11,15 @@ const MOTS_CLES = new Set(["beziers", "allee", "allees", "platane", "platanes"])
 const ETALEMENT = 0.8;
 const DUREE_MOT = 0.2;
 
-type Props = { texte: string; className?: string };
+type Props = {
+  texte: string;
+  className?: string;
+  /**
+   * En grand écran, où le manifeste reste en place (sticky), la lecture suit
+   * l'entrée de cet élément à l'écran (le mur de cadres) plutôt que la sienne.
+   */
+  cible?: RefObject<HTMLElement | null>;
+};
 
 /**
  * Manifeste révélé mot à mot au défilement : chaque mot, d'abord « éteint »
@@ -20,10 +28,14 @@ type Props = { texte: string; className?: string };
  * aucune couleur animée, le texte reste lisible à chaque instant.
  * Les lecteurs d'écran reçoivent la phrase entière une seule fois (copie sr-only).
  */
-export function Manifeste({ texte, className }: Props) {
+export function Manifeste({ texte, className, cible }: Props) {
   const ref = useRef<HTMLParagraphElement>(null);
   const reduire = useMedia(MOUVEMENT_REDUIT);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "end 0.45"] });
+  const suivreCible = useMedia(BUREAU) && Boolean(cible);
+  const { scrollYProgress } = useScroll({
+    target: suivreCible ? cible : ref,
+    offset: suivreCible ? ["start 0.9", "start 0.35"] : ["start 0.85", "end 0.45"],
+  });
   // Espaces normales seulement : les insécables restent collées au mot.
   const mots = texte.split(" ").filter(Boolean);
 

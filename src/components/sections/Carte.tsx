@@ -14,7 +14,7 @@ export function Carte() {
   const textes = site.textes.carte;
   return (
     <section id="carte" aria-labelledby="carte-titre" data-surface="clair" className="relative isolate bg-ciel text-nuit">
-      <OrbVague haut="var(--color-nuit)" bas="var(--color-ciel)" />
+      <OrbVague haut="var(--color-minuit)" bas="var(--color-ciel)" />
 
       <div className="relative pb-20 pt-10 md:pb-28 md:pt-16">
         <CielDecor />

@@ -253,13 +253,23 @@ export const site = {
       // Le « ⁠ » (liant invisible) empêche la coupure « Paul- / Riquet » en fin de ligne.
       manifeste:
         "Sur les allées Paul-⁠Riquet, on a rallumé le four sous notre propre nom. Même salle, même terrasse sous les platanes, et une carte qu’on écrit désormais nous-mêmes, avec ce que Béziers et ses coteaux posent sur la table.",
-      points: [
-        // À VALIDER : pâte pétrie chaque matin sur place, durée de maturation
-        { titre: "La pâte", texte: "Pétrie chaque matin à la pizzeria, et laissée le temps de lever. [À PRÉCISER : durée de maturation]" },
-        // À VALIDER : produits et fournisseurs réellement travaillés
-        { titre: "Les produits", texte: "Olives Lucques, pélardon, cèbes de Lézignan : des fournisseurs du Biterrois. [À PRÉCISER : noms des producteurs]" },
-        { titre: "La maison", texte: "Une salle sous la fresque du Pont Vieux, une grande terrasse sous les platanes des Allées." },
-      ],
+      /**
+       * Le mur de cadres : nos pizzas encadrées et rétroéclairées, deux photos de
+       * la salle, et trois ardoises dont les phrases s'écrivent à la main à l'écran.
+       * Phrases courtes (elles s'écrivent lettre à lettre) ; sans crochets : les
+       * points à préciser sont en commentaire.
+       */
+      mur: {
+        /** Nom du mur pour les lecteurs d'écran. */
+        aria: "Le mur de la salle : nos pizzas encadrées et quelques mots sur la maison",
+        ardoises: [
+          "Une pâte pétrie chaque matin, et laissée lever le temps qu’il faut.", // À VALIDER : durée de maturation à préciser
+          "Olives Lucques, pélardon, cèbes de Lézignan : le Biterrois passe à table.", // À VALIDER : producteurs à nommer
+          "Une salle sous la fresque du Pont Vieux, une terrasse sous les platanes des Allées.",
+        ],
+        /** Pizzas exposées sur le mur (identifiants de `pizzas`), dans l'ordre d'accrochage : quatre cadres. */
+        pizzas: ["passejada", "cers", "rosace", "caritats"],
+      },
     },
 
     // La carte (fond ciel)
@@ -346,9 +356,12 @@ export const site = {
       intro: "Une salle aux murs peints de Béziers et de vignes, une terrasse ouverte sur les Allées Paul-⁠Riquet.",
       notePhotos: "Photos provisoires : le shooting de la réouverture arrive.",
       lieux: { salle: "La salle", terrasse: "La terrasse" } satisfies Record<Photo["lieu"], string>,
-      filtres: { salle: "La salle", terrasse: "La terrasse" } satisfies Record<Photo["lieu"], string>,
-      ariaFiltres: "Filtrer les photos",
-      compte: { une: "{n} photo affichée", plusieurs: "{n} photos affichées" },
+      /** Les photos défilent en continu (promenade) ; on peut les glisser, les survoler ou les arrêter. */
+      galerie: {
+        aria: "Photos de la salle et de la terrasse, qui défilent",
+        /** Bouton d'arrêt du défilement (libellé fixe, l'état est annoncé par aria-pressed). */
+        pause: "Arrêter le défilement des photos",
+      },
       /** Complément lu après la légende : « Le coin des vignes, agrandir la photo ». */
       agrandir: "agrandir la photo",
       visionneuse: { precedente: "Photo précédente", suivante: "Photo suivante", photo: "photo", sur: "sur" },
@@ -537,7 +550,7 @@ export const site = {
         cadrage: "50% 100%",
       },
     ] satisfies Photo[],
-    /** Les deux arches de « Notre histoire » : chemins de deux photos de la galerie ci-dessus. */
+    /** Les deux photos de la salle accrochées au mur de « Notre histoire » : chemins de deux photos de la galerie ci-dessus. */
     histoire: {
       grande: "/images/salle/salle-cadres-vegetaux.jpg",
       petite: "/images/salle/salle-vignes.jpg",

@@ -9,7 +9,7 @@ import { remplir } from "@/lib/textes";
 /**
  * La salle et la terrasse : les Allées Paul-Riquet qui se dessinent en fond,
  * une voûte d'où pendent des ampoules qui s'allument et scintillent, puis les
- * photos en arches inégales, filtrables (la salle, la terrasse) et agrandissables.
+ * photos en arches inégales qui défilent en continu (et s'agrandissent d'un clic).
  * La section se referme sur la ligne de l'Orb, vers les infos pratiques.
  */
 export function Salle() {
