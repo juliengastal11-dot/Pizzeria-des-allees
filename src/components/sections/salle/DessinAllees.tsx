@@ -38,7 +38,8 @@ export function DessinAllees() {
         vue.disconnect();
         setFichier(choisi);
       },
-      { threshold: 0.2 },
+      // Assez du dessin à l'écran pour voir la statue se tracer en premier
+      { threshold: 0.45 },
     );
     approche.observe(el);
     vue.observe(el);
