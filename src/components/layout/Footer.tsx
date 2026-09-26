@@ -81,12 +81,8 @@ export function Footer() {
                   <li key={s.id}>
                     <a
                       href={ancre(s.id)}
-                      className="group inline-flex min-h-11 items-center gap-3 text-calcaire transition-colors duration-200 hover:text-or-clair"
+                      className="inline-flex min-h-11 items-center text-calcaire transition-colors duration-200 hover:text-or-clair"
                     >
-                      <span
-                        aria-hidden
-                        className="size-1.5 rounded-full bg-filet transition-[background-color,box-shadow] duration-300 group-hover:bg-halo group-hover:shadow-[0_0_10px_2px_rgba(242,211,140,0.55)]"
-                      />
                       {s.libelle}
                     </a>
                   </li>

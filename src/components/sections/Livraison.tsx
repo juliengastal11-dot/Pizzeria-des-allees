@@ -2,7 +2,7 @@ import { SectionTitre } from "@/components/ui/SectionTitre";
 import { site } from "@/config/site";
 import { Onglets } from "./livraison/Onglets";
 
-/** Livraison et à emporter : carte de nuit de la zone livrée, ou les trois écluses du retrait au 43. */
+/** Livraison et à emporter : carte de nuit des communes livrées, ou les trois écluses du retrait à la pizzeria. */
 export function Livraison() {
   const t = site.textes.livraison;
   return (

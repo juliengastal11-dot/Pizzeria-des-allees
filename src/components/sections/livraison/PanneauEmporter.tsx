@@ -73,7 +73,7 @@ export function PanneauEmporter() {
         ))}
       </ol>
 
-      <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 lg:mt-12 lg:justify-center">
+      <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 lg:mt-12">
         <BoutonCommander>{TEXTES.bouton}</BoutonCommander>
         {!estPlaceholder(site.liens.itineraire) && (
           <a

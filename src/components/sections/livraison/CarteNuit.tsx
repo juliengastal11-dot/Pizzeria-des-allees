@@ -62,7 +62,8 @@ export function CarteNuit({ choix, demande, survol, onChoisir, onEtat }: Props) 
           return creerCarte({
             conteneur,
             communes: COMMUNES,
-            nomRestaurant: TEXTES.restaurant,
+            lignesRestaurant: site.nomLignes,
+            zone: site.livraison.zoneDefinie,
             locale: { ...TEXTES.locale },
             libelleRecentrer: TEXTES.recentrer,
             surChoix: (nom) => surChoix.current(nom),

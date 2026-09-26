@@ -44,8 +44,7 @@ export function SectionTitre({ surtitre, titre, intro, id, surface = "sombre", a
 
   return (
     <div className={`${align === "centre" ? "mx-auto text-center" : ""} max-w-3xl ${className ?? ""}`}>
-      <p className={`surtitre flex items-center gap-2.5 ${align === "centre" ? "justify-center" : ""} ${clair ? "text-nuit" : "text-pierre"}`}>
-        <span aria-hidden className={`inline-block size-1.5 rounded-full ${clair ? "bg-nuit" : "bg-or shadow-[0_0_10px_2px_rgba(242,211,140,0.55)]"}`} />
+      <p className={`surtitre ${clair ? "text-nuit" : "text-pierre"}`}>
         {typographie(surtitre)}
       </p>
       <h2 ref={refTitre} id={id} className={`mt-4 text-[clamp(2.1rem,1.4rem+3.4vw,3.9rem)] font-semibold tracking-[-0.018em] ${clair ? "text-nuit" : "text-calcaire"}`}>

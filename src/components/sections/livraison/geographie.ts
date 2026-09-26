@@ -1,6 +1,6 @@
 /**
  * Géographie réelle de la zone de livraison.
- * Coordonnées officielles (geo.api.gouv.fr pour les communes, adresse.data.gouv.fr pour le 43).
+ * Coordonnées officielles (geo.api.gouv.fr pour les communes, adresse.data.gouv.fr pour la pizzeria).
  *
  * ⚠ Les clés suivent `site.livraison.communes` : ajouter une commune dans src/config/site.ts
  * demande d'ajouter ici ses coordonnées (longitude, latitude). Sans elles, la commune reste
@@ -23,7 +23,7 @@ export type Lieu = {
   lignes?: readonly string[];
 };
 
-/** Le 43, 43 Allées Paul Riquet (site.adresse.geo). */
+/** La pizzeria, 43 Allées Paul Riquet (site.adresse.geo). */
 export const RESTAURANT: Coordonnees = [site.adresse.geo.longitude, site.adresse.geo.latitude];
 
 export const LIEUX: Partial<Record<string, Lieu>> = {
@@ -37,7 +37,7 @@ export const LIEUX: Partial<Record<string, Lieu>> = {
 };
 
 /* ------------------------------------------------------------------------
- * Calculs (projection locale en kilomètres autour du 43 : largement assez
+ * Calculs (projection locale en kilomètres autour de la pizzeria : largement assez
  * précise à l'échelle d'une vingtaine de kilomètres)
  * --------------------------------------------------------------------- */
 
@@ -91,7 +91,7 @@ function enveloppe(points: Plan[]): Plan[] {
 }
 
 /**
- * Contour de la zone de livraison : l'enveloppe des communes et du 43, élargie de `margeKm`
+ * Contour de la zone de livraison : l'enveloppe des communes et de la pizzeria, élargie de `margeKm`
  * avec des angles arrondis (tampon lisse, comme un bassin). Anneau GeoJSON fermé.
  */
 export function zoneLivraison(points: readonly Coordonnees[], margeKm = 2.2): [number, number][] {
@@ -119,7 +119,7 @@ export function zoneLivraison(points: readonly Coordonnees[], margeKm = 2.2): [n
   return anneau;
 }
 
-/** Trajet légèrement bombé du 43 vers une commune, comme une route (LineString GeoJSON). */
+/** Trajet légèrement bombé de la pizzeria vers une commune, comme une route (LineString GeoJSON). */
 export function trajet(vers: Coordonnees, courbure = 0.16, segments = 40): [number, number][] {
   const a = versPlan(RESTAURANT);
   const b = versPlan(vers);

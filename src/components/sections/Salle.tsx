@@ -1,13 +1,15 @@
 import { site } from "@/config/site";
 import { OrbVague } from "@/components/ui/OrbVague";
 import { SectionTitre } from "@/components/ui/SectionTitre";
+import { DessinAllees } from "@/components/sections/salle/DessinAllees";
 import { Plafond } from "@/components/sections/salle/Plafond";
 import { Galerie } from "@/components/sections/salle/Galerie";
 import { remplir } from "@/lib/textes";
 
 /**
- * La salle et la terrasse : une voûte d'où pendent des ampoules qui
- * s'allument, puis les photos en arches inégales, filtrables et agrandissables.
+ * La salle et la terrasse : les Allées Paul-Riquet qui se dessinent en fond,
+ * une voûte d'où pendent des ampoules qui s'allument et scintillent, puis les
+ * photos en arches inégales, filtrables (la salle, la terrasse) et agrandissables.
  * La section se referme sur la ligne de l'Orb, vers les infos pratiques.
  */
 export function Salle() {
@@ -17,6 +19,7 @@ export function Salle() {
 
   return (
     <section id="salle" aria-labelledby="salle-titre" className="relative isolate overflow-clip bg-minuit pt-28 md:pt-36">
+      <DessinAllees />
       <Plafond />
 
       <div className="relative mx-auto max-w-6xl px-5">

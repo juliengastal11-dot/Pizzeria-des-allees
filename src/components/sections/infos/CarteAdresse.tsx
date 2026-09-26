@@ -25,7 +25,7 @@ const fondu = {
 
 /**
  * Carte « Adresse » au sommet en arche : l'adresse, le plan illustré des Allées
- * (une fenêtre sur la nuit, où le 43 s'allume en or) et, seulement si le
+ * (une fenêtre sur la nuit, où la pizzeria s'allume en or) et, seulement si le
  * visiteur le demande, la carte Google Maps (cookies tiers).
  * Mobile : plan à l'horizontale, pour que la carte tienne dans un écran.
  */
@@ -40,8 +40,7 @@ export function CarteAdresse() {
       aria-labelledby="infos-adresse"
       className="flex h-full flex-col items-center rounded-[50%_50%_2.5rem_2.5rem/8rem_8rem_2.5rem_2.5rem] bg-calcaire-clair px-5 pb-6 pt-11 text-center text-nuit shadow-[0_40px_80px_-40px_rgba(6,15,46,0.9)] sm:px-8 md:rounded-[50%_50%_2.5rem_2.5rem/9rem_9rem_2.5rem_2.5rem] md:pt-16 lg:rounded-[50%_50%_2.5rem_2.5rem/13rem_13rem_2.5rem_2.5rem] lg:pb-9 lg:pt-20"
     >
-      <h3 id="infos-adresse" className="surtitre flex items-center gap-2.5 text-eau">
-        <span aria-hidden className="size-2 rounded-full bg-or ring-2 ring-nuit" />
+      <h3 id="infos-adresse" className="surtitre text-eau">
         {TEXTES.titre}
       </h3>
       <address className="mt-2 font-display text-[clamp(1.5rem,1rem+1.4vw,2.1rem)] font-semibold not-italic leading-[1.1] tracking-[-0.01em] md:mt-3">

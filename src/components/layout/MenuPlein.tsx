@@ -136,12 +136,8 @@ export function MenuPlein({ id, ouvert, onFermer }: Props) {
                       cible.current = s.id;
                       onFermer();
                     }}
-                    className="group flex min-h-14 items-center gap-4 font-display text-[2.25rem] font-semibold leading-[1.1] tracking-[-0.015em] text-calcaire md:text-[3rem]"
+                    className="group flex min-h-14 items-center font-display text-[2.25rem] font-semibold leading-[1.1] tracking-[-0.015em] text-calcaire md:text-[3rem]"
                   >
-                    <span
-                      aria-hidden
-                      className="size-1.5 shrink-0 rounded-full bg-or shadow-[0_0_10px_2px_rgba(242,211,140,0.55)] transition-transform duration-300 group-hover:scale-150"
-                    />
                     <span className="transition-colors duration-200 group-hover:text-or-clair">{s.libelle}</span>
                   </a>
                 </motion.li>

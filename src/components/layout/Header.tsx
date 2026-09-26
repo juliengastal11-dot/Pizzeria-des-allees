@@ -197,9 +197,9 @@ export function Header() {
                           {s.libelle}
                           {actif && (
                             <motion.span
-                              layoutId="point-de-lumiere"
+                              layoutId="trait-de-lumiere"
                               aria-hidden
-                              className="absolute inset-x-0 bottom-1 mx-auto size-[5px] rounded-full bg-halo shadow-[0_0_10px_2px_rgba(242,211,140,0.55)]"
+                              className="absolute inset-x-3 bottom-1.5 h-0.5 rounded-full bg-or-clair xl:inset-x-3.5"
                               transition={{ type: "spring", stiffness: 500, damping: 34 }}
                             />
                           )}

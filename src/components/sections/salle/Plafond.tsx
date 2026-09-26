@@ -1,14 +1,16 @@
 "use client";
 
-import { useId, useRef, type CSSProperties } from "react";
+import { useEffect, useId, useRef, type CSSProperties, type RefObject } from "react";
 import { motion, useInView, type Variants } from "motion/react";
 
 /**
  * Le plafond de la salle : une voûte en anse de panier (le haut de la section
  * se courbe vers les murs, filet laiton en guise de moulure) d'où pendent des
  * ampoules à filament, à des fils de longueurs inégales. Elles s'allument une
- * à une quand la section arrive à l'écran ; une seule vacille, une seule fois
- * (WCAG 2.3.1). Mouvement réduit : allumées d'emblée (classes motion-reduce).
+ * à une quand la section arrive à l'écran, puis scintillent doucement : de
+ * temps en temps, une ampoule prise au hasard baisse un instant et reprend
+ * (jamais éteinte, jamais plus de deux creux par seconde : WCAG 2.3.1).
+ * Mouvement réduit : allumées d'emblée et immobiles (classes motion-reduce).
  */
 
 // Profil de la voûte : superellipse, plate au centre et plongeante vers les murs
@@ -34,6 +36,8 @@ const AMPOULES = [
 
 const DELAI = 0.15;
 const PAS = 0.2;
+/** Fin de l'allumage (dernière ampoule), en millisecondes : le scintillement commence après. */
+const FIN_ALLUMAGE_MS = (DELAI + (AMPOULES.length - 1) * PAS + 0.7) * 1000;
 
 const lumiere: Variants = {
   eteint: { opacity: 0 },
@@ -60,9 +64,54 @@ const chaleur: Variants = {
   allume: { opacity: 1, transition: { delay: DELAI + AMPOULES.length * PAS, duration: 1.2, ease: "easeOut" } },
 };
 
+/**
+ * Scintillement : toutes les 1,5 à 4 s, une ampoule visible prise au hasard (jamais deux fois
+ * de suite la même) baisse doucement puis reprend. Seulement quand le plafond est à l'écran et
+ * l'onglet visible ; rien du tout si le visiteur a demandé de réduire les animations.
+ */
+function useScintillement(ref: RefObject<HTMLDivElement | null>, allume: boolean) {
+  useEffect(() => {
+    const plafond = ref.current;
+    if (!allume || !plafond || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let visible = true;
+    let precedente: Element | null = null;
+    let minuteur = 0;
+    const vue = new IntersectionObserver(([entree]) => {
+      visible = Boolean(entree?.isIntersecting);
+    });
+    vue.observe(plafond);
+
+    const scintiller = () => {
+      // Ampoules affichées à cette largeur (les deux des bords n'existent qu'en grand écran)
+      const ampoules = Array.from(plafond.querySelectorAll("[data-ampoule]")).filter((a) => a.getClientRects().length > 0);
+      const choix = ampoules.filter((a) => a !== precedente);
+      if (visible && !document.hidden && choix.length > 0) {
+        const ampoule = choix[Math.floor(Math.random() * choix.length)];
+        precedente = ampoule;
+        const creux = 0.35 + Math.random() * 0.3;
+        // Une baisse lente, ou deux petites à la suite, comme un filament qui hésite
+        const images: Keyframe[] =
+          Math.random() < 0.55
+            ? [{ opacity: 1 }, { opacity: creux, offset: 0.4 }, { opacity: 1 }]
+            : [{ opacity: 1 }, { opacity: creux, offset: 0.25 }, { opacity: 0.92, offset: 0.5 }, { opacity: creux + 0.12, offset: 0.72 }, { opacity: 1 }];
+        const duree = 900 + Math.random() * 700;
+        ampoule.querySelectorAll("[data-lumiere]").forEach((el) => el.animate(images, { duration: duree, easing: "ease-in-out" }));
+      }
+      minuteur = window.setTimeout(scintiller, 1500 + Math.random() * 2500);
+    };
+    minuteur = window.setTimeout(scintiller, FIN_ALLUMAGE_MS + 800);
+
+    return () => {
+      window.clearTimeout(minuteur);
+      vue.disconnect();
+    };
+  }, [ref, allume]);
+}
+
 export function Plafond() {
   const ref = useRef<HTMLDivElement>(null);
   const allume = useInView(ref, { once: true, margin: "0px 0px -20% 0px" });
+  useScintillement(ref, allume);
 
   return (
     <motion.div
@@ -95,6 +144,7 @@ export function Plafond() {
         return (
           <motion.div
             key={i}
+            data-ampoule
             custom={i}
             variants={balancement}
             style={style}
@@ -105,6 +155,7 @@ export function Plafond() {
             <span className="block w-px bg-pierre/45" style={{ height: a.fil }} />
             <div className="relative">
               <motion.div
+                data-lumiere
                 custom={i}
                 variants={lumiere}
                 className="absolute left-1/2 top-[60%] size-36 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(242,211,140,0.42)_0%,rgba(242,211,140,0.13)_36%,transparent_68%)] motion-reduce:opacity-100! md:size-48"
@@ -144,7 +195,7 @@ function Ampoule({ index }: { index: number }) {
       <path d={filament} stroke="var(--color-pierre)" strokeOpacity="0.55" strokeWidth="0.9" strokeLinejoin="round" />
 
       {/* Allumée */}
-      <motion.g custom={index} variants={lumiere} className="motion-reduce:opacity-100!">
+      <motion.g data-lumiere custom={index} variants={lumiere} className="motion-reduce:opacity-100!">
         <circle cx="14" cy="26" r="12" fill={`url(#${lueur})`} />
         <path d={verre} fill="var(--color-halo)" fillOpacity="0.28" stroke="var(--color-or-clair)" strokeOpacity="0.75" strokeWidth="0.9" />
         <path d={filament} stroke="var(--color-or-clair)" strokeWidth="1.3" strokeLinejoin="round" />

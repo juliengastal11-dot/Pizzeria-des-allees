@@ -165,12 +165,12 @@
 }
 
 /* Une commune choisie : les autres s'effacent un peu */
-.carte-nuit [data-choix] .cn-lieu:not(.est-choisi):not(.cn-43) .cn-nom {
+.carte-nuit [data-choix] .cn-lieu:not(.est-choisi):not(.cn-pizzeria) .cn-nom {
   opacity: 0.55;
 }
 
-/* Le 43 : la lumière la plus vive */
-.carte-nuit .cn-43 .cn-point {
+/* La pizzeria : la lumière la plus vive */
+.carte-nuit .cn-pizzeria .cn-point {
   left: -6px;
   top: -6px;
   width: 12px;
@@ -181,17 +181,17 @@
     0 0 22px 8px rgba(242, 211, 140, 0.6);
 }
 
-.carte-nuit .cn-43 .cn-aura {
+.carte-nuit .cn-pizzeria .cn-aura {
   opacity: 0.8;
   transform: none;
 }
 
-.carte-nuit .cn-43 .cn-nom {
-  font: italic 600 1rem/1 var(--cn-police-titre);
+.carte-nuit .cn-pizzeria .cn-nom {
+  font: italic 600 1rem/1.08 var(--cn-police-titre);
   color: var(--cn-or-clair);
 }
 
-.carte-nuit .cn-43.cn-gauche .cn-nom {
+.carte-nuit .cn-pizzeria.cn-gauche .cn-nom {
   right: 14px;
 }
 

@@ -44,10 +44,9 @@ export function Hero() {
         ].join(" ")}
       >
         <p
-          className={`${styles.monte} surtitre mx-auto flex w-full max-w-[28rem] items-center gap-2.5 text-or-clair [grid-area:surtitre] sm:max-w-none sm:justify-center lg:justify-start`}
+          className={`${styles.monte} surtitre mx-auto w-full max-w-[28rem] text-or-clair [grid-area:surtitre] sm:max-w-none sm:text-center lg:text-left`}
           style={delai(0.1)}
         >
-          <span aria-hidden className="inline-block size-1.5 rounded-full bg-or shadow-[0_0_10px_2px_rgba(242,211,140,0.55)]" />
           {surtitre}
         </p>
 

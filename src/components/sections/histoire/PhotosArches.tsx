@@ -70,9 +70,7 @@ export function PhotosArches({ grande, petite, className }: Props) {
               aria-hidden
               style={{ y: yEcho, borderRadius: rayonArche(RATIO_GRANDE) }}
               className="absolute -right-3 -top-3 bottom-3 left-3 border border-filet/60"
-            >
-              <span className="absolute left-1/2 top-0 size-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-halo shadow-[0_0_10px_2px_rgba(242,211,140,0.55)]" />
-            </motion.span>
+            />
             <ArcheImage
               src={grande.src}
               alt={grande.alt}

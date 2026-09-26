@@ -23,7 +23,10 @@ export type OptionsCarte = {
   /** Élément qui reçoit la carte (vide, dimensionné par le panneau). */
   conteneur: HTMLElement;
   communes: readonly CommuneCarte[];
-  nomRestaurant: string;
+  /** Étiquette du restaurant, une entrée par ligne. */
+  lignesRestaurant: readonly string[];
+  /** Trace le contour de la zone de livraison (site.livraison.zoneDefinie). */
+  zone: boolean;
   locale: Record<string, string>;
   libelleRecentrer: string;
   surChoix: (nom: string) => void;
@@ -32,7 +35,7 @@ export type OptionsCarte = {
 };
 
 export type CarteNuitGL = {
-  /** Met une commune en lumière et cadre le trajet depuis le 43 (null : toute la zone). */
+  /** Met une commune en lumière et cadre le trajet depuis la pizzeria (null : toutes les communes). */
   choisir(nom: string | null): void;
   survoler(nom: string | null): void;
   detruire(): void;
@@ -71,7 +74,7 @@ function preparerTravailleur(): Promise<void> {
 
 const mouvementReduit = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-/** Marges autour de la zone : l'arche en haut, les commandes et crédits en bas. */
+/** Marges autour des communes : l'arche en haut, les commandes et crédits en bas. */
 function marges(largeur: number): PaddingOptions {
   return largeur < 640 ? { top: 64, bottom: 84, left: 44, right: 44 } : { top: 74, bottom: 68, left: 96, right: 96 };
 }
@@ -86,7 +89,7 @@ function bornes(points: readonly Coordonnees[]): LngLatBoundsLike {
 
 type Commande = { classe: string; libelle: string; action: () => void };
 
-/** Zoomer, dézoomer, revoir toute la zone : une seule colonne de boutons de 44 px, aux couleurs du site. */
+/** Zoomer, dézoomer, revoir toutes les communes : une seule colonne de boutons de 44 px, aux couleurs du site. */
 class Commandes implements IControl {
   private groupe: HTMLElement | null = null;
   constructor(private readonly liste: readonly Commande[]) {}
@@ -136,7 +139,7 @@ function creerLumiere(nom: string, lieu: Pick<Lieu, "cote" | "lignes">, delaiMs:
     etiquette.append(span);
   }
   corps.append(aura);
-  if (classe.includes("cn-43")) {
+  if (classe.includes("cn-pizzeria")) {
     const onde = document.createElement("span");
     onde.className = "cn-onde";
     corps.append(onde);
@@ -191,7 +194,7 @@ export async function creerCarte(o: OptionsCarte): Promise<CarteNuitGL> {
     "bottom-left",
   );
 
-  // Points de lumière : du plus proche au plus lointain du 43, en cascade rapide
+  // Points de lumière : du plus proche au plus lointain de la pizzeria, en cascade rapide
   const tries = [...o.communes].sort(
     (a, b) =>
       Math.hypot(a.lieu.coord[0] - RESTAURANT[0], a.lieu.coord[1] - RESTAURANT[1]) -
@@ -208,7 +211,7 @@ export async function creerCarte(o: OptionsCarte): Promise<CarteNuitGL> {
     lumieres.set(nom, el);
     marqueurs.push(new Marker({ element: el, anchor: "center" }).setLngLat([...lieu.coord]).addTo(carte));
   });
-  const siege = creerLumiere(o.nomRestaurant, { cote: "gauche" }, 60, "cn-43");
+  const siege = creerLumiere(o.lignesRestaurant.join(" "), { cote: "gauche", lignes: o.lignesRestaurant }, 60, "cn-pizzeria");
   marqueurs.push(new Marker({ element: siege, anchor: "center" }).setLngLat([...RESTAURANT]).addTo(carte));
 
   let pret = false;
@@ -221,6 +224,7 @@ export async function creerCarte(o: OptionsCarte): Promise<CarteNuitGL> {
     if (allume || !pret || !visible) return;
     allume = true;
     o.conteneur.setAttribute("data-allume", "");
+    if (!o.zone) return;
     carte.setPaintProperty("zone-nuit", "fill-opacity", 0.55);
     carte.setPaintProperty("zone-fond", "fill-opacity", 0.05);
     carte.setPaintProperty("zone-lueur", "line-opacity", 0.18);
@@ -241,14 +245,8 @@ export async function creerCarte(o: OptionsCarte): Promise<CarteNuitGL> {
 
   const transition = { duration: reduit ? 0 : 900, delay: 0 };
 
-  carte.on("load", () => {
-    // Pas de doublon : les communes livrées portent déjà leur étiquette lumineuse
-    const noms = [...o.communes.map((c) => c.nom)];
-    for (const id of ["place_village", "place_town", "place_city", "place_city_large"]) {
-      const filtre = carte.getFilter(id);
-      if (filtre) carte.setFilter(id, ["all", filtre, ["!", ["in", ["get", "name"], ["literal", noms]]]] as FilterSpecification);
-    }
-
+  /** Contour de la zone de livraison, qui s'éclaire à l'allumage (seulement si la zone est arrêtée). */
+  function ajouterZone() {
     const contour = zoneLivraison(points);
     carte.addSource("zone", {
       type: "geojson",
@@ -319,6 +317,17 @@ export async function creerCarte(o: OptionsCarte): Promise<CarteNuitGL> {
       },
       AVANT_LIBELLES,
     );
+  }
+
+  carte.on("load", () => {
+    // Pas de doublon : les communes livrées portent déjà leur étiquette lumineuse
+    const noms = [...o.communes.map((c) => c.nom)];
+    for (const id of ["place_village", "place_town", "place_city", "place_city_large"]) {
+      const filtre = carte.getFilter(id);
+      if (filtre) carte.setFilter(id, ["all", filtre, ["!", ["in", ["get", "name"], ["literal", noms]]]] as FilterSpecification);
+    }
+
+    if (o.zone) ajouterZone();
 
     carte.addSource("trajet", { type: "geojson", data: VIDE });
     carte.addLayer({
@@ -365,7 +374,7 @@ export async function creerCarte(o: OptionsCarte): Promise<CarteNuitGL> {
     else carte.fitBounds(zone, { padding: marges(nouvelle), duration: 0 });
   });
 
-  /** Cadrage du trajet 43 → commune : assez large pour garder un peu de contexte. */
+  /** Cadrage du trajet pizzeria → commune : assez large pour garder un peu de contexte. */
   function cadrageChoix() {
     const large = o.conteneur.clientWidth >= 640;
     return {

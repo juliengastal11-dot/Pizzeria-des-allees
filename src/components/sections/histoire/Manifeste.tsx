@@ -36,10 +36,6 @@ export function Manifeste({ texte, className }: Props) {
           style={{ scaleY: reduire ? 1 : scrollYProgress }}
         />
       </span>
-      <span
-        aria-hidden
-        className="absolute left-[-2.5px] top-3 hidden size-1.5 -translate-y-1/2 rounded-full bg-halo shadow-[0_0_10px_2px_rgba(242,211,140,0.55)] md:block"
-      />
 
       <p
         ref={ref}

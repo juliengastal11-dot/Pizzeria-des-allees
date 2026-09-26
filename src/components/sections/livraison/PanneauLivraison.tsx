@@ -20,6 +20,7 @@ const INFOS = [
 
 const ville: string = site.adresse.ville;
 const communes: readonly string[] = site.livraison.communes;
+const zoneDefinie: boolean = site.livraison.zoneDefinie;
 
 const pression = { whileHover: { scale: 1.04 }, whileTap: { scale: 0.95 }, transition: { type: "spring", stiffness: 500, damping: 30 } } as const;
 
@@ -32,9 +33,9 @@ function annonce(nom: string): string {
 }
 
 /**
- * Panneau « Livraison » : la carte de nuit, puis la liste des communes.
- * Chaque commune est un bouton « Voir … sur la carte » : la carte se cadre sur le trajet depuis le 43,
- * et une phrase (région live) dit où se trouve la commune, pour tout le monde.
+ * Panneau « Livraison » : la carte de nuit, puis la liste des communes (centrée) et le bouton Commander,
+ * au milieu de la page. Chaque commune est un bouton « Voir … sur la carte » : la carte se cadre sur le
+ * trajet depuis la pizzeria, et une phrase (région live) dit où se trouve la commune, pour tout le monde.
  */
 export function PanneauLivraison() {
   const [choix, setChoix] = useState<string | null>(null);
@@ -50,96 +51,95 @@ export function PanneauLivraison() {
   const sansCarte = etatCarte === "echec";
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,1fr)] lg:items-start lg:gap-14">
-      <div className="mx-auto w-full max-w-[36rem] lg:max-w-none">
-        <CarteNuit choix={choix} demande={demande} survol={survol} onChoisir={choisir} onEtat={setEtatCarte} />
+    <>
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,1fr)] lg:items-start lg:gap-14">
+        <div className="mx-auto w-full max-w-[36rem] lg:max-w-none">
+          <CarteNuit choix={choix} demande={demande} survol={survol} onChoisir={choisir} onEtat={setEtatCarte} />
 
-        {/* Légende des symboles de la carte (le texte utile est dans la liste) ; sans carte, elle s'efface sans décaler la page */}
-        <ul
-          aria-hidden
-          className={`mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 px-2 text-[0.875rem] text-pierre lg:justify-start ${sansCarte ? "invisible" : ""}`}
-        >
-          <li className="flex items-center gap-2.5">
-            <span className="size-2.5 rounded-full bg-calcaire-clair shadow-[0_0_0_2px_rgba(242,211,140,0.35),0_0_12px_4px_rgba(242,211,140,0.5)]" />
-            <span className="font-display font-semibold italic text-or-clair">{TEXTES.carte.restaurant}</span>
-          </li>
-          <li className="flex items-center gap-2.5">
-            <span className="size-2 rounded-full bg-halo shadow-[0_0_10px_2px_rgba(242,211,140,0.55)]" />
-            {TEXTES.carte.legende.commune}
-          </li>
-          <li className="flex items-center gap-2.5">
-            <span className="h-3 w-5 rounded-[50%] border-[1.5px] border-dashed border-or-clair/90 bg-or/10" />
-            {TEXTES.carte.legende.zone}
-          </li>
-        </ul>
-      </div>
-
-      <div>
-        <h3 className="font-display text-[1.6rem] font-semibold leading-tight text-calcaire">{TEXTES.communes.titre}</h3>
-        <p aria-live="polite" className="mt-2 min-h-[3em] text-[0.9375rem] leading-snug text-pierre">
-          {sansCarte ? TEXTES.communes.aideSansCarte : choix ? annonce(choix) : TEXTES.communes.aide}
-        </p>
-
-        <ul role="list" className="mt-4 flex flex-wrap gap-2.5">
-          {communes.map((nom) => {
-            const allume = choix === nom;
-            const pastille = (
-              <span
-                aria-hidden
-                className={`size-2 shrink-0 rounded-full bg-halo shadow-[0_0_10px_3px_rgba(242,211,140,0.6)] transition-opacity duration-300 ${
-                  allume || survol === nom ? "opacity-100" : "opacity-80"
-                }`}
-              />
-            );
-            return (
-              <li key={nom}>
-                {sansCarte ? (
-                  <span className="inline-flex min-h-11 items-center gap-2.5 rounded-full border border-filet bg-grain px-4 text-[0.9375rem] font-semibold text-calcaire">
-                    {pastille}
-                    {nom}
-                  </span>
-                ) : (
-                  <motion.button
-                    type="button"
-                    aria-label={remplir(TEXTES.communes.voirSurCarte, { commune: nom })}
-                    onClick={() => choisir(nom)}
-                    onPointerEnter={(e: PointerEvent<HTMLButtonElement>) => {
-                      if (e.pointerType === "mouse") setSurvol(nom);
-                    }}
-                    onPointerLeave={() => setSurvol((s) => (s === nom ? null : s))}
-                    className={`inline-flex min-h-11 items-center gap-2.5 rounded-full border bg-grain px-4 text-[0.9375rem] font-semibold transition-colors duration-200 ${
-                      allume ? "border-or-clair text-or-clair" : "border-filet text-calcaire hover:border-calcaire/70"
-                    }`}
-                    {...pression}
-                  >
-                    {pastille}
-                    {nom}
-                  </motion.button>
-                )}
+          {/* Légende de la carte ; sans carte, elle s'efface sans décaler la page */}
+          <div
+            className={`mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 px-2 text-[0.875rem] text-pierre lg:justify-start ${sansCarte ? "invisible" : ""}`}
+          >
+            {/* Symboles : décoratifs pour les lecteurs d'écran (le texte utile est dans la liste) */}
+            <ul aria-hidden className="contents">
+              <li className="flex items-center gap-2.5">
+                <span className="size-2.5 rounded-full bg-calcaire-clair shadow-[0_0_0_2px_rgba(242,211,140,0.35),0_0_12px_4px_rgba(242,211,140,0.5)]" />
+                <span className="font-display font-semibold italic text-or-clair">{site.nom}</span>
               </li>
-            );
-          })}
-        </ul>
+              <li className="flex items-center gap-2.5">
+                <span className="size-2 rounded-full bg-halo shadow-[0_0_10px_2px_rgba(242,211,140,0.55)]" />
+                {TEXTES.carte.legende.commune}
+              </li>
+              {zoneDefinie && (
+                <li className="flex items-center gap-2.5">
+                  <span className="h-3 w-5 rounded-[50%] border-[1.5px] border-dashed border-or-clair/90 bg-or/10" />
+                  {TEXTES.carte.legende.zone}
+                </li>
+              )}
+            </ul>
+            {/* Zone pas encore arrêtée : mention en pointillés, comme les autres valeurs à fournir */}
+            {!zoneDefinie && <p className="placeholder py-0.5">{TEXTES.carte.legende.zoneADefinir}</p>}
+          </div>
+        </div>
 
-        {/* Conditions : lignes à points de conduite, comme sur une carte de restaurant */}
-        <dl className="mt-9 space-y-1">
-          {INFOS.map(({ libelle, valeur, Icone }) => (
-            <div key={libelle} className="flex items-center gap-2.5 py-2">
-              <dt className="flex min-w-0 flex-1 items-center gap-2 text-[0.9375rem] text-pierre after:h-0 after:min-w-3 after:flex-1 after:translate-y-[0.35em] after:border-b-2 after:border-dotted after:border-filet/70 after:content-['']">
-                <Icone aria-hidden className="size-[1.15rem] shrink-0 text-or-clair" strokeWidth={2} />
-                <span className="min-w-0">{libelle}</span>
-              </dt>
-              <dd className="shrink-0 whitespace-nowrap text-[0.9375rem] font-semibold tabular-nums text-calcaire">
-                <Valeur valeur={valeur} />
-              </dd>
-            </div>
-          ))}
-        </dl>
+        <div className="text-center">
+          <h3 className="font-display text-[1.6rem] font-semibold leading-tight text-calcaire">{TEXTES.communes.titre}</h3>
+          <p aria-live="polite" className="mx-auto mt-2 min-h-[3em] max-w-[34rem] text-[0.9375rem] leading-snug text-pierre">
+            {sansCarte ? TEXTES.communes.aideSansCarte : choix ? annonce(choix) : TEXTES.communes.aide}
+          </p>
 
-        <div className="mt-8">
-          <BoutonCommander>{TEXTES.boutonLivraison}</BoutonCommander>
+          <ul role="list" className="mt-4 flex flex-wrap justify-center gap-2.5">
+            {communes.map((nom) => {
+              const allume = choix === nom;
+              return (
+                <li key={nom}>
+                  {sansCarte ? (
+                    <span className="inline-flex min-h-11 items-center rounded-full border border-filet bg-grain px-4 text-[0.9375rem] font-semibold text-calcaire">
+                      {nom}
+                    </span>
+                  ) : (
+                    <motion.button
+                      type="button"
+                      aria-label={remplir(TEXTES.communes.voirSurCarte, { commune: nom })}
+                      onClick={() => choisir(nom)}
+                      onPointerEnter={(e: PointerEvent<HTMLButtonElement>) => {
+                        if (e.pointerType === "mouse") setSurvol(nom);
+                      }}
+                      onPointerLeave={() => setSurvol((s) => (s === nom ? null : s))}
+                      className={`inline-flex min-h-11 items-center rounded-full border bg-grain px-4 text-[0.9375rem] font-semibold transition-colors duration-200 ${
+                        allume ? "border-or-clair text-or-clair" : "border-filet text-calcaire hover:border-calcaire/70"
+                      }`}
+                      {...pression}
+                    >
+                      {nom}
+                    </motion.button>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+
+          {/* Conditions : lignes à points de conduite, comme sur une carte de restaurant */}
+          <dl className="mt-9 space-y-1 text-left">
+            {INFOS.map(({ libelle, valeur, Icone }) => (
+              <div key={libelle} className="flex items-center gap-2.5 py-2">
+                <dt className="flex min-w-0 flex-1 items-center gap-2 text-[0.9375rem] text-pierre after:h-0 after:min-w-3 after:flex-1 after:translate-y-[0.35em] after:border-b-2 after:border-dotted after:border-filet/70 after:content-['']">
+                  <Icone aria-hidden className="size-[1.15rem] shrink-0 text-or-clair" strokeWidth={2} />
+                  <span className="min-w-0">{libelle}</span>
+                </dt>
+                <dd className="shrink-0 whitespace-nowrap text-[0.9375rem] font-semibold tabular-nums text-calcaire">
+                  <Valeur valeur={valeur} />
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </div>
-    </div>
+
+      {/* Au milieu de la page, sous la carte et la liste */}
+      <div className="mt-10 flex justify-center lg:mt-14">
+        <BoutonCommander>{TEXTES.boutonLivraison}</BoutonCommander>
+      </div>
+    </>
   );
 }

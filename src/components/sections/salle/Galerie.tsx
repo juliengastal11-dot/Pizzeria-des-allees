@@ -20,9 +20,10 @@ import { facteurLargeur, styleCadrage } from "./cadrage";
 
 const TEXTES = site.textes.salle;
 
-type Filtre = "tout" | Photo["lieu"];
+type Filtre = Photo["lieu"];
 
-const FILTRES: Filtre[] = ["tout", "salle", "terrasse"];
+// Deux onglets seulement : la salle (ouvert par défaut) et la terrasse
+const FILTRES: Filtre[] = ["salle", "terrasse"];
 
 // Largeurs relatives des arches en desktop, inégales comme celles du Pont Vieux
 const LARGEURS = [1, 1.3, 0.85, 1.15];
@@ -59,7 +60,7 @@ type Props = {
 };
 
 export function Galerie({ photos, titreFenetre }: Props) {
-  const [filtre, setFiltre] = useState<Filtre>("tout");
+  const [filtre, setFiltre] = useState<Filtre>("salle");
   const [ouverte, setOuverte] = useState<number | null>(null);
   const rangee = useRef<HTMLUListElement>(null);
   // Carrousel sous 1024 px, rangée d'arches au-dessus
@@ -68,7 +69,7 @@ export function Galerie({ photos, titreFenetre }: Props) {
   const carrousel = !large && !reduire;
 
   // Chaque photo garde la largeur d'arche de sa place d'origine
-  const visibles = photos.map((photo, rang) => ({ photo, rang })).filter(({ photo }) => filtre === "tout" || photo.lieu === filtre);
+  const visibles = photos.map((photo, rang) => ({ photo, rang })).filter(({ photo }) => photo.lieu === filtre);
   const listeVisionneuse = visibles.map((v) => v.photo);
 
   const { scrollXProgress } = useScroll({ container: rangee });
@@ -256,8 +257,7 @@ function ArcheGalerie({ photo, rangee, carrousel, delai, onOuvrir }: PropsArche)
         </span>
         <span className="sr-only">{`, ${TEXTES.agrandir}`}</span>
       </button>
-      <figcaption className="mt-5 flex items-center justify-center gap-2 text-center font-display text-[1.125rem] italic leading-snug text-halo">
-        <span aria-hidden className="inline-block size-1 shrink-0 rounded-full bg-halo shadow-[0_0_10px_2px_rgba(242,211,140,0.55)]" />
+      <figcaption className="mt-5 text-center font-display text-[1.125rem] italic leading-snug text-halo">
         {photo.legende}
       </figcaption>
     </motion.figure>

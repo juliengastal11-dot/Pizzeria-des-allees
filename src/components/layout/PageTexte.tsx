@@ -11,7 +11,7 @@ const { pagesLegales, actions } = site.textes;
 /*
  * Mise en page des pages de texte (mentions légales, confidentialité) :
  * fond Bleu des Allées, colonne de lecture étroite, ornement en arche avec le
- * Pont Vieux qui s'allume, et une « allée » de lampadaires le long des sections.
+ * Pont Vieux qui s'allume, et un filet vertical le long des sections.
  */
 
 type Props = {
@@ -40,8 +40,7 @@ export function PageTexte({ titre, surtitre, chapo, miseAJour, avertissement, ch
         <header className="text-center">
           <OrnementPont />
           {surtitre && (
-            <p className="surtitre mt-9 flex items-center justify-center gap-2.5 text-pierre">
-              <span aria-hidden className="inline-block size-1.5 rounded-full bg-or shadow-[0_0_10px_2px_rgba(242,211,140,0.55)]" />
+            <p className="surtitre mt-9 text-pierre">
               {surtitre}
             </p>
           )}
@@ -64,15 +63,14 @@ export function PageTexte({ titre, surtitre, chapo, miseAJour, avertissement, ch
             role="note"
             className="mx-auto mt-12 max-w-prose rounded-[1.75rem] border border-dashed border-or-clair/70 bg-minuit/70 px-5 py-4 sm:px-6"
           >
-            <p className="flex items-center gap-2.5 font-semibold text-or-clair">
-              <span aria-hidden className="inline-block size-2 shrink-0 rounded-full bg-halo shadow-[0_0_10px_2px_rgba(242,211,140,0.55)]" />
+            <p className="font-semibold text-or-clair">
               {avertissement.titre}
             </p>
             <div className="mt-1.5 text-[0.9375rem] leading-relaxed text-pierre">{avertissement.texte}</div>
           </div>
         )}
 
-        {/* L'allée : un filet vertical, un lampadaire qui s'allume à chaque section */}
+        {/* L'allée : un filet vertical le long des sections */}
         <div
           className={[
             "relative mx-auto mt-14 max-w-prose space-y-14 text-pierre md:mt-16",
@@ -107,20 +105,12 @@ export function PageTexte({ titre, surtitre, chapo, miseAJour, avertissement, ch
   );
 }
 
-/** Section de texte : H2 relié à la section, lampadaire qui s'allume en arrivant à l'écran. */
+/** Section de texte : H2 relié à la section. */
 export function SectionTexte({ id, titre, children }: { id: string; titre: string; children: ReactNode }) {
   const idTitre = `${id}-titre`;
   return (
     <section id={id} aria-labelledby={idTitre} className="relative scroll-mt-28 pl-7 sm:pl-10">
       <h2 id={idTitre} className="text-[clamp(1.5rem,1.2rem+1.2vw,2rem)] font-semibold tracking-[-0.01em] text-calcaire">
-        <motion.span
-          aria-hidden
-          className="absolute left-[-4.5px] top-[0.525em] -mt-[5px] block size-2.5 rounded-full bg-halo shadow-[0_0_12px_3px_rgba(242,211,140,0.55)]"
-          initial={{ opacity: 0.2, scale: 0.55 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "0px 0px -30% 0px" }}
-          transition={{ duration: 0.7, ease: ENTREE }}
-        />
         {titre}
       </h2>
       <div className="mt-4 space-y-4">{children}</div>
