@@ -50,13 +50,13 @@ export function PanneauLivraison() {
 
           {/* Légende de la carte ; sans carte, elle s'efface sans décaler la page */}
           <div
-            className={`mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 px-2 text-[0.875rem] text-pierre lg:justify-start ${sansCarte ? "invisible" : ""}`}
+            className={`mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 px-2 font-petit text-[0.875rem] text-pierre lg:justify-start ${sansCarte ? "invisible" : ""}`}
           >
             {/* Symboles : décoratifs pour les lecteurs d'écran (le texte utile est dans la liste) */}
             <ul aria-hidden className="contents">
               <li className="flex items-center gap-2.5">
                 <span className="size-2.5 rounded-full bg-calcaire-clair shadow-[0_0_0_2px_rgba(242,211,140,0.35),0_0_12px_4px_rgba(242,211,140,0.5)]" />
-                <span className="font-display font-semibold italic text-or-clair">{site.nom}</span>
+                <span className="font-accent font-semibold italic text-or-clair">{site.nom}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <span className="size-2 rounded-full bg-halo shadow-[0_0_10px_2px_rgba(242,211,140,0.55)]" />
@@ -73,7 +73,7 @@ export function PanneauLivraison() {
         </div>
 
         <div className="text-center">
-          <h3 className="font-display text-[1.6rem] font-semibold leading-tight text-calcaire">{TEXTES.communes.titre}</h3>
+          <h3 className="font-soustitre text-[1.6rem] font-semibold leading-tight text-calcaire">{TEXTES.communes.titre}</h3>
           <p aria-live="polite" className="mx-auto mt-2 min-h-[3em] max-w-[34rem] text-[0.9375rem] leading-snug text-pierre">
             {sansCarte ? TEXTES.communes.aideSansCarte : choix ? annonce(choix) : TEXTES.communes.aide}
           </p>

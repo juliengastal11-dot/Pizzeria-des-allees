@@ -1,5 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Besley, Cormorant_Garamond, Figtree, Playfair_Display, Raleway } from "next/font/google";
+import {
+  Besley,
+  Bricolage_Grotesque,
+  Caveat,
+  Cormorant_Garamond,
+  DM_Mono,
+  Figtree,
+  Fraunces,
+  Instrument_Serif,
+  Playfair_Display,
+  Raleway,
+} from "next/font/google";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 import { Providers } from "@/components/providers/Providers";
@@ -28,31 +39,80 @@ const figtree = Figtree({
 });
 
 /*
- * Deux essais de palette (« Émeraude », « Ivoire ») proposent une autre typographie :
- * un serif éditorial pour les titres, un sans-serif fin et aéré pour le texte courant.
- * Chargées ici comme Besley/Figtree ; seules les palettes concernées les activent
- * (globals.css), donc rien ne change pour les autres tant qu'elles ne sont pas choisies.
+ * Polices des palettes typographiques d'essai (bandeau en haut du site, voir BandeauEssai
+ * et globals.css). Jamais préchargées : le navigateur ne les télécharge que si une palette
+ * qui s'en sert est choisie (ou pour l'aperçu « Aa » de son bouton).
  */
+// (next/font n'accepte que des options écrites en toutes lettres : pas d'objet partagé.)
+
+// Éditorial : Playfair Display (titres) et Raleway (texte)
 const playfair = Playfair_Display({
   subsets: ["latin"],
   style: ["normal", "italic"],
   variable: "--font-playfair",
   display: "swap",
+  preload: false,
+});
+const raleway = Raleway({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-raleway",
+  display: "swap",
+  preload: false,
 });
 
+// Gravure : Cormorant Garamond (titres) et Raleway
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
   style: ["normal", "italic"],
   variable: "--font-cormorant",
   display: "swap",
+  preload: false,
 });
 
-const raleway = Raleway({
+// Ardoise : Fraunces aux terminaisons arrondies (axe SOFT) et Caveat, une écriture à la craie
+const fraunces = Fraunces({
   subsets: ["latin"],
-  variable: "--font-raleway",
+  style: ["normal", "italic"],
+  axes: ["SOFT", "opsz"],
+  variable: "--font-fraunces",
   display: "swap",
+  preload: false,
 });
+const caveat = Caveat({
+  subsets: ["latin"],
+  variable: "--font-caveat",
+  display: "swap",
+  preload: false,
+});
+
+// Comptoir : Bricolage Grotesque, Instrument Serif en italique, DM Mono comme un ticket de commande
+const bricolage = Bricolage_Grotesque({
+  subsets: ["latin"],
+  axes: ["opsz"],
+  variable: "--font-bricolage",
+  display: "swap",
+  preload: false,
+});
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-instrument-serif",
+  display: "swap",
+  preload: false,
+});
+const dmMono = DM_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-dm-mono",
+  display: "swap",
+  preload: false,
+});
+
+const variablesPolices = [besley, figtree, playfair, raleway, cormorant, fraunces, caveat, bricolage, instrumentSerif, dmMono]
+  .map((police) => police.variable)
+  .join(" ");
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
@@ -88,16 +148,12 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="fr"
-      className={`${besley.variable} ${figtree.variable} ${playfair.variable} ${cormorant.variable} ${raleway.variable}`}
-      suppressHydrationWarning
-    >
+    <html lang="fr" className={variablesPolices} suppressHydrationWarning>
       <body className="min-h-svh bg-nuit text-calcaire">
-        {/* Palette d'essai choisie dans ce navigateur (voir SelecteurPalette) : posée avant la première peinture. */}
+        {/* Palettes d'essai choisies dans ce navigateur (voir BandeauEssai) : posées avant la première peinture. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var p=localStorage.getItem("palette-essai");if(p)document.documentElement.dataset.palette=p;}catch(e){}`,
+            __html: `try{var d=document.documentElement,p=localStorage.getItem("palette-essai"),t=localStorage.getItem("typo-essai");if(p)d.dataset.palette=p;if(t)d.dataset.typo=t;}catch(e){}`,
           }}
         />
         <a

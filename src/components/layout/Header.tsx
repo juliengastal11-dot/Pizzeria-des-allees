@@ -10,7 +10,7 @@ import { useActions, useEtatActions } from "@/components/providers/ActionsProvid
 import { site } from "@/config/site";
 import { remplir } from "@/lib/textes";
 import { MenuPlein } from "./MenuPlein";
-import { SelecteurPalette } from "./SelecteurPalette";
+import { BandeauEssai } from "./BandeauEssai";
 import { SECTIONS, ancre, type IdSection } from "./navigation";
 
 const ressort = { type: "spring", stiffness: 420, damping: 42 } as const;
@@ -141,11 +141,11 @@ export function Header() {
           if (e.target instanceof HTMLElement && e.target.matches(":focus-visible")) setMasque(false);
         }}
       >
-        <SelecteurPalette />
+        <BandeauEssai />
 
         {/* Mobile */}
         <motion.div
-          className="pointer-events-auto relative pt-[env(safe-area-inset-top)] md:hidden"
+          className="pointer-events-auto relative pt-[var(--inset-haut,env(safe-area-inset-top))] md:hidden"
           initial={false}
           animate={{ y: masque && !menu ? "-100%" : "0%" }}
           transition={ressort}
@@ -167,7 +167,7 @@ export function Header() {
           <div className="relative flex h-16 items-center justify-between gap-3 px-4">
             <a href={ancre("accueil")} aria-label={nomAccueil} className="flex min-h-11 items-center gap-2.5 rounded-full">
               <Image src={site.logo.src} alt="" width={42} height={42} className="size-[42px] shrink-0" />
-              <span aria-hidden className="whitespace-nowrap font-display text-[1.02rem] font-semibold leading-[1.02] text-calcaire max-[359px]:hidden">
+              <span aria-hidden className="whitespace-nowrap font-titre text-[1.02rem] font-semibold leading-[1.02] text-calcaire max-[359px]:hidden">
                 {site.nom}
               </span>
             </a>
@@ -176,7 +176,7 @@ export function Header() {
         </motion.div>
 
         {/* Tablette et ordinateur : capsule flottante */}
-        <div className="hidden justify-center px-4 pt-[max(0.75rem,env(safe-area-inset-top))] md:flex">
+        <div className="hidden justify-center px-4 pt-[max(0.75rem,var(--inset-haut,env(safe-area-inset-top)))] md:flex">
           <motion.div
             layout
             transition={{ layout: ressortCapsule }}

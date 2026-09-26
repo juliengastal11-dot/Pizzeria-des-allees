@@ -257,7 +257,7 @@ function ArcheGalerie({ photo, onOuvrir }: { photo: Photo; onOuvrir: () => void 
         </span>
         <span className="sr-only">{`, ${TEXTES.agrandir}`}</span>
       </button>
-      <figcaption className="mt-5 text-center font-display text-[1.125rem] italic leading-snug text-halo">{photo.legende}</figcaption>
+      <figcaption className="mt-5 text-center font-accent text-[1.125rem] italic leading-snug text-halo">{photo.legende}</figcaption>
     </figure>
   );
 }

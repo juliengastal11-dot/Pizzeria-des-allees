@@ -40,7 +40,7 @@ type Commun = {
 
 function classes({ variante = "or", forme = "pilule", anneau, className }: Commun) {
   return [
-    "group relative inline-flex min-h-12 items-center justify-center gap-2 px-6 font-sans text-[1rem] font-semibold leading-none",
+    "group relative inline-flex min-h-12 items-center justify-center gap-2 px-6 font-texte text-[1rem] font-semibold leading-none",
     "transition-colors duration-200 select-none",
     VARIANTES[variante],
     FORMES[forme],

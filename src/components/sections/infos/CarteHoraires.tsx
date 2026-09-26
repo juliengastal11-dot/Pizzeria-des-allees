@@ -122,7 +122,7 @@ function SemaineConfirmee() {
   return (
     <>
       <div className="flex min-h-10 flex-wrap items-center gap-x-4 gap-y-3">
-        <h3 id="infos-horaires" className="font-display text-[1.75rem] font-semibold leading-none">
+        <h3 id="infos-horaires" className="font-soustitre text-[1.75rem] font-semibold leading-none">
           {TEXTES.titre}
         </h3>
         {statut && aujourdhui && <BadgeStatut statut={statut} aujourdhui={aujourdhui} />}
@@ -142,11 +142,11 @@ function SemaineConfirmee() {
 function SemaineAConfirmer() {
   return (
     <>
-      <h3 id="infos-horaires" className="font-display text-[1.75rem] font-semibold leading-none">
+      <h3 id="infos-horaires" className="font-soustitre text-[1.75rem] font-semibold leading-none">
         {TEXTES.titre}
       </h3>
       <details className="group mt-4 rounded-[1.75rem] border border-dashed border-eau/50 open:pb-2">
-        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-[1.75rem] px-4 py-2 text-sm font-semibold text-eau transition-colors hover:text-encre sm:px-5 [&::-webkit-details-marker]:hidden">
+        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-[1.75rem] px-4 py-2 font-petit text-sm font-semibold text-eau transition-colors hover:text-encre sm:px-5 [&::-webkit-details-marker]:hidden">
           {TEXTES.voirExemple}
           <ChevronDown aria-hidden className="size-4 shrink-0 transition-transform duration-300 group-open:rotate-180" strokeWidth={2.2} />
         </summary>

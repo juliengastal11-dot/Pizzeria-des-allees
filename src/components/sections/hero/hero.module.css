@@ -12,7 +12,7 @@
 .cadre {
   /* Hauteur d'écran barres comprises (svh), repli en vh pour les navigateurs plus anciens */
   --ecran: 100vh;
-  width: min(100%, 28rem, max(15rem, calc((var(--ecran) - 14.75rem - env(safe-area-inset-top)) * 0.75)));
+  width: min(100%, 28rem, max(15rem, calc((var(--ecran) - 14.75rem - var(--hauteur-essai, 0px) - var(--inset-haut, env(safe-area-inset-top))) * 0.75)));
   aspect-ratio: 3 / 4;
 }
 
@@ -24,20 +24,20 @@
 
 @media (min-width: 40rem) {
   .cadre {
-    width: min(100%, 26rem, max(15rem, calc((var(--ecran) - 14.75rem - env(safe-area-inset-top)) * 0.75)));
+    width: min(100%, 26rem, max(15rem, calc((var(--ecran) - 14.75rem - var(--hauteur-essai, 0px) - var(--inset-haut, env(safe-area-inset-top))) * 0.75)));
   }
 }
 
 @media (min-width: 48rem) {
   .cadre {
-    width: min(100%, 26rem, max(18rem, calc((var(--ecran) - 17.5rem - env(safe-area-inset-top)) * 0.75)));
+    width: min(100%, 26rem, max(18rem, calc((var(--ecran) - 17.5rem - var(--hauteur-essai, 0px) - var(--inset-haut, env(safe-area-inset-top))) * 0.75)));
   }
 }
 
 /* Ordinateur : colonne de droite, hauteur réglée sur l'écran, pont et reflets au-dessus du pli */
 @media (min-width: 64rem) {
   .cadre {
-    --arche-h: clamp(24rem, min(76 * var(--ecran) / 100, calc(var(--ecran) - 20.5rem)), 45rem);
+    --arche-h: clamp(24rem, min(76 * var(--ecran) / 100, calc(var(--ecran) - 20.5rem - var(--hauteur-essai, 0px))), 45rem);
     width: calc(var(--arche-h) * 0.75);
     height: var(--arche-h);
     aspect-ratio: auto;
@@ -73,7 +73,7 @@
   /* Chaque ligne tient sur une ligne ; si l'espacement du texte est agrandi (WCAG 1.4.12), elle se replie au lieu d'être rognée */
   width: calc(100% - var(--titre-gauche) - 3cqi);
   margin: 0;
-  font-family: var(--font-display, Georgia, serif);
+  font-family: var(--font-titre, Georgia, serif);
   font-size: var(--titre-taille);
   font-weight: 700;
   line-height: var(--titre-interligne);

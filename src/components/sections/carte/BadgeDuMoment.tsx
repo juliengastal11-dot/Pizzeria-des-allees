@@ -58,7 +58,7 @@ export function BadgeDuMoment() {
           strokeLinecap="round"
         />
       </svg>
-      <span className="relative text-center font-display text-[0.95rem] font-semibold italic leading-[1.02]">
+      <span className="relative text-center font-accent text-[0.95rem] font-semibold italic leading-[1.02]">
         {MOTS.map((mot, i) => (
           <Fragment key={i}>
             {i > 0 && <br />}

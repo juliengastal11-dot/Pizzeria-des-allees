@@ -28,7 +28,7 @@ export function CarteAdresse() {
       <h3 id="infos-adresse" className="surtitre text-eau">
         {TEXTES.titre}
       </h3>
-      <address className="mt-2 font-display text-[clamp(1.5rem,1rem+1.4vw,2.1rem)] font-semibold not-italic leading-[1.1] tracking-[-0.01em] md:mt-3">
+      <address className="mt-2 font-soustitre text-[clamp(1.5rem,1rem+1.4vw,2.1rem)] font-semibold not-italic leading-[1.1] tracking-[-0.01em] md:mt-3">
         <span className="block">{site.adresse.rue}</span>
         <span className="mt-1 block text-[0.62em] font-medium italic text-eau md:mt-1.5">
           {site.adresse.codePostal} {site.adresse.ville}
@@ -63,7 +63,7 @@ export function CarteAdresse() {
           <span className="sr-only">{` ${actions.nouvelOnglet}`}</span>
         </motion.a>
       </div>
-      <p className="mt-1 max-w-[34ch] text-sm leading-snug text-eau">{TEXTES.avertissement}</p>
+      <p className="mt-1 max-w-[34ch] font-petit text-sm leading-snug text-eau">{TEXTES.avertissement}</p>
     </article>
   );
 }

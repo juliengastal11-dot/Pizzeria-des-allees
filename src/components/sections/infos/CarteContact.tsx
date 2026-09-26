@@ -17,7 +17,7 @@ function Ligne({ icone, libelle, children }: { icone: ReactNode; libelle: string
         {icone}
       </span>
       <div className="min-w-0">
-        <p className="text-sm text-eau">{libelle}</p>
+        <p className="font-petit text-sm text-eau">{libelle}</p>
         <p className="text-[1.0625rem] font-semibold leading-snug">{children}</p>
       </div>
     </li>
@@ -35,7 +35,7 @@ export function CarteContact() {
       aria-labelledby="infos-contact"
       className="h-full rounded-[2.5rem] bg-calcaire-clair p-6 text-encre shadow-[0_40px_80px_-40px_rgba(6,15,46,0.9)] sm:p-8"
     >
-      <h3 id="infos-contact" className="font-display text-[1.75rem] font-semibold leading-none">
+      <h3 id="infos-contact" className="font-soustitre text-[1.75rem] font-semibold leading-none">
         {TEXTES.titre}
       </h3>
       <ul className="mt-5 space-y-3">
@@ -65,7 +65,7 @@ export function CarteContact() {
       </div>
 
       <div className="mt-7 border-t border-dashed border-eau/35 pt-6">
-        <h4 className="font-display text-xl font-semibold leading-tight">{TEXTES.paiements}</h4>
+        <h4 className="font-soustitre text-xl font-semibold leading-tight">{TEXTES.paiements}</h4>
         <Paiements className="mt-4" />
       </div>
     </article>

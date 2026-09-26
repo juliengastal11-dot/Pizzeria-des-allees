@@ -16,7 +16,7 @@ import {
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./carte-nuit.css";
 import { emprise, RESTAURANT, trajet, zoneLivraison, type Coordonnees, type Lieu } from "./geographie";
-import { couleursPaletteCarte, EVENEMENT_PALETTE } from "@/lib/palette-essai";
+import { couleursPaletteCarte, EVENEMENT_ESSAI } from "@/lib/essai";
 
 export type CommuneCarte = { nom: string; lieu: Lieu };
 
@@ -373,7 +373,7 @@ export async function creerCarte(o: OptionsCarte): Promise<CarteNuitGL> {
     if (carte.getLayer("trajet-lueur")) carte.setPaintProperty("trajet-lueur", "line-color", halo);
     if (carte.getLayer("trajet-points")) carte.setPaintProperty("trajet-points", "line-color", halo);
   };
-  window.addEventListener(EVENEMENT_PALETTE, surChangementPalette);
+  window.addEventListener(EVENEMENT_ESSAI, surChangementPalette);
 
   // Largeur qui change (rotation, onglet réaffiché) : on recadre sans animation
   let largeur = o.conteneur.clientWidth;
@@ -427,7 +427,7 @@ export async function creerCarte(o: OptionsCarte): Promise<CarteNuitGL> {
     },
     detruire() {
       vue.disconnect();
-      window.removeEventListener(EVENEMENT_PALETTE, surChangementPalette);
+      window.removeEventListener(EVENEMENT_ESSAI, surChangementPalette);
       for (const m of marqueurs) m.remove();
       carte.remove();
     },

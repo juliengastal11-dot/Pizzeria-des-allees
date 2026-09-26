@@ -53,7 +53,7 @@ export function AvisGoogle({ className }: { className?: string }) {
           href={site.liens.avisGoogle}
           target="_blank"
           rel="noopener noreferrer"
-          className="group inline-flex min-h-11 items-center gap-1 text-[0.9375rem] text-pierre underline decoration-filet decoration-1 underline-offset-4 transition-colors duration-200 hover:text-or-clair hover:decoration-or-clair"
+          className="group inline-flex min-h-11 items-center gap-1 font-petit text-[0.9375rem] text-pierre underline decoration-filet decoration-1 underline-offset-4 transition-colors duration-200 hover:text-or-clair hover:decoration-or-clair"
         >
           {remplir(TEXTES.lien, { n: nombreAffiche })}
           <ArrowUpRight aria-hidden className="size-4 shrink-0 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
@@ -71,8 +71,8 @@ function CarteAvis({ t }: { t: (typeof TEMOIGNAGES)[number] }) {
   return (
     <figure className="flex h-full w-72 shrink-0 flex-col rounded-[1.5rem] border border-filet/60 bg-grain px-5 py-4.5">
       <Etoiles note={t.note} className="shrink-0" />
-      <blockquote className="mt-2.5 flex-1 font-display text-[1.0625rem] italic leading-snug text-calcaire">“{t.texte}”</blockquote>
-      <figcaption className="mt-3 flex items-center gap-1.5 text-[0.8125rem] text-pierre">
+      <blockquote className="mt-2.5 flex-1 font-accent text-[1.0625rem] italic leading-snug text-calcaire">“{t.texte}”</blockquote>
+      <figcaption className="mt-3 flex items-center gap-1.5 font-petit text-[0.8125rem] text-pierre">
         <span className="font-semibold text-or-clair">{t.auteur}</span>
         {TEXTES.origine}
       </figcaption>

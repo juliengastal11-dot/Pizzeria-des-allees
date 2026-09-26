@@ -127,7 +127,7 @@ function CadrePizza({ pizza, rotation }: { pizza: Pizza; rotation: number }) {
       {/* Le nom, à la craie sous la pelle */}
       <figcaption className="relative z-10 mt-4 text-center">
         <span aria-hidden className="mx-auto mb-2 block h-px w-8 bg-or-clair/70" />
-        <span className="font-display text-[1rem] italic leading-none text-calcaire/90 [text-shadow:0_0_10px_rgb(from_var(--color-calcaire)_r_g_b_/_0.35)]">
+        <span className="font-accent text-[1rem] italic leading-none text-calcaire/90 [text-shadow:0_0_10px_rgb(from_var(--color-calcaire)_r_g_b_/_0.35)]">
           {pizza.nom}
         </span>
       </figcaption>
@@ -144,7 +144,7 @@ function CadreArdoise({ texte }: { texte: string }) {
         <span aria-hidden className="relative mb-3 block h-px w-8 bg-or-clair/70 sm:mb-4 sm:w-9" />
         <TexteEcrit
           texte={typographie(texte)}
-          className="relative font-display text-[0.98rem] font-medium italic leading-[1.45] text-calcaire sm:text-[1.05rem] sm:leading-[1.5] lg:text-[1.2rem]"
+          className="relative font-accent text-[0.98rem] font-medium italic leading-[1.45] text-calcaire sm:text-[1.05rem] sm:leading-[1.5] lg:text-[1.2rem]"
         />
       </div>
     </div>

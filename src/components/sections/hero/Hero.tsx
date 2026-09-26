@@ -25,7 +25,7 @@ export function Hero() {
   return (
     <HeroScene
       titreId={TITRE_ID}
-      className="relative isolate z-[1] -mb-6 overflow-x-clip bg-nuit pb-4 pt-[calc(4.75rem_+_env(safe-area-inset-top))] md:-mb-10 md:pt-24 lg:-mb-20 lg:pt-[5.75rem]"
+      className="relative isolate z-[1] -mb-6 overflow-x-clip bg-nuit pb-4 pt-[calc(4.75rem_+_var(--inset-haut,env(safe-area-inset-top)))] md:-mb-10 md:pt-24 lg:-mb-20 lg:pt-[5.75rem]"
     >
       <div
         className={[
@@ -44,7 +44,7 @@ export function Hero() {
 
         <div className="mt-2 [grid-area:texte] sm:mx-auto sm:max-w-xl sm:text-center lg:mx-0 lg:mt-6 lg:max-w-lg lg:text-left">
           <p
-            className={`${styles.monte} font-display text-[1.3rem] italic leading-snug text-calcaire md:text-[1.5rem] lg:text-[clamp(1.6rem,0.8rem_+_1.5vw,2.4rem)]`}
+            className={`${styles.monte} font-accent text-[1.3rem] italic leading-snug text-calcaire md:text-[1.5rem] lg:text-[clamp(1.6rem,0.8rem_+_1.5vw,2.4rem)]`}
             style={delai(0.55)}
           >
             {accroche}

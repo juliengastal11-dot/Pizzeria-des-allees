@@ -106,8 +106,8 @@ export function Visionneuse({ photos, index, onChanger, onFermer, titre }: Props
               </BoutonNav>
             )}
             <div className="min-w-0 flex-1 text-center" aria-live="polite" aria-atomic="true">
-              <p className="font-display text-xl italic leading-snug text-halo">{photo.legende}</p>
-              <p className="mt-1 text-sm text-pierre tabular-nums">
+              <p className="font-accent text-xl italic leading-snug text-halo">{photo.legende}</p>
+              <p className="mt-1 font-petit text-sm text-pierre tabular-nums">
                 {lieux[photo.lieu]}
                 {plusieurs && (
                   <>

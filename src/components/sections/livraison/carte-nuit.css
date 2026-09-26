@@ -15,8 +15,10 @@
   --cn-grain: var(--color-grain);
   --cn-filet: var(--color-filet);
   --cn-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --cn-police: var(--font-figtree), ui-sans-serif, system-ui, "Segoe UI", sans-serif;
-  --cn-police-titre: var(--font-besley), Georgia, "Times New Roman", serif;
+  /* Rôles typographiques du site (globals.css) : suivent aussi les palettes typographiques d'essai */
+  --cn-police: var(--font-texte);
+  --cn-police-titre: var(--font-accent);
+  --cn-police-petit: var(--font-petit);
 }
 
 /* La carte hérite de la police du site (les commandes et crédits aussi) */
@@ -304,7 +306,7 @@
   border-radius: 999px;
   background: rgb(from var(--cn-minuit) r g b / 0.86);
   color: var(--cn-pierre);
-  font: 400 0.75rem/1.35 var(--cn-police);
+  font: 400 0.75rem/1.35 var(--cn-police-petit);
   text-align: right;
 }
 

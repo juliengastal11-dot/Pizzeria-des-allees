@@ -31,7 +31,7 @@ export function PanneauEmporter() {
 
   return (
     <div>
-      <h3 className="font-display text-[1.6rem] font-semibold italic leading-tight text-calcaire">{TEXTES.titre}</h3>
+      <h3 className="font-soustitre text-[1.6rem] font-semibold italic leading-tight text-calcaire">{TEXTES.titre}</h3>
 
       <ol role="list" className="mt-8 flex flex-col gap-3 lg:mt-14 lg:flex-row lg:items-end lg:justify-center lg:gap-8">
         {TEXTES.etapes.map((titre, i) => (
@@ -56,7 +56,7 @@ export function PanneauEmporter() {
                   variants={eau}
                   className="absolute inset-x-0 bottom-0 -z-10 h-[68%] origin-bottom bg-[linear-gradient(to_top,rgba(95,127,160,0.34),rgba(95,127,160,0.14)_55%,rgba(95,127,160,0))]"
                 />
-                <span className="font-display text-[2.1rem] font-semibold leading-none text-or-clair lg:text-[2.4rem]">{i + 1}</span>
+                <span className="font-titre text-[2.1rem] font-semibold leading-none text-or-clair lg:text-[2.4rem]">{i + 1}</span>
                 <div>
                   <p className="text-[1.0625rem] font-semibold leading-snug text-calcaire">{titre}</p>
                   {i === derniere && <p className="mt-1 text-[0.9375rem] leading-snug text-pierre">{adresseComplete}</p>}

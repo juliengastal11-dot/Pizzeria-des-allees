@@ -412,7 +412,7 @@ function Plan({ d, progression, reduire, className }: { d: Disposition; progress
       {d.arbresPlateau.map((a) => (
         <circle key={`p${a.x}-${a.y}`} cx={a.x} cy={a.y} r={5} className="fill-ciel" opacity={0.55} />
       ))}
-      <Libelle e={d.etiquettes.plateau} police={d.police} className="fill-pierre font-sans font-semibold" />
+      <Libelle e={d.etiquettes.plateau} police={d.police} className="fill-pierre font-texte font-semibold" />
 
       {/* Façades, dans l'ombre, avec quelques fenêtres encore éclairées */}
       {g.facades.map(({ r, fenetres }) => (
@@ -433,7 +433,7 @@ function Plan({ d, progression, reduire, className }: { d: Disposition; progress
           <rect key={b.x} x={b.x - 5} y={b.y - 2} width={10} height={4} rx={2} className="fill-halo" />
         ),
       )}
-      <Libelle e={d.etiquettes.theatre} police={d.police * 0.92} className="fill-calcaire font-sans font-semibold" />
+      <Libelle e={d.etiquettes.theatre} police={d.police * 0.92} className="fill-calcaire font-texte font-semibold" />
 
       {/* La promenade, ouverte sur le parvis de la place Jean-Jaurès et ses pelouses */}
       <Bloc zone={g.promenade} rx={6} className="fill-ciel" fillOpacity={0.16} />
@@ -456,7 +456,7 @@ function Plan({ d, progression, reduire, className }: { d: Disposition; progress
       <rect x={s.x - 5.5} y={s.y - 3.5} width={11} height={10} rx={2.5} className="fill-calcaire" opacity={0.85} />
       <rect x={s.x - 2.5} y={s.y - 8.5} width={5} height={6} rx={2} className="fill-halo" />
       <circle cx={s.x} cy={s.y - 11} r={2.5} className="fill-halo" />
-      <Libelle e={d.etiquettes.riquet} police={d.police * 0.88} className="fill-calcaire font-display font-semibold italic" />
+      <Libelle e={d.etiquettes.riquet} police={d.police * 0.88} className="fill-calcaire font-accent font-semibold italic" />
 
       {/* Platanes : quatre rangées de petits disques couleur de ciel, comme sous la lune */}
       <motion.g variants={rangees} initial="cache" whileInView="vu" viewport={{ once: true, amount: 0.3 }}>
@@ -480,9 +480,9 @@ function Plan({ d, progression, reduire, className }: { d: Disposition; progress
       <motion.circle cx={porte.x} cy={porte.y} r={13} fill={`url(#${halo})`} style={{ opacity: reduire ? 1 : lueurPizzeria }} />
       <circle cx={porte.x} cy={porte.y} r={4.5} className="fill-or-clair stroke-nuit" strokeWidth={2} />
       {d.etiquettes.pizzeria.enseigne ? (
-        <Libelle e={d.etiquettes.pizzeria} police={d.police * 0.84} className="fill-nuit font-display font-bold italic" />
+        <Libelle e={d.etiquettes.pizzeria} police={d.police * 0.84} className="fill-nuit font-accent font-bold italic" />
       ) : (
-        <Libelle e={d.etiquettes.pizzeria} police={d.police} contour className="fill-or-clair font-display font-semibold italic" />
+        <Libelle e={d.etiquettes.pizzeria} police={d.police} contour className="fill-or-clair font-accent font-semibold italic" />
       )}
     </svg>
   );

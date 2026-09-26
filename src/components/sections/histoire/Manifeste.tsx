@@ -51,7 +51,7 @@ export function Manifeste({ texte, className, cible }: Props) {
 
       <p
         ref={ref}
-        className="font-display text-[clamp(1.5rem,1.1rem+1.6vw,2.25rem)] font-medium leading-[1.3] tracking-[-0.01em] text-[#9099b2] md:max-w-[32ch]"
+        className="font-titre text-[clamp(1.5rem,1.1rem+1.6vw,2.25rem)] font-medium leading-[1.3] tracking-[-0.01em] text-[#9099b2] md:max-w-[32ch]"
       >
         <span className="sr-only">{texte}</span>
         <span aria-hidden="true">

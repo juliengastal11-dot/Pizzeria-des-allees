@@ -61,7 +61,7 @@ export function Footer() {
         <div className="relative grid gap-14 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
           <div>
             <Image src={site.logo.src} alt={site.logo.alt} width={112} height={112} className="size-24 md:size-28" />
-            <p className="mt-7 max-w-[15ch] font-display text-[clamp(2rem,1.3rem+3.2vw,3.5rem)] font-medium italic leading-[1.04] tracking-[-0.01em] text-or-clair">
+            <p className="mt-7 max-w-[15ch] font-accent text-[clamp(2rem,1.3rem+3.2vw,3.5rem)] font-medium italic leading-[1.04] tracking-[-0.01em] text-or-clair">
               {site.textes.footer.signature}
             </p>
             {/* Bloc repéré par la barre mobile, qui se retire quand il est à l'écran */}
@@ -102,7 +102,7 @@ export function Footer() {
                   <MapPin aria-hidden className="mt-0.5 size-5 shrink-0 text-or" />
                   <span>
                     {adresseComplete}
-                    <span className="mt-1 flex items-center gap-1 text-sm font-semibold text-or-clair">
+                    <span className="mt-1 flex items-center gap-1 font-petit text-sm font-semibold text-or-clair">
                       {actions.itineraire}
                       <ArrowUpRight
                         aria-hidden
@@ -171,7 +171,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="relative mt-14 border-t border-filet/30 pt-5 text-sm leading-relaxed text-pierre md:mt-20">
+        <div className="relative mt-14 border-t border-filet/30 pt-5 font-petit text-sm leading-relaxed text-pierre md:mt-20">
           <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-2">
             <ul className="flex flex-wrap gap-x-6">
               <li>

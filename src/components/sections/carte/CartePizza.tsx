@@ -27,7 +27,7 @@ const RESSORT = { type: "spring", stiffness: 220, damping: 15 } as const;
 
 const ETIQUETTES = site.textes.carte.etiquettes;
 
-const PASTILLE = "inline-flex min-h-8 items-center gap-1.5 rounded-full px-3.5 text-[0.875rem] font-semibold leading-none text-encre";
+const PASTILLE = "inline-flex min-h-8 items-center gap-1.5 rounded-full px-3.5 font-petit text-[0.875rem] font-semibold leading-none text-encre";
 
 type Props = {
   pizza: Pizza;
@@ -109,13 +109,13 @@ export const CartePizza = memo(function CartePizza({ pizza, index, defileur, rou
         </div>
 
         <div className="flex flex-1 flex-col px-6 pb-7 pt-3 text-center sm:px-7">
-          <h3 id={titreId} className="font-display text-[1.45rem] font-semibold leading-tight text-encre">
+          <h3 id={titreId} className="font-soustitre text-[1.45rem] font-semibold leading-tight text-encre">
             {pizza.nom}
           </h3>
           {pizza.duMoment && <BadgeDuMoment />}
           <p className="mt-2 text-[0.96875rem] leading-relaxed text-eau">{pizza.description}</p>
           {pizza.prix && (
-            <p className="mt-3 font-display text-xl font-semibold tabular-nums text-encre">
+            <p className="mt-3 font-soustitre text-xl font-semibold tabular-nums text-encre">
               <Valeur valeur={pizza.prix} />
             </p>
           )}

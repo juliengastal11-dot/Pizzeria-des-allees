@@ -111,7 +111,7 @@ export function MenuPlein({ id, ouvert, onFermer }: Props) {
           <div className="flex h-16 items-center justify-between gap-3 md:h-20">
             <span className="flex items-center gap-2.5">
               <Image src={site.logo.src} alt="" width={42} height={42} className="size-[42px] shrink-0" />
-              <span className="font-display text-[1.02rem] font-semibold leading-[1.02] max-[359px]:hidden">
+              <span className="font-titre text-[1.02rem] font-semibold leading-[1.02] max-[359px]:hidden">
                 <span className="block">{site.nomLignes[0]}</span>
                 <span className="block">{site.nomLignes[1]}</span>
               </span>
@@ -136,7 +136,7 @@ export function MenuPlein({ id, ouvert, onFermer }: Props) {
                       cible.current = s.id;
                       onFermer();
                     }}
-                    className="group flex min-h-14 items-center font-display text-[2.25rem] font-semibold leading-[1.1] tracking-[-0.015em] text-calcaire md:text-[3rem]"
+                    className="group flex min-h-14 items-center font-titre text-[2.25rem] font-semibold leading-[1.1] tracking-[-0.015em] text-calcaire md:text-[3rem]"
                   >
                     <span className="transition-colors duration-200 group-hover:text-or-clair">{s.libelle}</span>
                   </a>

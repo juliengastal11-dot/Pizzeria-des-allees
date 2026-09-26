@@ -46,8 +46,10 @@ Pilules translucides de la barre mobile (variante `voile` : `minuit/70`, contour
 
 ## 3. Typographie
 
-- **Besley** (`font-display`) : titres, 600-700, italique pour les accroches et le mot mis en valeur. Casse normale, jamais de capitales (elles appartiennent au logo).
-- **Figtree** (`font-sans`) : texte 400, libellés et boutons 600-650.
+- **Besley** : titres, 600-700, italique pour les accroches et le mot mis en valeur. Casse normale, jamais de capitales (elles appartiennent au logo).
+- **Figtree** : texte 400, libellés et boutons 600-650.
+- Chaque texte porte un **rôle** (jetons du `@theme` de `globals.css`), jamais une police en dur : `font-titre` (h1, h2 par défaut, grands affichages : manifeste, menu plein écran, chiffres des étapes), `font-soustitre` (h3, h4 par défaut : titres de cartes, noms et prix des pizzas, adresse), `font-accent` (phrases en italique : accroche du hero, ardoises, noms sous les pelles, légendes des photos, avis Google, signature du pied de page), `font-texte` (corps et boutons), `font-petit` (étiquettes des pizzas, légende de la carte, mentions du pied de page, compteurs) et `.surtitre` (police, taille, graisse, espacement et casse réglables par `--surtitre-*`). Par défaut (« Enseigne »), titre, sous-titre et accent sont en Besley, le reste en Figtree.
+- Essai en cours (temporaire) : un bandeau en haut du site (`BandeauEssai.tsx`) propose huit palettes de couleurs (`[data-palette]`) et cinq palettes typographiques indépendantes (`[data-typo]`) : Enseigne, Éditorial (Playfair Display, Raleway), Gravure (Cormorant Garamond, Raleway), Ardoise (Fraunces, Caveat, Figtree), Comptoir (Bricolage Grotesque, Instrument Serif, DM Mono). Polices d'essai jamais préchargées.
 - Échelle : H1 hero clamp(2.6rem → 5.5rem) ; H2 clamp(2.1rem → 3.9rem) (voir `SectionTitre`) ; texte 17 px ; petit texte ≥ 14 px ; surtitres `.surtitre` (13 px, capitales, +0,14 em).
 - `text-wrap: balance` sur les titres (déjà global). Pour maîtriser une coupure, un titre de `site.ts` peut être un tableau de segments (une ligne chacun, ex. le titre de la Salle). Chiffres tabulaires (`tabular-nums`) pour horaires et prix.
 

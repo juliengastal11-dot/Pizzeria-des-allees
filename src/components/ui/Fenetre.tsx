@@ -76,7 +76,7 @@ export function Fenetre({ ouvert, onFermer, titre, children, large, retour }: Pr
     >
       <div className="relative flex max-h-[92svh] flex-col overflow-hidden rounded-t-[2rem] border border-filet/60 bg-minuit shadow-[0_-20px_60px_rgba(6,15,46,0.55)] sm:rounded-[2rem]">
         <div className="flex items-center justify-between gap-4 border-b border-filet/40 px-5 py-4 sm:px-6">
-          <h2 id={titreId} className="font-display text-2xl font-semibold text-calcaire">
+          <h2 id={titreId} className="font-soustitre text-2xl font-semibold text-calcaire">
             {titre}
           </h2>
           <button

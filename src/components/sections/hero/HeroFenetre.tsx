@@ -265,8 +265,8 @@ function Commandes({ courante, n, onAller }: { courante: number; n: number; onAl
         <ChevronLeft aria-hidden className="size-5" />
       </BoutonVue>
       <p className="min-w-0 flex-1 text-balance text-center leading-tight" aria-live="polite" aria-atomic="true">
-        <span className="block font-display text-[0.95rem] italic text-calcaire">{vue.nom}</span>
-        <span className="mt-0.5 block text-xs font-semibold tabular-nums text-pierre">
+        <span className="block font-accent text-[0.95rem] italic text-calcaire">{vue.nom}</span>
+        <span className="mt-0.5 block font-petit text-xs font-semibold tabular-nums text-pierre">
           <span className="sr-only">{`${TEXTES.vue} `}</span>
           {courante + 1}
           <span aria-hidden>{" / "}</span>

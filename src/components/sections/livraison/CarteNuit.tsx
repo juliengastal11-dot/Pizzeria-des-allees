@@ -157,7 +157,7 @@ export function CarteNuit({ choix, demande, survol, onChoisir, onEtat }: Props) 
             )}
           </div>
         ) : (
-          <p className="relative font-display text-[0.9375rem] italic text-pierre">{TEXTES.chargement}</p>
+          <p className="relative font-accent text-[0.9375rem] italic text-pierre">{TEXTES.chargement}</p>
         )}
       </div>
     </div>

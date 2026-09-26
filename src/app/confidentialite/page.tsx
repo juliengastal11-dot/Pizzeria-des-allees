@@ -31,7 +31,7 @@ function Service({ usage, nom, children, politique }: { usage: string; nom: stri
         <span className="inline-flex min-h-7 items-center rounded-full border border-filet px-3 text-[0.875rem] font-semibold text-or-clair">
           {usage}
         </span>
-        <h3 className="font-display text-[1.25rem] font-semibold text-calcaire">{nom}</h3>
+        <h3 className="font-soustitre text-[1.25rem] font-semibold text-calcaire">{nom}</h3>
       </div>
       <div className="mt-3 space-y-3">{children}</div>
       <p className="mt-3 text-[0.9375rem]">{politique}</p>
