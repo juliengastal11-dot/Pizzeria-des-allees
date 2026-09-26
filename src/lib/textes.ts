@@ -18,6 +18,12 @@ export function typographie(texte: string): string {
     .replace(/(\p{L})'(\p{L})/gu, "$1’$2");
 }
 
+/** « Béziers, Villeneuve-lès-Béziers ou Corneilhan » : une liste en toutes lettres, séparée par « ou ». */
+export function enumererOu(mots: readonly string[]): string {
+  if (mots.length < 2) return mots.join("");
+  return `${mots.slice(0, -1).join(", ")} ou ${mots[mots.length - 1]}`;
+}
+
 export type Morceau = { texte: string; placeholder: boolean };
 
 /** Découpe un texte : les parties « [À PRÉCISER …] » sont marquées comme placeholders. */

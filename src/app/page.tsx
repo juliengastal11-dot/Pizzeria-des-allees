@@ -5,6 +5,7 @@ import { Livraison } from "@/components/sections/Livraison";
 import { Salle } from "@/components/sections/Salle";
 import { Infos } from "@/components/sections/Infos";
 import { Fidelite } from "@/components/sections/Fidelite";
+import { Faq } from "@/components/sections/Faq";
 
 export default function Accueil() {
   return (
@@ -16,6 +17,7 @@ export default function Accueil() {
       <Salle />
       <Fidelite />
       <Infos />
+      <Faq />
     </>
   );
 }

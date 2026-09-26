@@ -30,9 +30,9 @@ SEO et informations légales. Le fichier est rangé par blocs commentés :
 | `livraison` | Communes livrées, minimum, frais, délai ; `zoneDefinie` (contour de la zone sur la carte) |
 | `navigation` | Libellés du menu, bouton Menu, lien d'évitement |
 | `textes.actions` | Boutons Commander / Réserver et leurs fenêtres |
-| `textes.hero`, `textes.histoire` (dont `mur` : ardoises et pizzas exposées), `textes.carte`, `textes.livraison`, `textes.salle`, `textes.infos`, `textes.footer` | Textes de chaque section, jusqu'aux libellés lus par les lecteurs d'écran |
+| `textes.hero`, `textes.histoire` (dont `mur` : ardoises et pizzas exposées), `textes.carte`, `textes.livraison`, `textes.salle` (dont `avisGoogle`), `textes.infos`, `textes.faq`, `textes.footer` | Textes de chaque section, jusqu'aux libellés lus par les lecteurs d'écran |
 | `textes.introuvable`, `textes.pagesLegales` | Page 404, titres et avertissements des pages légales |
-| `pizzas`, `photos` (dont `photos.histoire` et `photos.dessinAllees`), `hero` | Contenus visuels |
+| `pizzas`, `photos` (dont `photos.histoire` et `photos.dessinAllees`), `hero`, `avisGoogle` | Contenus visuels |
 | `seo` | Titre, description (155 caractères au plus), image de partage, date de mise à jour |
 | `legal` | Société, hébergeur, médiateur, politiques des services tiers, durées de conservation, crédits |
 
@@ -55,6 +55,12 @@ SEO et informations légales. Le fichier est rangé par blocs commentés :
   arrêtée : la carte trace alors un contour arrondi autour des communes livrées.
 - **Nom de la pizzeria** : on parle toujours de « la Pizzeria des Allées » (ou « la pizzeria » quand la
   place manque), jamais du « 43 ». Le numéro n'apparaît que dans l'adresse.
+- **Avis Google** : `avisGoogle` (note, nombre d'avis, témoignages) et `liens.avisGoogle` (la fiche). Julien garde
+  la fiche existante : elle affiche encore l'ancienne enseigne (Google, pas ce site — voir `liens.reserver`
+  pour la même situation côté TheFork). Relevé le 26/09/2026 : à actualiser de temps en temps.
+- **FAQ** : `textes.faq.items` (question/réponse). Chaque réponse est un accordéon natif `<details>`, déjà dans
+  le HTML servi (indexable), et reprise telle quelle dans les données structurées `FAQPage`
+  (`faqJsonLd` dans `src/lib/jsonld.ts`, incluses dans `layout.tsx`).
 - **Dates** : `seo.derniereMiseAJour` (accueil) et `legal.miseAJour` (pages légales) alimentent le plan du
   site et la mention « Dernière mise à jour ». Les changer quand le contenu change.
 

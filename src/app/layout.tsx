@@ -7,7 +7,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { BarreMobile } from "@/components/layout/BarreMobile";
 import { site } from "@/config/site";
-import { restaurantJsonLd } from "@/lib/jsonld";
+import { faqJsonLd, restaurantJsonLd } from "@/lib/jsonld";
 import { partage } from "@/lib/metadonnees";
 import { getSiteUrl } from "@/lib/site-url";
 import { estBrouillon } from "./brouillon";
@@ -73,6 +73,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <style>{SANS_JS}</style>
         </noscript>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: restaurantJsonLd() }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: faqJsonLd() }} />
         <Providers>
           <Header />
           <main id="contenu" tabIndex={-1} className="outline-none">

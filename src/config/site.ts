@@ -135,6 +135,13 @@ export const site = {
     carte: "https://www.google.com/maps/search/?api=1&query=43+All%C3%A9es+Paul+Riquet%2C+34500+B%C3%A9ziers",
     /** Carte Google intégrée (section Infos), chargée seulement au clic du visiteur (RGPD). */
     carteIntegree: "https://www.google.com/maps/embed?origin=mfe&pb=!1m3!2m1!1s43+All%C3%A9es+Paul+Riquet,+34500+B%C3%A9ziers!6i17",
+    /**
+     * Fiche Google de la pizzeria (avis clients) : Julien garde cette fiche existante plutôt que d'en recréer une.
+     * ⚠ Elle affiche encore l'ancienne enseigne (comme la fiche TheFork, voir `reserver`) : c'est
+     * Google qui l'affiche, pas ce site, mais il faudra la faire renommer avant la mise en ligne réelle.
+     */
+    avisGoogle:
+      "https://www.google.com/maps/place/Basilic+%26+Co+-+pizzas+de+terroirs+-+B%C3%A9ziers/@43.3414205,3.2181342,17z/data=!3m1!4b1!4m6!3m5!1s0x12b10fed5dbd6f95:0x842c6f4c237de571!8m2!3d43.3414205!4d3.2181342!16s%2Fg%2F11j303zkvd",
   },
 
   reseaux: {
@@ -194,6 +201,7 @@ export const site = {
       livraison: "Livraison",
       salle: "La salle",
       infos: "Infos pratiques",
+      faq: "FAQ",
     },
     menu: "Menu",
     fermer: "Fermer",
@@ -242,8 +250,6 @@ export const site = {
       surtitre: "Pizzeria artisanale · Béziers",
       accroche: "Pâte pétrie ici, produits du coin, et la terrasse sous les platanes des Allées.", // À VALIDER
       modes: "Sur place · À emporter · En livraison",
-      /** Bouton pause de la fresque animée (libellé fixe, l'état est annoncé par aria-pressed). */
-      pauseVideo: "Mettre en pause l’animation",
     },
 
     // Notre histoire
@@ -262,10 +268,17 @@ export const site = {
       mur: {
         /** Nom du mur pour les lecteurs d'écran. */
         aria: "Le mur de la salle : nos pizzas encadrées et quelques mots sur la maison",
+        /**
+         * Cinq ardoises (textes du restaurateur, 25/09/2026).
+         * ⚠ « pizzas de terroirs » reprend l'intitulé de l'ancienne fiche Google Basilic & Co
+         * (voir liens.avisGoogle) : à reformuler si Julien veut zéro ressemblance.
+         */
         ardoises: [
-          "Une pâte pétrie chaque matin, et laissée lever le temps qu’il faut.", // À VALIDER : durée de maturation à préciser
-          "Olives Lucques, pélardon, cèbes de Lézignan : le Biterrois passe à table.", // À VALIDER : producteurs à nommer
-          "Une salle sous la fresque du Pont Vieux, une terrasse sous les platanes des Allées.",
+          "La Pizzeria des Allées vous propose une expérience culinaire unique centrée sur la pizza artisanale de qualité.",
+          "Chaque pizza est confectionnée avec des ingrédients soigneusement sélectionnés.",
+          "Notre savoir-faire garantit une pâte à pizza fine et croustillante et des garnitures généreuses.",
+          "Complétant notre offre de pizzas de terroirs, nous vous proposons également une sélection de salades fraîches.", // ⚠ voir la note ci-dessus
+          "Nos gratins de ravioles sont composés d’ingrédients frais et de saison, chaque recette est un équilibre parfait entre fraîcheur, saveurs et authenticité.",
         ],
         /** Pizzas exposées sur le mur (identifiants de `pizzas`), dans l'ordre d'accrochage : quatre cadres. */
         pizzas: ["passejada", "cers", "rosace", "caritats"],
@@ -354,17 +367,24 @@ export const site = {
       /** Une ligne par segment (coupures maîtrisées). {salle} et {terrasse} viennent de `couverts` (plus haut). */
       titre: ["{salle} couverts sous la fresque,", "{terrasse} sous les platanes."],
       intro: "Une salle aux murs peints de Béziers et de vignes, une terrasse ouverte sur les Allées Paul-⁠Riquet.",
-      notePhotos: "Photos provisoires : le shooting de la réouverture arrive.",
       lieux: { salle: "La salle", terrasse: "La terrasse" } satisfies Record<Photo["lieu"], string>,
-      /** Les photos défilent en continu (promenade) ; on peut les glisser, les survoler ou les arrêter. */
-      galerie: {
-        aria: "Photos de la salle et de la terrasse, qui défilent",
-        /** Bouton d'arrêt du défilement (libellé fixe, l'état est annoncé par aria-pressed). */
-        pause: "Arrêter le défilement des photos",
-      },
+      /**
+       * Les photos défilent en continu (promenade) ; on peut les arrêter en les survolant, en leur
+       * donnant le focus, ou en les glissant à la main. Pas de bouton pause visible (choix de Julien) :
+       * WCAG 2.2.2 reste satisfait par le survol/focus, seule échappatoire pour le clavier et la souris.
+       */
+      galerie: { aria: "Photos de la salle et de la terrasse, qui défilent" },
       /** Complément lu après la légende : « Le coin des vignes, agrandir la photo ». */
       agrandir: "agrandir la photo",
       visionneuse: { precedente: "Photo précédente", suivante: "Photo suivante", photo: "photo", sur: "sur" },
+      /** Témoignages de site.avisGoogle, qui défilent sous la galerie (voir salle/AvisGoogle.tsx). */
+      avisGoogle: {
+        aria: "Avis de nos clients sur Google, qui défilent",
+        /** {n} est remplacé par le nombre d'avis. */
+        lien: "Voir les {n} avis sur Google",
+        /** Affiché après le prénom, dans chaque témoignage. */
+        origine: "· avis Google",
+      },
     },
 
     // Infos pratiques
@@ -397,6 +417,39 @@ export const site = {
         email: "E-mail",
         paiements: "Paiements acceptés",
       },
+    },
+
+    // FAQ (juste avant le pied de page)
+    faq: {
+      surtitre: "FAQ",
+      titre: "Vous vous demandez peut-être…",
+      /** {communes} et {couverts.salle}/{couverts.terrasse} sont remplacés à l'affichage (voir Faq.tsx). */
+      items: [
+        {
+          question: "Livrez-vous chez moi ?",
+          reponse: "Oui, si vous êtes à {communes}. Le détail de la zone est juste au-dessus, dans la section Livraison.",
+        },
+        {
+          question: "Peut-on payer par carte ou en titres-restaurant ?",
+          reponse: "Oui, nous acceptons la carte bancaire, les titres-restaurant et les espèces.",
+        },
+        {
+          question: "Comment réserver une table ?",
+          reponse: "En un clic sur « Réserver une table » : une fenêtre s’ouvre avec notre outil de réservation en ligne, pour choisir votre date et votre heure.",
+        },
+        {
+          question: "Peut-on commander à emporter ou en livraison ?",
+          reponse: "Oui, directement en ligne avec le bouton « Commander » : choisissez à emporter ou en livraison, selon votre commune.",
+        },
+        {
+          question: "Quels sont vos horaires ?",
+          reponse: "Ils sont annoncés dans la rubrique Infos pratiques, juste en dessous, et mis à jour dès leur confirmation.",
+        },
+        {
+          question: "Quelle est la capacité de la salle et de la terrasse ?",
+          reponse: "{salle} couverts en salle, sous la fresque, et {terrasse} sur la terrasse, sous les platanes.",
+        },
+      ],
     },
 
     // Pied de page
@@ -563,6 +616,36 @@ export const site = {
     dessinAllees: { anime: "/images/salle/allees-dessin.svg", fixe: "/images/salle/allees-dessin-fixe.svg" }, // À VALIDER : droits de la photo d'origine
     /** Visuels générés par IA ou retouchés : mention « visuels provisoires » affichée en pied de page. */
     provisoires: true,
+  },
+
+  /* ------------------------------------------------------------------------
+   * Avis Google, relevés sur la fiche que Julien garde (liens.avisGoogle).
+   * Relevé le 26/09/2026 : à actualiser de temps en temps (note, nombre
+   * d'avis, et pourquoi pas en changer quelques-uns).
+   * --------------------------------------------------------------------- */
+  avisGoogle: {
+    note: 4.6,
+    nombreAvis: 2137,
+    /** Quatre à six extraits, positifs et courts, avec le prénom et l'initiale tels qu'affichés sur Google. */
+    temoignages: [
+      { auteur: "Rais R.", note: 5, texte: "Bah ils frôlent la perfection." },
+      {
+        auteur: "Delphine G.",
+        note: 5,
+        texte: "Une très belle découverte, des pizzas à la pâte fine et croustillante, un service très sympa. Je recommande vraiment !",
+      },
+      {
+        auteur: "Sandrine",
+        note: 5,
+        texte: "Les pizzas et salades sont très bonnes et copieuses. L’équipe est très sympa, le service rapide.",
+      },
+      { auteur: "Martine V.", note: 5, texte: "Personnel adorable, très bon accueil, service rapide, avec le sourire." },
+      {
+        auteur: "Adrien V.",
+        note: 4,
+        texte: "Très bonnes pizzas, rien à redire sur la qualité et le goût : le point fort de l’adresse !",
+      },
+    ] satisfies { auteur: string; note: number; texte: string }[],
   },
 
   /* ------------------------------------------------------------------------

@@ -16,7 +16,7 @@ const TEXTES = site.textes.histoire.mur;
  * formes différentes (ronds, ovales, arches, rectangles), accrochés sur deux
  * colonnes irrégulières. Les pizzas y sont exposées en portraits rétroéclairés
  * (une lueur chaude sur le mur autour du cadre, qui s'allume à l'arrivée à
- * l'écran) ; trois ardoises portent des phrases qui s'écrivent à la main ;
+ * l'écran) ; cinq ardoises portent des phrases qui s'écrivent à la main ;
  * deux photos de la salle complètent l'accrochage. Au défilement, chaque cadre
  * glisse à sa propre vitesse (parallaxe), d'autant plus que l'on descend.
  */
@@ -39,20 +39,22 @@ function composer(): { gauche: Accroche[]; droite: Accroche[] } {
   const galerie: readonly Photo[] = site.photos.galerie;
   const grande = galerie.find((p) => p.src === site.photos.histoire.grande);
   const petite = galerie.find((p) => p.src === site.photos.histoire.petite);
-  const [a0, a1, a2] = TEXTES.ardoises;
+  const [a0, a1, a2, a3, a4] = TEXTES.ardoises;
 
   const gauche: (Accroche | false | undefined)[] = [
-    pizzas[0] && { cadre: { type: "pizza", pizza: pizzas[0], forme: "rond" }, largeur: "90%", cote: "droite", amplitude: 50 },
-    a0 && { cadre: { type: "ardoise", texte: a0 }, largeur: "84%", cote: "gauche", amplitude: 72 },
-    grande && { cadre: { type: "photo", photo: grande, forme: "arche" }, largeur: "92%", cote: "droite", amplitude: 60 },
-    pizzas[2] && { cadre: { type: "pizza", pizza: pizzas[2], forme: "carre" }, largeur: "78%", cote: "gauche", haut: "0.75rem", amplitude: 84 },
-    a2 && { cadre: { type: "ardoise", texte: a2 }, largeur: "88%", cote: "droite", amplitude: 58 },
+    pizzas[0] && { cadre: { type: "pizza", pizza: pizzas[0], forme: "rond" }, largeur: "90%", cote: "droite", amplitude: 46 },
+    a0 && { cadre: { type: "ardoise", texte: a0 }, largeur: "84%", cote: "gauche", amplitude: 66 },
+    grande && { cadre: { type: "photo", photo: grande, forme: "arche" }, largeur: "92%", cote: "droite", amplitude: 56 },
+    a1 && { cadre: { type: "ardoise", texte: a1 }, largeur: "88%", cote: "gauche", haut: "0.5rem", amplitude: 78 },
+    pizzas[2] && { cadre: { type: "pizza", pizza: pizzas[2], forme: "carre" }, largeur: "78%", cote: "gauche", amplitude: 92 },
+    a3 && { cadre: { type: "ardoise", texte: a3 }, largeur: "90%", cote: "droite", amplitude: 104 },
   ];
   const droite: (Accroche | false | undefined)[] = [
-    a1 && { cadre: { type: "ardoise", texte: a1 }, largeur: "100%", cote: "gauche", amplitude: 118 },
-    pizzas[1] && { cadre: { type: "pizza", pizza: pizzas[1], forme: "ovale" }, largeur: "84%", cote: "gauche", amplitude: 100 },
-    petite && { cadre: { type: "photo", photo: petite, forme: "paysage" }, largeur: "94%", cote: "droite", amplitude: 128 },
-    pizzas[3] && { cadre: { type: "pizza", pizza: pizzas[3], forme: "rond" }, largeur: "68%", cote: "gauche", haut: "0.5rem", amplitude: 108 },
+    a2 && { cadre: { type: "ardoise", texte: a2 }, largeur: "100%", cote: "gauche", amplitude: 110 },
+    pizzas[1] && { cadre: { type: "pizza", pizza: pizzas[1], forme: "ovale" }, largeur: "84%", cote: "gauche", amplitude: 94 },
+    petite && { cadre: { type: "photo", photo: petite, forme: "paysage" }, largeur: "94%", cote: "droite", amplitude: 120 },
+    a4 && { cadre: { type: "ardoise", texte: a4 }, largeur: "92%", cote: "gauche", amplitude: 108 },
+    pizzas[3] && { cadre: { type: "pizza", pizza: pizzas[3], forme: "rond" }, largeur: "66%", cote: "gauche", haut: "0.5rem", amplitude: 96 },
   ];
   const garder = (liste: (Accroche | false | undefined)[]) => liste.filter((a): a is Accroche => Boolean(a));
   return { gauche: garder(gauche), droite: garder(droite) };

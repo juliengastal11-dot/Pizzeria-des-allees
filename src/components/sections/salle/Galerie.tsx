@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent as PointeurReact } from "react";
 import { motion, useAnimationFrame, useInView, useMotionValue, type PanInfo } from "motion/react";
-import { Maximize2, Pause, Play } from "lucide-react";
+import { Maximize2 } from "lucide-react";
 import { site, type Photo } from "@/config/site";
 import { MOUVEMENT_REDUIT, useMedia } from "@/components/sections/histoire/useMedia";
 import { Visionneuse } from "./Visionneuse";
@@ -65,9 +65,10 @@ type Props = {
 /**
  * Galerie de la salle et de la terrasse : les photos, en arches cerclées de
  * chêne, défilent en continu comme une promenade le long des tableaux. On peut
- * les glisser à la main (souris ou doigt), les survoler pour les arrêter, ou
- * les arrêter avec le bouton ; chacune s'agrandit d'un clic.
- * Mouvement réduit : une rangée fixe, à faire défiler soi-même.
+ * les glisser à la main (souris ou doigt), ou les arrêter en les survolant ou
+ * en leur donnant le focus (pas de bouton pause visible : choix de Julien) ;
+ * chacune s'agrandit d'un clic. Mouvement réduit : une rangée fixe, à faire
+ * défiler soi-même.
  */
 export function Galerie({ photos, titreFenetre }: Props) {
   const [ouverte, setOuverte] = useState<number | null>(null);
@@ -110,16 +111,15 @@ function Promenade({ photos, onOuvrir, fenetreOuverte }: PropsRangee & { fenetre
   const fenetre = useRef<HTMLDivElement>(null);
   const premiere = useRef<HTMLUListElement>(null);
   const [copies, setCopies] = useState(COPIES_MIN);
-  const [arret, setArret] = useState(false);
   const enVue = useInView(fenetre, { amount: 0.15 });
   const x = useMotionValue(0);
 
   // Tout ce que lit la boucle d'animation vit dans des références : aucun rendu à chaque image
   const etat = useRef({ position: 0, largeur: 0, elan: 0, survol: false, focus: false, glisse: false, aGlisse: false });
-  const pauses = useRef({ arret: false, fenetre: false, horsVue: true });
+  const pauses = useRef({ fenetre: false, horsVue: true });
   useEffect(() => {
-    pauses.current = { arret, fenetre: fenetreOuverte, horsVue: !enVue };
-  }, [arret, fenetreOuverte, enVue]);
+    pauses.current = { fenetre: fenetreOuverte, horsVue: !enVue };
+  }, [fenetreOuverte, enVue]);
 
   const appliquer = useCallback(() => {
     const e = etat.current;
@@ -150,7 +150,7 @@ function Promenade({ photos, onOuvrir, fenetreOuverte }: PropsRangee & { fenetre
     if (p.horsVue || !e.largeur) return;
     const dt = Math.min(delta, 64) / 1000;
     let vitesse = 0;
-    if (!(p.arret || p.fenetre || e.survol || e.focus || e.glisse)) vitesse -= VITESSE;
+    if (!(p.fenetre || e.survol || e.focus || e.glisse)) vitesse -= VITESSE;
     if (e.elan !== 0) {
       vitesse += e.elan;
       e.elan *= FREIN ** dt;
@@ -227,18 +227,6 @@ function Promenade({ photos, onOuvrir, fenetreOuverte }: PropsRangee & { fenetre
             </ul>
           ))}
         </motion.div>
-      </div>
-
-      <div className="mt-1 flex justify-center">
-        <button
-          type="button"
-          aria-pressed={arret}
-          aria-label={TEXTES.galerie.pause}
-          onClick={() => setArret((a) => !a)}
-          className="grid size-11 place-items-center rounded-full border border-filet/70 bg-minuit/80 text-calcaire transition-colors duration-200 hover:border-calcaire/70"
-        >
-          {arret ? <Play aria-hidden className="size-[1.05rem]" strokeWidth={2.2} /> : <Pause aria-hidden className="size-[1.05rem]" strokeWidth={2.2} />}
-        </button>
       </div>
     </div>
   );

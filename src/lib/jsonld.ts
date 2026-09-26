@@ -1,5 +1,6 @@
 import { estPlaceholder, site } from "@/config/site";
 import { openingHoursSpecification } from "@/lib/horaires";
+import { enumererOu, remplir } from "@/lib/textes";
 import { getSiteUrl } from "@/lib/site-url";
 
 /** Données structurées schema.org de type Restaurant (SEO local). */
@@ -61,5 +62,25 @@ export function restaurantJsonLd() {
   };
 
   // Échappe « < » pour éviter toute injection dans la balise <script>
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}
+
+/**
+ * Données structurées schema.org de type FAQPage (SEO), à partir de `site.textes.faq.items`.
+ * Les jetons ({communes}, {salle}, {terrasse}) sont résolus ici comme dans `Faq.tsx`, pour que
+ * le texte des données structurées soit identique à celui affiché (l'accordéon garde tout dans
+ * le HTML initial : rien ici n'est un contenu caché qui n'existerait pas ailleurs sur la page).
+ */
+export function faqJsonLd() {
+  const jetons = { communes: enumererOu(site.livraison.communes), ...site.couverts };
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: site.textes.faq.items.map(({ question, reponse }) => ({
+      "@type": "Question",
+      name: question,
+      acceptedAnswer: { "@type": "Answer", text: remplir(reponse, jetons) },
+    })),
+  };
   return JSON.stringify(data).replace(/</g, "\\u003c");
 }
