@@ -92,10 +92,18 @@ chemin dans `site.ts`, sinon l'ancienne version peut rester affichée.
   pour en changer, produire les deux fichiers ensemble et garder le même rapport 1536 × 1020.
 - Pizzas : PNG ou WebP **détourés en disque** (fond transparent), carrés, 800 px, dans `public/images/pizzas/`.
 - Image de partage (réseaux sociaux) : JPEG 1200 × 630 dans `public/images/partage/`, décrite par `seo.image`.
-- Hero : la vidéo (`public/video/fresque-hero.mp4|webm`), son poster et la ligne d'horizon détourée
-  (`public/images/hero/`) doivent provenir **de la même vidéo, au même cadrage 3:4**, sinon le titre
-  ne passera plus derrière la cathédrale au bon endroit. Réglages du titre et du pont :
-  `src/components/sections/hero/geometrie.ts`.
+- Hero : les vues de la fenêtre en arche sont listées dans `hero.vues` (vidéo en boucle MP4 + WebM
+  900 × 1200, 24 i/s, sans son dans `public/video/` ; poster = sa première image, dans `public/images/hero/`).
+  Tant qu'il y en a plusieurs, le hero est en **mode présentation** : on passe d'une vue à l'autre en glissant
+  la fenêtre, avec les flèches ou au clavier. Une fois la vue choisie par le restaurateur, ne garder qu'elle :
+  les flèches disparaissent. `titreClair` passe le titre en calcaire (ciel soutenu, feuillage sombre).
+- Fresque : la vidéo (`fresque-hero.mp4|webm`), son poster et la ligne d'horizon détourée doivent provenir
+  **de la même vidéo, au même cadrage 3:4**, sinon le titre ne passera plus derrière la cathédrale au bon
+  endroit. Réglages du titre et du pont : `src/components/sections/hero/geometrie.ts`.
+- Allées (essais du 26/09/2026, photos recadrées en 3:4 et animées sur Higgsfield) : le jour avec Seedance 2.5
+  (boucle de 9 s, fondu enchaîné d'une seconde à la jointure) ; le soir avec Kling 3.0 en deux plans, un aller
+  depuis la photo puis un retour de sa dernière image vers la première (boucle de 20 s sans fondu, ~2,8 Mo).
+  Une même image en début et en fin fait marcher les promeneurs sur place : à éviter dès qu'il y a des passants.
 
 ## Direction artistique
 

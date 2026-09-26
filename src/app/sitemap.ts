@@ -16,7 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: REVISION_ACCUEIL,
       changeFrequency: "weekly",
       priority: 1,
-      images: [site.seo.image.src, site.hero.poster, ...site.photos.galerie.map((photo) => photo.src)].map(url),
+      images: [site.seo.image.src, site.hero.vues[0].poster, ...site.photos.galerie.map((photo) => photo.src)].map(url),
     },
     {
       url: url("/mentions-legales"),

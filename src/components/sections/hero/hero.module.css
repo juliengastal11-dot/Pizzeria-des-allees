@@ -44,8 +44,15 @@
   }
 }
 
-/* La fenêtre en arche : demi-cercle exact en haut (rapport 3:4), cadre chêne */
+/*
+ * La fenêtre en arche : demi-cercle exact en haut (rapport 3:4), cadre chêne.
+ * clip et non hidden : les vues voisines attendent de part et d'autre, et une
+ * zone « hidden » défile encore quand le navigateur y amène un élément (focus
+ * d'une flèche, recherche dans la page), ce qui décalerait tout le contenu.
+ */
 .arche {
+  overflow: hidden;
+  overflow: clip;
   border-radius: 50% 50% 1.75rem 1.75rem / 37.5% 37.5% 1.75rem 1.75rem;
   box-shadow:
     0 0 0 5px var(--color-nuit, #051a4b),
@@ -76,6 +83,18 @@
   text-shadow:
     0 0 28px rgba(241, 224, 200, 0.45),
     0 0 2px rgba(241, 224, 200, 0.25);
+  /* D'une vue à l'autre (mode présentation), le titre change de ton en douceur */
+  transition:
+    color 0.6s ease,
+    text-shadow 0.6s ease;
+}
+
+/* Vue au ciel soutenu ou au feuillage sombre : calcaire à halo nuit */
+.titre[data-ton="clair"] {
+  color: var(--color-calcaire, #f1e0c8);
+  text-shadow:
+    0 0 24px rgba(5, 26, 75, 0.6),
+    0 1px 3px rgba(5, 26, 75, 0.55);
 }
 
 /* Chaque ligne se lève derrière la cathédrale */
@@ -148,7 +167,8 @@
   .monte {
     animation: none;
   }
-  .video {
+  .video,
+  .titre {
     transition: none;
   }
 }

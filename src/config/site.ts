@@ -57,6 +57,22 @@ export type Photo = {
   cadrage?: string;
 };
 
+/** Une vue de la fenêtre en arche du hero : vidéo en boucle 3:4 (900 × 1200, 24 i/s) et son poster. */
+export type VueHero = {
+  id: string;
+  /** Nom affiché dans la fenêtre tant que l'on peut passer d'une vue à l'autre. */
+  nom: string;
+  videoMp4: string;
+  videoWebm: string;
+  /** Première image de la vidéo : affichée avant elle, et seule en mouvement réduit. */
+  poster: string;
+  /** Ligne d'horizon détourée qui passe devant le titre (il se lève derrière elle). Sans elle, le titre est devant la vue. */
+  horizon?: string;
+  /** Titre calcaire à halo nuit, pour une vue au ciel soutenu ou au feuillage sombre derrière le nom (sinon : nuit à halo calcaire). */
+  titreClair?: boolean;
+  alt: string;
+};
+
 export const site = {
   /* ------------------------------------------------------------------------
    * Identité
@@ -250,6 +266,8 @@ export const site = {
       surtitre: "Pizzeria artisanale · Béziers",
       accroche: "Pâte pétrie ici, produits du coin, et la terrasse sous les platanes des Allées.", // À VALIDER
       modes: "Sur place · À emporter · En livraison",
+      /** Passage d'une vue à l'autre de la fenêtre (seulement s'il y en a plusieurs, voir `hero.vues`). */
+      vues: { groupe: "Vues de la fenêtre", precedente: "Vue précédente", suivante: "Vue suivante", vue: "vue", sur: "sur" },
     },
 
     // Notre histoire
@@ -643,16 +661,44 @@ export const site = {
   },
 
   /* ------------------------------------------------------------------------
-   * Hero : fresque animée (vidéo en boucle) et ligne d'horizon détourée
-   * ⚠ Droits : la fresque est reproduite et animée. Faire confirmer par écrit
-   * l'autorisation de son auteur (voir legal.credits.fresque).
+   * Hero : les vues de la fenêtre en arche (vidéos en boucle)
+   * Tant qu'il y en a plusieurs, on passe de l'une à l'autre d'un glissé ou
+   * avec les flèches : c'est le mode présentation, pour que le restaurateur
+   * choisisse. Le choix fait, ne garder que la vue retenue : la fenêtre
+   * redevient simple, sans flèches. La première est celle du chargement.
    * --------------------------------------------------------------------- */
   hero: {
-    videoMp4: "/video/fresque-hero.mp4",
-    videoWebm: "/video/fresque-hero.webm",
-    poster: "/images/hero/fresque-poster.jpg",
-    horizon: "/images/hero/fresque-horizon.webp",
-    alt: "La fresque de la salle : la cathédrale Saint-Nazaire sur sa colline, le Pont Vieux et l’Orb, animés comme un matin d’été",
+    vues: [
+      {
+        id: "fresque",
+        nom: "La fresque de la salle",
+        // ⚠ Droits : la fresque est reproduite et animée. Faire confirmer par écrit l'autorisation de son auteur (voir legal.credits.fresque).
+        videoMp4: "/video/fresque-hero.mp4",
+        videoWebm: "/video/fresque-hero.webm",
+        poster: "/images/hero/fresque-poster.jpg",
+        horizon: "/images/hero/fresque-horizon.webp",
+        alt: "La fresque de la salle : la cathédrale Saint-Nazaire sur sa colline, le Pont Vieux et l’Orb, animés comme un matin d’été",
+      },
+      {
+        id: "allees-soir",
+        nom: "Les Allées au soleil couchant",
+        // Photo de Julien, animée par IA.
+        videoMp4: "/video/allees-soir-hero.mp4",
+        videoWebm: "/video/allees-soir-hero.webm",
+        poster: "/images/hero/allees-soir-poster.jpg",
+        titreClair: true,
+        alt: "Les Allées Paul-Riquet au soleil couchant : promeneurs sous les platanes et la lune dans le ciel bleu",
+      },
+      {
+        id: "allees-jour",
+        nom: "Les Allées en plein été",
+        // ⚠ Droits : photo animée par IA. La remplacer par la nôtre, ou obtenir l'accord de son auteur, avant la mise en ligne.
+        videoMp4: "/video/allees-jour-hero.mp4",
+        videoWebm: "/video/allees-jour-hero.webm",
+        poster: "/images/hero/allees-jour-poster.jpg",
+        alt: "Les Allées Paul-Riquet en plein jour : la voûte des platanes jusqu’au théâtre, promeneurs et terrasses",
+      },
+    ] satisfies VueHero[],
   },
 
   /* ------------------------------------------------------------------------
