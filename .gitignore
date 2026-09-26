@@ -42,5 +42,6 @@ next-env.d.ts
 
 # Outils locaux
 .claude/
+.overlay/
 
 public/__qa*.html
