@@ -32,7 +32,7 @@ SEO et informations légales. Le fichier est rangé par blocs commentés :
 | `textes.actions` | Boutons Commander / Réserver et leurs fenêtres |
 | `textes.hero`, `textes.histoire` (dont `mur` : ardoises et pizzas exposées), `textes.carte`, `textes.livraison`, `textes.salle` (dont `avisGoogle`), `textes.infos`, `textes.faq`, `textes.footer` | Textes de chaque section, jusqu'aux libellés lus par les lecteurs d'écran |
 | `textes.introuvable`, `textes.pagesLegales` | Page 404, titres et avertissements des pages légales |
-| `pizzas`, `photos` (dont `photos.histoire` et `photos.dessinAllees`), `hero`, `avisGoogle` | Contenus visuels |
+| `pizzas`, `photos` (dont `photos.dessinAllees`), `hero`, `avisGoogle` | Contenus visuels |
 | `seo` | Titre, description (155 caractères au plus), image de partage, date de mise à jour |
 | `legal` | Société, hébergeur, médiateur, politiques des services tiers, durées de conservation, crédits |
 
@@ -84,8 +84,8 @@ chemin dans `site.ts`, sinon l'ancienne version peut rester affichée.
 
 - Photos de la salle : JPEG ~1500 px de large dans `public/images/salle/` (next/image produit l'AVIF/WebP).
   `cadrage` règle le point gardé dans les arches (les photos y sont zoomées autour de ce point).
-  Toutes les photos défilent dans la galerie de la section « La salle » ; deux d'entre elles (`photos.histoire`)
-  sont aussi accrochées au mur de cadres de « Notre histoire », avec les pizzas listées dans `textes.histoire.mur.pizzas`.
+  Toutes les photos défilent dans la galerie de la section « La salle » ; le mur de cadres de « Notre histoire »
+  n'en reprend aucune (à la demande de Julien), seulement les pizzas listées dans `textes.histoire.mur.pizzas`.
 - Dessin des Allées (fond de la section « La salle ») : deux SVG dans `public/images/salle/`,
   `allees-dessin.svg` (les traits se dessinent en ~4 s, animation interne au fichier) et
   `allees-dessin-fixe.svg` (le même, déjà tracé). Ce sont des traits vectoriels tirés d'un dessin au trait :

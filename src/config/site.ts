@@ -260,10 +260,9 @@ export const site = {
       manifeste:
         "Sur les allées Paul-⁠Riquet, on a rallumé le four sous notre propre nom. Même salle, même terrasse sous les platanes, et une carte qu’on écrit désormais nous-mêmes, avec ce que Béziers et ses coteaux posent sur la table.",
       /**
-       * Le mur de cadres : nos pizzas encadrées et rétroéclairées, deux photos de
-       * la salle, et trois ardoises dont les phrases s'écrivent à la main à l'écran.
-       * Phrases courtes (elles s'écrivent lettre à lettre) ; sans crochets : les
-       * points à préciser sont en commentaire.
+       * Le mur de cadres : nos pizzas encadrées et rétroéclairées, et cinq ardoises
+       * dont les phrases s'écrivent à la main à l'écran (plus de photos : Julien a
+       * préféré les garder seulement dans la galerie qui défile, plus bas).
        */
       mur: {
         /** Nom du mur pour les lecteurs d'écran. */
@@ -603,11 +602,6 @@ export const site = {
         cadrage: "50% 100%",
       },
     ] satisfies Photo[],
-    /** Les deux photos de la salle accrochées au mur de « Notre histoire » : chemins de deux photos de la galerie ci-dessus. */
-    histoire: {
-      grande: "/images/salle/salle-cadres-vegetaux.jpg",
-      petite: "/images/salle/salle-vignes.jpg",
-    },
     /**
      * Dessin au trait des Allées Paul-Riquet, en fond de la section « La salle » : il se trace
      * à l'écran (`anime`) ; `fixe` est le même dessin, déjà tracé (animations réduites, sans JavaScript).

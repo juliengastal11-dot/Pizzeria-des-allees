@@ -3,9 +3,8 @@
 import Image from "next/image";
 import type { CSSProperties, RefObject } from "react";
 import { motion, useScroll, useTransform, type MotionValue } from "motion/react";
-import { site, type Photo, type Pizza } from "@/config/site";
+import { site, type Pizza } from "@/config/site";
 import { typographie } from "@/lib/textes";
-import { styleCadrage } from "@/components/sections/salle/cadrage";
 import { TexteEcrit } from "./TexteEcrit";
 import { MOUVEMENT_REDUIT, useMedia } from "./useMedia";
 
@@ -13,18 +12,16 @@ const TEXTES = site.textes.histoire.mur;
 
 /*
  * Le mur de cadres, comme dans une salle à manger : des cadres de tailles et de
- * formes différentes (ronds, ovales, arches, rectangles), accrochés sur deux
- * colonnes irrégulières. Les pizzas y sont exposées en portraits rétroéclairés
- * (une lueur chaude sur le mur autour du cadre, qui s'allume à l'arrivée à
- * l'écran) ; cinq ardoises portent des phrases qui s'écrivent à la main ;
- * deux photos de la salle complètent l'accrochage. Au défilement, chaque cadre
- * glisse à sa propre vitesse (parallaxe), d'autant plus que l'on descend.
+ * formes différentes (ronds, ovales, carrés), accrochés sur deux colonnes
+ * irrégulières. Les pizzas y sont exposées en portraits rétroéclairés (une
+ * lueur chaude sur le mur autour du cadre, qui s'allume à l'arrivée à l'écran) ;
+ * cinq ardoises portent des phrases qui s'écrivent à la main. Au défilement,
+ * chaque cadre glisse à sa propre vitesse (parallaxe), d'autant plus que l'on
+ * descend. (Les photos de la salle vivent dans la galerie qui défile, plus bas :
+ * Julien a préféré ne pas les dupliquer ici.)
  */
 
-type Cadre =
-  | { type: "pizza"; pizza: Pizza; forme: "rond" | "ovale" | "carre" }
-  | { type: "ardoise"; texte: string }
-  | { type: "photo"; photo: Photo; forme: "arche" | "paysage" };
+type Cadre = { type: "pizza"; pizza: Pizza; forme: "rond" | "ovale" | "carre" } | { type: "ardoise"; texte: string };
 
 /**
  * Un cadre accroché : sa largeur en grand écran (part de la colonne), son côté,
@@ -36,25 +33,20 @@ type Accroche = { cadre: Cadre; largeur: string; cote: "gauche" | "droite"; haut
 function composer(): { gauche: Accroche[]; droite: Accroche[] } {
   const catalogue: readonly Pizza[] = site.pizzas;
   const pizzas = TEXTES.pizzas.map((id) => catalogue.find((p) => p.id === id)).filter((p): p is Pizza => Boolean(p));
-  const galerie: readonly Photo[] = site.photos.galerie;
-  const grande = galerie.find((p) => p.src === site.photos.histoire.grande);
-  const petite = galerie.find((p) => p.src === site.photos.histoire.petite);
   const [a0, a1, a2, a3, a4] = TEXTES.ardoises;
 
   const gauche: (Accroche | false | undefined)[] = [
     pizzas[0] && { cadre: { type: "pizza", pizza: pizzas[0], forme: "rond" }, largeur: "90%", cote: "droite", amplitude: 46 },
-    a0 && { cadre: { type: "ardoise", texte: a0 }, largeur: "84%", cote: "gauche", amplitude: 66 },
-    grande && { cadre: { type: "photo", photo: grande, forme: "arche" }, largeur: "92%", cote: "droite", amplitude: 56 },
-    a1 && { cadre: { type: "ardoise", texte: a1 }, largeur: "88%", cote: "gauche", haut: "0.5rem", amplitude: 78 },
-    pizzas[2] && { cadre: { type: "pizza", pizza: pizzas[2], forme: "carre" }, largeur: "78%", cote: "gauche", amplitude: 92 },
-    a3 && { cadre: { type: "ardoise", texte: a3 }, largeur: "90%", cote: "droite", amplitude: 104 },
+    a0 && { cadre: { type: "ardoise", texte: a0 }, largeur: "84%", cote: "gauche", amplitude: 64 },
+    a1 && { cadre: { type: "ardoise", texte: a1 }, largeur: "90%", cote: "droite", amplitude: 82 },
+    pizzas[2] && { cadre: { type: "pizza", pizza: pizzas[2], forme: "carre" }, largeur: "78%", cote: "gauche", haut: "0.5rem", amplitude: 100 },
+    a3 && { cadre: { type: "ardoise", texte: a3 }, largeur: "88%", cote: "gauche", amplitude: 116 },
   ];
   const droite: (Accroche | false | undefined)[] = [
-    a2 && { cadre: { type: "ardoise", texte: a2 }, largeur: "100%", cote: "gauche", amplitude: 110 },
-    pizzas[1] && { cadre: { type: "pizza", pizza: pizzas[1], forme: "ovale" }, largeur: "84%", cote: "gauche", amplitude: 94 },
-    petite && { cadre: { type: "photo", photo: petite, forme: "paysage" }, largeur: "94%", cote: "droite", amplitude: 120 },
-    a4 && { cadre: { type: "ardoise", texte: a4 }, largeur: "92%", cote: "gauche", amplitude: 108 },
-    pizzas[3] && { cadre: { type: "pizza", pizza: pizzas[3], forme: "rond" }, largeur: "66%", cote: "gauche", haut: "0.5rem", amplitude: 96 },
+    a2 && { cadre: { type: "ardoise", texte: a2 }, largeur: "100%", cote: "gauche", amplitude: 92 },
+    pizzas[1] && { cadre: { type: "pizza", pizza: pizzas[1], forme: "ovale" }, largeur: "84%", cote: "gauche", amplitude: 108 },
+    a4 && { cadre: { type: "ardoise", texte: a4 }, largeur: "92%", cote: "droite", amplitude: 122 },
+    pizzas[3] && { cadre: { type: "pizza", pizza: pizzas[3], forme: "rond" }, largeur: "66%", cote: "gauche", haut: "0.5rem", amplitude: 100 },
   ];
   const garder = (liste: (Accroche | false | undefined)[]) => liste.filter((a): a is Accroche => Boolean(a));
   return { gauche: garder(gauche), droite: garder(droite) };
@@ -139,33 +131,8 @@ function CadreArdoise({ texte }: { texte: string }) {
   );
 }
 
-/** Une photo de la salle : en arche de chêne, ou en paysage sous passe-partout calcaire dans un fin laiton. */
-function CadrePhoto({ photo, forme }: { photo: Photo; forme: "arche" | "paysage" }) {
-  return (
-    <figure>
-      {forme === "arche" ? (
-        <div className={`arche relative isolate aspect-[3/4] w-full ${MOULURE.chene}`}>
-          <span className="absolute inset-0 block overflow-hidden rounded-[inherit] bg-grain">
-            <Image src={photo.src} alt={photo.alt} fill sizes="(min-width: 1024px) 300px, 48vw" className="object-cover" style={styleCadrage(photo.cadrage)} />
-          </span>
-          <span aria-hidden className={FILET_INTERIEUR} />
-        </div>
-      ) : (
-        <div className={`relative isolate rounded-[3px] bg-calcaire-clair p-2.5 ${MOULURE.laiton}`}>
-          <span className="relative block aspect-[4/3] overflow-hidden rounded-[2px] bg-grain">
-            <Image src={photo.src} alt={photo.alt} fill sizes="(min-width: 1024px) 300px, 48vw" className="object-cover" style={{ objectPosition: photo.cadrage }} />
-          </span>
-        </div>
-      )}
-      <figcaption className="mt-3 text-center font-display text-[0.95rem] italic leading-snug text-pierre">{typographie(photo.legende)}</figcaption>
-    </figure>
-  );
-}
-
 function CadreQuelconque({ cadre }: { cadre: Cadre }) {
-  if (cadre.type === "pizza") return <CadrePizza pizza={cadre.pizza} forme={cadre.forme} />;
-  if (cadre.type === "ardoise") return <CadreArdoise texte={cadre.texte} />;
-  return <CadrePhoto photo={cadre.photo} forme={cadre.forme} />;
+  return cadre.type === "pizza" ? <CadrePizza pizza={cadre.pizza} forme={cadre.forme} /> : <CadreArdoise texte={cadre.texte} />;
 }
 
 /** Un cadre accroché au mur, qui glisse à sa propre vitesse au défilement. */
