@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, type CSSProperties, type RefObject } from "react";
+import { Fragment, useEffect, useId, useRef, type CSSProperties, type RefObject } from "react";
 import { motion, useInView, type Variants } from "motion/react";
 
 /**
@@ -16,6 +16,11 @@ import { motion, useInView, type Variants } from "motion/react";
 // Profil de la voûte : superellipse, plate au centre et plongeante vers les murs
 const EXPOSANT = 2.4;
 const voute = (u: number) => 1 - Math.pow(1 - Math.pow(Math.min(1, Math.abs(u)), EXPOSANT), 1 / EXPOSANT);
+/** Pente du profil (dérivée de `voute`) : négative à gauche, où la voûte remonte vers le centre. */
+const pente = (u: number) => {
+  const a = Math.min(Math.abs(u), 0.999);
+  return a === 0 ? 0 : Math.sign(u) * Math.pow(a, EXPOSANT - 1) * Math.pow(1 - Math.pow(a, EXPOSANT), 1 / EXPOSANT - 1);
+};
 
 // Tracé dans une boîte 1000 × 100 étirée sur toute la largeur (0 = sommet, 100 = retombée)
 const POINTS = Array.from({ length: 81 }, (_, i) => {
@@ -117,8 +122,8 @@ export function Plafond() {
     <motion.div
       ref={ref}
       aria-hidden
-      // --voute : retombée de la voûte vers les murs
-      className="pointer-events-none absolute inset-x-0 top-0 h-32 [--voute:2.5rem] md:h-36 md:[--voute:4.5rem]"
+      // --voute : retombée de la voûte vers les murs ; @container : sa largeur (cqw) donne la pente réelle des pieds
+      className="@container pointer-events-none absolute inset-x-0 top-0 h-32 [--voute:2.5rem] md:h-36 md:[--voute:4.5rem]"
       initial="eteint"
       animate={allume ? "allume" : "eteint"}
     >
@@ -140,29 +145,36 @@ export function Plafond() {
           "--x-lg": `${xLarge}%`,
           "--accroche": String(voute(a.x / 50 - 1)),
           "--accroche-lg": String(voute(xLarge / 50 - 1)),
+          "--pente": String(pente(a.x / 50 - 1)),
+          "--pente-lg": String(pente(xLarge / 50 - 1)),
         } as CSSProperties;
         return (
-          <motion.div
-            key={i}
-            data-ampoule
-            custom={i}
-            variants={balancement}
-            style={style}
-            // Accroché à la voûte : le haut du fil suit la courbe de l'intrados
-            className={`${"large" in a ? "hidden md:flex" : "flex"} absolute left-(--x) top-[calc(var(--voute)_*_var(--accroche)_-_1px)] -translate-x-1/2 origin-top flex-col items-center md:left-(--x-lg) md:top-[calc(var(--voute)_*_var(--accroche-lg)_-_1px)]`}
-          >
-            <span className="block h-1.5 w-4 rounded-b-full bg-filet/80" />
-            <span className="block w-px bg-pierre/45" style={{ height: a.fil }} />
-            <div className="relative">
-              <motion.div
-                data-lumiere
-                custom={i}
-                variants={lumiere}
-                className="absolute left-1/2 top-[60%] size-36 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(242,211,140,0.42)_0%,rgba(242,211,140,0.13)_36%,transparent_68%)] motion-reduce:opacity-100! md:size-48"
-              />
-              <Ampoule index={i} />
-            </div>
-          </motion.div>
+          <Fragment key={i}>
+            {/* Pied laiton fixé à la voûte (il ne balance pas) et incliné selon sa pente : son bord haut épouse l'intrados */}
+            <span
+              style={style}
+              className={`${"large" in a ? "hidden md:block" : "block"} absolute left-(--x) top-[calc(var(--voute)_*_var(--accroche)_-_1px)] h-1.5 w-4 -translate-x-1/2 origin-top rounded-b-full bg-filet/80 [rotate:atan2(calc(var(--voute)*var(--pente)*2),100cqw)] md:left-(--x-lg) md:top-[calc(var(--voute)_*_var(--accroche-lg)_-_1px)] md:[rotate:atan2(calc(var(--voute)*var(--pente-lg)*2),100cqw)]`}
+            />
+            <motion.div
+              data-ampoule
+              custom={i}
+              variants={balancement}
+              style={style}
+              // Le fil part du pied : il pend droit et se balance autour de ce point
+              className={`${"large" in a ? "hidden md:flex" : "flex"} absolute left-(--x) top-[calc(var(--voute)_*_var(--accroche)_+_0.25rem)] -translate-x-1/2 origin-top flex-col items-center md:left-(--x-lg) md:top-[calc(var(--voute)_*_var(--accroche-lg)_+_0.25rem)]`}
+            >
+              <span className="block w-px bg-pierre/45" style={{ height: a.fil }} />
+              <div className="relative">
+                <motion.div
+                  data-lumiere
+                  custom={i}
+                  variants={lumiere}
+                  className="absolute left-1/2 top-[60%] size-36 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(242,211,140,0.42)_0%,rgba(242,211,140,0.13)_36%,transparent_68%)] motion-reduce:opacity-100! md:size-48"
+                />
+                <Ampoule index={i} />
+              </div>
+            </motion.div>
+          </Fragment>
         );
       })}
     </motion.div>

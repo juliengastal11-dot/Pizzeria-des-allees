@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import { Mail, Phone } from "lucide-react";
 import { estPlaceholder, site } from "@/config/site";
 import { Valeur } from "@/components/ui/Valeur";
-import { BoutonCommander, BoutonReserver } from "@/components/actions/Boutons";
 import { Paiements } from "@/components/sections/infos/Paiements";
 
 const TEXTES = site.textes.infos.contact;
@@ -24,7 +23,7 @@ function Ligne({ icone, libelle, children }: { icone: ReactNode; libelle: string
   );
 }
 
-/** Carte « Contact » : téléphone, e-mail, Réserver / Commander, moyens de paiement. */
+/** Carte « Contact » : téléphone, e-mail, moyens de paiement. */
 export function CarteContact() {
   const telephone = site.telephone;
   const email = site.email;
@@ -58,11 +57,6 @@ export function CarteContact() {
           )}
         </Ligne>
       </ul>
-
-      <div className="mt-6 flex flex-wrap gap-3">
-        <BoutonReserver variante="nuit" />
-        <BoutonCommander variante="or" anneau />
-      </div>
 
       <div className="mt-7 border-t border-dashed border-eau/35 pt-6">
         <h4 className="font-soustitre text-xl font-semibold leading-tight">{TEXTES.paiements}</h4>
