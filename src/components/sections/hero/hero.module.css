@@ -6,14 +6,15 @@
 /*
  * La bande de la devanture : tout en haut de la page (l'en-tête se réduit au
  * bouton menu, incrusté dessus), toute la largeur, en bannière, jamais plein
- * écran. Photo en 3:2 sur téléphone, 2:1 sur tablette, 2,5:1 sur ordinateur,
- * sans dépasser le premier écran : les arches Commander / Réserver du pont
- * restent visibles (réserve = le pont jusqu'à l'eau).
+ * écran. Photo en 16:9 sur téléphone (entière : c'est le format de la photo
+ * et de sa vidéo), 2:1 sur tablette, 2,5:1 sur ordinateur, sans dépasser le
+ * premier écran : les arches Commander / Réserver du pont restent visibles
+ * (réserve = le pont jusqu'à l'eau).
  */
 .bande {
   --ecran: 100vh;
   /* Téléphone : 3 rem de nuit au-dessus de la photo (voir .cadre) */
-  height: max(15rem, min(calc(66.7vw + 3rem), calc(var(--ecran) - 8rem - var(--hauteur-essai, 0px) - var(--inset-haut, env(safe-area-inset-top)))));
+  height: max(15rem, min(calc(56.25vw + 3rem), calc(var(--ecran) - 8rem - var(--hauteur-essai, 0px) - var(--inset-haut, env(safe-area-inset-top)))));
 }
 
 @supports (height: 100svh) {

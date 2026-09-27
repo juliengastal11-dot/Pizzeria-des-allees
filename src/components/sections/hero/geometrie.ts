@@ -13,7 +13,7 @@ export const PAYSAGE = {
 
 /** Tons de la devanture, relevés de haut en bas sur la photo : visibles un instant, avant son chargement. */
 export const FOND_DEVANTURE =
-  "linear-gradient(#685349, #423b3a 14%, #584335 28%, #724f2e 43%, #604127 57%, #5d3f2b 71%, #593c2c 86%, #674a3d)";
+  "linear-gradient(#67554c, #3f3a38 14%, #584133 28%, #7a532f 43%, #664326 57%, #553722 71%, #4e3425 86%, #57392a)";
 
 /* ---------------------------------------------------------------------------
  * Pont Vieux dessiné au trait (valeurs en pixels CSS, dessin jamais mis à l'échelle)

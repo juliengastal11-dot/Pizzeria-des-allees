@@ -659,11 +659,14 @@ export const site = {
     // Visuel provisoire généré par IA (voir legal.credits.visuelsProvisoires). Retravaillé le 27/09 à la demande de
     // Julien (GPT Image 2.5 sur Higgsfield) : heure bleue, façade nettoyée, terrasse habillée (chaises en rotin,
     // oliviers en pot). C'est une projection : la terrasse montrée n'est pas encore la vraie.
+    // Puis animée de convives en terrasse et en salle, et du pizzaiolo au four au fond à droite (GPT Image 2.5).
+    // Recadrée en 16:9 (format de la future vidéo en boucle), l'enseigne centrée de gauche à droite (marges égales) :
+    // cadrage horizontal à 50 % partout.
     photo: {
-      src: "/images/hero/devanture-pizzeria-des-allees-heure-bleue.jpg",
-      alt: "La devanture de la Pizzeria des Allées à l’heure bleue : l’enseigne bleu nuit aux lettres dorées, les vitrines éclairées et la terrasse dressée, chaises en rotin et oliviers en pot",
+      src: "/images/hero/devanture-pizzeria-des-allees-convives.jpg",
+      alt: "La devanture de la Pizzeria des Allées à l’heure bleue : l’enseigne bleu nuit aux lettres dorées, des convives qui dînent en terrasse et en salle, et le pizzaiolo au four à bois, au fond",
       largeur: 1920,
-      hauteur: 1138,
+      hauteur: 1080,
       cadrage: "50% 18%",
     } satisfies PhotoHero,
   },
