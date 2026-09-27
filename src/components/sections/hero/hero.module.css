@@ -4,17 +4,15 @@
  */
 
 /*
- * La bande du paysage : toute la largeur, moins haute que l'écran (effet
- * paysage). Téléphone : 4:5 au plus, pour que le paysage garde de la hauteur,
- * et les arches Commander / Réserver du pont restent dans le premier écran
- * (réserve = en-tête + pont jusqu'à l'eau). Au-delà : 43,3 % de la largeur,
- * soit 77 % de la hauteur de la scène (du ciel au-dessus du titre à l'Orb sous
- * le pont), sans dépasser le premier écran.
+ * La bande de la devanture : toute la largeur, en bannière, jamais plein
+ * écran. Téléphone : 3:2, la devanture presque entière ; tablette : 2:1 ;
+ * ordinateur : 2,5:1. Sans dépasser le premier écran, pour que les arches
+ * Commander / Réserver du pont restent visibles (réserve = en-tête + pont
+ * jusqu'à l'eau).
  */
 .bande {
   --ecran: 100vh;
-  height: max(18rem, min(125vw, calc(var(--ecran) - 12.5rem - var(--hauteur-essai, 0px) - var(--inset-haut, env(safe-area-inset-top)))));
-  container-type: size;
+  height: max(13rem, min(66.7vw, calc(var(--ecran) - 12.5rem - var(--hauteur-essai, 0px) - var(--inset-haut, env(safe-area-inset-top)))));
 }
 
 @supports (height: 100svh) {
@@ -25,22 +23,14 @@
 
 @media (min-width: 48rem) {
   .bande {
-    height: max(20rem, min(43.3vw, calc(var(--ecran) - 8rem - var(--hauteur-essai, 0px))));
+    height: max(18rem, min(50vw, calc(var(--ecran) - 8rem - var(--hauteur-essai, 0px))));
   }
 }
 
-/*
- * La scène 16:9 de la fresque couvre la bande, comme un object-fit: cover, calée
- * par --scene-x / --scene-y (fraction du débord gardée à gauche / en haut, voir
- * SCENE dans geometrie.ts). Conteneur à son tour : le titre s'y mesure en cqw.
- */
-.scene {
-  position: absolute;
-  width: max(100cqw, 177.78cqh);
-  height: max(100cqh, 56.25cqw);
-  left: calc((100cqw - max(100cqw, 177.78cqh)) * var(--scene-x, 0.5));
-  top: calc((100cqh - max(100cqh, 56.25cqw)) * var(--scene-y, 0.5));
-  container-type: size;
+@media (min-width: 64rem) {
+  .bande {
+    height: max(20rem, min(40vw, calc(var(--ecran) - 8rem - var(--hauteur-essai, 0px))));
+  }
 }
 
 /* Le bas de la bande se fond dans la nuit, où le Pont Vieux dessiné prend le relais */
@@ -53,58 +43,14 @@
   pointer-events: none;
 }
 
-/* « Le paysage se pose » */
+/* « La devanture se pose » */
 .paysage {
   animation: paysage-pose 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.titre {
-  position: absolute;
-  left: var(--titre-gauche);
-  top: var(--titre-haut);
-  /* Chaque ligne tient sur une ligne ; si l'espacement du texte est agrandi (WCAG 1.4.12), elle se replie au lieu d'être rognée */
-  width: calc(100% - var(--titre-gauche) - 3cqi);
-  margin: 0;
-  font-family: var(--font-titre, Georgia, serif);
-  font-size: var(--titre-taille);
-  font-weight: 700;
-  line-height: var(--titre-interligne);
-  letter-spacing: -0.01em;
-  color: var(--color-nuit, #051a4b);
-  /* Halo calcaire : détache le bleu du ciel sans le trahir */
-  text-shadow:
-    0 0 28px rgba(241, 224, 200, 0.45),
-    0 0 2px rgba(241, 224, 200, 0.25);
-}
-
-/* Chaque ligne se lève derrière la cathédrale */
-.ligne {
-  display: block;
-  animation: titre-leve var(--titre-duree) var(--titre-courbe) var(--titre-delai) both;
-}
-
-.ligne2 {
-  padding-left: var(--titre-retrait);
-  /* Elle ne se replie jamais (sinon « Allées » passerait derrière la cathédrale) */
-  white-space: nowrap;
-  font-style: italic;
-  font-weight: 600;
-  animation-delay: calc(var(--titre-delai) + var(--titre-decalage));
-}
-
-/* Textes du hero : ils montent doucement, à la suite du paysage */
+/* Textes du hero : ils montent doucement, à la suite de la photo */
 .monte {
   animation: texte-monte 0.8s cubic-bezier(0.22, 1, 0.36, 1) var(--delai, 0.4s) both;
-}
-
-/* Vidéo : fondu dès qu'elle joue vraiment */
-.video {
-  opacity: 0;
-  transition: opacity 600ms ease;
-}
-
-.videoVisible {
-  opacity: 1;
 }
 
 @keyframes paysage-pose {
@@ -120,27 +66,9 @@
   }
 }
 
-@keyframes titre-leve {
-  0% {
-    transform: translate3d(0, var(--titre-depart), 0);
-    opacity: 0;
-  }
-  22% {
-    opacity: 1;
-  }
-  100% {
-    transform: none;
-    opacity: 1;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .paysage,
-  .ligne,
   .monte {
     animation: none;
-  }
-  .video {
-    transition: none;
   }
 }

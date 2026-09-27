@@ -64,10 +64,15 @@ export type VideoBoucle = {
   poster: string;
 };
 
-/** La vidéo du hero : en paysage, avec la ligne d'horizon détourée qui passe devant le titre (il se lève derrière elle). */
-export type VideoHero = VideoBoucle & {
-  horizon: string;
+/** La photo du hero, en bannière sur toute la largeur. */
+export type PhotoHero = {
+  src: string;
   alt: string;
+  /** Dimensions du fichier, en pixels. */
+  largeur: number;
+  hauteur: number;
+  /** Point gardé quand la bannière rogne la photo (object-position) : l'enseigne reste entière. */
+  cadrage: string;
 };
 
 export const site = {
@@ -646,21 +651,19 @@ export const site = {
   },
 
   /* ------------------------------------------------------------------------
-   * Vidéos en boucle (choix de Julien, 27/09) : la fresque de la salle occupe
-   * tout le hero, en paysage ; les Allées au soleil couchant passent en fond
-   * de « Venir à la Pizzeria des Allées ». La vue des Allées en plein été
-   * (droits incertains) est retirée du site.
+   * Hero et fond des Infos (choix de Julien, 27/09) : la devanture de la
+   * pizzeria en bannière en haut de page ; les Allées au soleil couchant en
+   * fond vidéo de « Venir à la Pizzeria des Allées ».
    * --------------------------------------------------------------------- */
   hero: {
-    // ⚠ Droits : la fresque est reproduite et animée. Faire confirmer par écrit l'autorisation de son auteur (voir legal.credits.fresque).
-    // Élargie en 16:9 (1280 × 720) par Higgsfield (reframe) à partir de la vidéo 3:4 d'origine, le 27/09
-    video: {
-      mp4: "/video/fresque-paysage.mp4",
-      webm: "/video/fresque-paysage.webm",
-      poster: "/images/hero/fresque-paysage-poster.jpg",
-      horizon: "/images/hero/fresque-paysage-horizon.webp",
-      alt: "La fresque de la salle : la cathédrale Saint-Nazaire sur sa colline, le Pont Vieux et l’Orb, animés comme un matin d’été",
-    } satisfies VideoHero,
+    // Visuel provisoire généré par IA (voir legal.credits.visuelsProvisoires) ; le badge « Made with AI » est coupé au recadrage
+    photo: {
+      src: "/images/hero/devanture-pizzeria-des-allees.jpg",
+      alt: "La devanture de la Pizzeria des Allées à la tombée du jour : l’enseigne bleu nuit aux lettres dorées, les vitrines éclairées et la terrasse",
+      largeur: 1536,
+      hauteur: 924,
+      cadrage: "50% 18%",
+    } satisfies PhotoHero,
   },
 
   /** Derrière la section Infos pratiques, sous un voile sombre. Photo de Julien, animée par IA. */
@@ -743,7 +746,7 @@ export const site = {
       journaux: "1 jour au plus",
     },
     credits: {
-      /** ⚠ Autorisation écrite de l'auteur à obtenir (reproduction de la fresque ET version animée du hero). */
+      /** ⚠ Autorisation écrite de l'auteur à obtenir (reproduction de la fresque : galerie de la salle, image de partage). */
       fresque: { libelle: "Fresque de la salle", texte: "[AUTEUR DE LA FRESQUE À CRÉDITER], reproduite avec autorisation [À CONFIRMER]" },
       /** Texte affiché tant que `photos.provisoires` est vrai ; ensuite, `photographe`. */
       visuelsProvisoires:

@@ -8,19 +8,9 @@ export type FicheAnimation = { nom: string; court: string; description: string }
 export const ANIMATIONS: Record<string, FicheAnimation> = {
   // Haut de page
   "paysage-hero": {
-    nom: "Le paysage qui se pose",
-    court: "Paysage qui se pose",
-    description: "À l’arrivée, la fresque se pose en douceur ; en descendant, elle grossit légèrement.",
-  },
-  "titre-hero": {
-    nom: "Le nom qui se lève derrière la cathédrale",
-    court: "Nom qui se lève",
-    description: "« La Pizzeria des Allées » se lève derrière la cathédrale, une ligne après l’autre, et continue de monter en descendant.",
-  },
-  "video-hero": {
-    nom: "La vidéo de la fresque",
-    court: "Vidéo de la fresque",
-    description: "La fresque de la salle (la cathédrale, le Pont Vieux et l’Orb) s’anime en boucle.",
+    nom: "La devanture qui se pose",
+    court: "Devanture qui se pose",
+    description: "À l’arrivée, la photo de la devanture se pose en douceur ; en descendant, elle grossit légèrement.",
   },
   "pont-lumieres": {
     nom: "Les lumières du Pont Vieux",

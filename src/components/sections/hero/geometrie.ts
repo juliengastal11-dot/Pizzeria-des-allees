@@ -1,56 +1,19 @@
 /**
  * Géométrie du hero, à régler ici.
  *
- * La fresque (vidéo, poster, horizon détouré) est une scène 16:9 (1280 × 720).
- * La scène couvre toute la bande du hero, comme un object-fit: cover (voir
- * `.scene` dans hero.module.css) : titre et horizon s'y placent en % de la
- * scène, donc restent calés sur la cathédrale quel que soit l'écran.
- * Dans la scène (conteneur CSS), 1cqw = 1 % de sa largeur ; sa hauteur vaut 56,25cqw.
- *
- * Relevés sur fresque-paysage-horizon.webp :
- * - flèche de Saint-Nazaire : y ≈ 26,4 % (x ≈ 57 %) ; tours : y ≈ 27-29 % (x 51-58 %) ;
- * - cathédrale : x 44,5 % → 76 %, du haut des toits (y ≈ 40-44 %) à la colline ;
- * - colline boisée : x 39 % → 81 %, jusqu'à y ≈ 64 % ;
- * - silhouette opaque (le reste est vivant) : x 38 % → 82 %, y 16 % → 70 %, bords fondus.
+ * En haut, la photo de la devanture en bannière (réglages dans `site.hero.photo`
+ * et `.bande` de hero.module.css) ; dessous, le Pont Vieux dessiné au trait.
  */
 
-/** Cadrage de la scène dans la bande : fraction du débord gardée à gauche / en haut (0,5 = centré). */
-export const SCENE = {
-  /** Sur téléphone, la bande ne montre qu'une tranche : centrée sur la cathédrale (x ≈ 60 %). */
-  x: 0.68,
-  /** Sur ordinateur, la bande rogne le haut et le bas : un peu de ciel, plus d'Orb coupé. */
-  y: 0.3,
-} as const;
-
-/** Titre H1 posé dans le ciel, au-dessus de la cathédrale, qui se lève derrière elle. */
-export const TITRE = {
-  /** « La Pizzeria » ≈ 28 % de la largeur de la scène. */
-  taille: "4.6cqw",
-  interligne: 1.02,
-  /** Boîte de la ligne 1 au repos : centrée sur la cathédrale, dans le ciel (glyphes ≈ 9,5 % → 25,7 %). */
-  gauche: "45.5%",
-  haut: "8.5%",
-  /** Décalage de « des Allées » vers la droite. */
-  retraitLigne2: "4.9cqw",
-  /** Départ : 35,6 % de la hauteur plus bas, entièrement caché par la cathédrale et la colline. */
-  depart: "20cqw",
-  duree: "2.2s",
-  delai: "0.35s",
-  /** La seconde ligne suit la première. */
-  decalageLigne2: "0.12s",
-  courbe: "cubic-bezier(0.3, 0.42, 0.28, 1)",
-  /** Au défilement, le titre continue de monter (en % de la hauteur de la scène). */
-  finDefilement: "-18%",
-} as const;
-
-/** Paysage (poster + vidéo + horizon) au défilement : descend et grossit, sans découvrir le haut. */
+/** Photo au défilement : elle descend et grossit, sans découvrir le haut de la bande. */
 export const PAYSAGE = {
   yFin: "4%",
   echelleFin: 1.08,
 } as const;
 
-/** Ciel de la fresque (relevé sur le poster) : visible un instant, avant le chargement. */
-export const CIEL_FRESQUE = "linear-gradient(#1c6cbe, #4f81c7 30%, #b6bede 56%, #8a7358 68%, #3b4a36)";
+/** Tons de la devanture, relevés de haut en bas sur la photo : visibles un instant, avant son chargement. */
+export const FOND_DEVANTURE =
+  "linear-gradient(#4a3a2b, #3b3333 14%, #4f3a22 28%, #624626 43%, #4a3b27 57%, #4d371f 71%, #43311f 86%, #503d29)";
 
 /* ---------------------------------------------------------------------------
  * Pont Vieux dessiné au trait (valeurs en pixels CSS, dessin jamais mis à l'échelle)

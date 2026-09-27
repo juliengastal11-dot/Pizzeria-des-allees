@@ -93,15 +93,15 @@ chemin dans `site.ts`, sinon l'ancienne version peut rester affichée.
 - Pizzas : PNG ou WebP **détourés en disque** (fond transparent), carrés, 800 px, dans `public/images/pizzas/`.
   La carte présente les pizzas listées dans `textes.carte.pizzas`, le mur celles de `textes.histoire.mur.pizzas`.
 - Image de partage (réseaux sociaux) : JPEG 1200 × 630 dans `public/images/partage/`, décrite par `seo.image`.
-- Hero : la fresque de la salle, en paysage sur toute la largeur (`hero.video` : MP4 + WebM 1280 × 720,
-  24 i/s, sans son, dans `public/video/` ; poster = sa première image, dans `public/images/hero/`). Elle a été
-  élargie en 16:9 par Higgsfield (outil « reframe », 720p) à partir de la vidéo 3:4 d'origine, puis compressée
-  (`-crf 27` en H.264, `-crf 38` en VP9, ~800 et ~670 Ko).
-- Fresque : la vidéo, son poster et la ligne d'horizon détourée (`fresque-paysage-horizon.webp`) doivent
-  provenir **de la même vidéo, au même cadrage**, sinon le titre ne passera plus derrière la cathédrale au bon
-  endroit. L'horizon se refait depuis la première image : le ciel est ce qui, bleu, se relie au haut de l'image ;
-  seule la zone que le titre traverse (x 38-82 %, y 16-70 %) est gardée, bords fondus. Réglages du titre, du
-  cadrage et du pont : `src/components/sections/hero/geometrie.ts`.
+- Hero : la devanture de la pizzeria, en bannière sur toute la largeur (`hero.photo` : JPEG 1536 × 924 dans
+  `public/images/hero/`). Visuel généré par IA : son badge « Made with AI » (coin haut droit) a été coupé en
+  retirant les 100 premiers pixels. `hero.photo.cadrage` (object-position) garde l'enseigne entière quand la
+  bannière rogne la photo ; `largeur` et `hauteur` doivent suivre le fichier. Hauteur de la
+  bannière : `.bande` dans `hero/hero.module.css` ; teintes d'attente et réglages du pont : `hero/geometrie.ts`.
+- Fresque animée (le hero précédent) : **gardée pour plus tard**, à la demande de Julien, mais plus affichée.
+  Fichiers : `public/video/fresque-paysage.mp4` et `.webm`, `public/images/hero/fresque-paysage-poster.jpg` et
+  `fresque-paysage-horizon.webp` (l'horizon détouré qui passait devant le titre). Son code (`HeroPaysage.tsx`,
+  réglages du titre et de la scène dans `geometrie.ts`, `hero.module.css`) se récupère depuis le commit `6065ff4`.
 - Fond des Infos : les Allées au soleil couchant (`fondInfos`, photo de Julien animée sur Higgsfield avec
   Kling 3.0 en deux plans : un aller depuis la photo, puis un retour de sa dernière image vers la première ;
   boucle de 20 s sans fondu, ~2,8 Mo). La vue des Allées en plein été a été retirée du site le 27/09.

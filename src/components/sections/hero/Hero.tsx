@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import { site } from "@/config/site";
 import { HeroScene } from "./HeroScene";
-import { HeroPaysage } from "./HeroPaysage";
+import { HeroDevanture } from "./HeroDevanture";
 import { PontLumineux } from "./PontLumineux";
 import styles from "./hero.module.css";
 
@@ -11,10 +11,10 @@ const TITRE_ID = "hero-titre";
 const delai = (secondes: number) => ({ "--delai": `${secondes}s` }) as CSSProperties;
 
 /**
- * Hero (27/09, choix de Julien) : la fresque de la salle, animée, en paysage
- * sur toute la largeur, avec le nom qui se lève derrière Saint-Nazaire ; dessous,
- * le Pont Vieux dessiné au trait dont deux arches sont Commander et Réserver,
- * puis la phrase d'accroche. Même ordre sur tous les écrans.
+ * Hero (27/09, choix de Julien) : la devanture de la pizzeria en bannière sur
+ * toute la largeur ; dessous, le Pont Vieux dessiné au trait dont deux arches
+ * sont Commander et Réserver, puis la phrase d'accroche. Même ordre sur tous
+ * les écrans.
  */
 export function Hero() {
   const { accroche } = site.textes.hero;
@@ -24,7 +24,7 @@ export function Hero() {
       titreId={TITRE_ID}
       className="relative isolate z-[1] -mb-6 overflow-x-clip bg-nuit pb-10 pt-[calc(4.75rem_+_var(--inset-haut,env(safe-area-inset-top)))] md:-mb-10 md:pb-14 md:pt-24 lg:pt-[5.75rem]"
     >
-      <HeroPaysage titreId={TITRE_ID} />
+      <HeroDevanture titreId={TITRE_ID} />
 
       <PontLumineux className="-mt-3 md:-mt-5" />
 
