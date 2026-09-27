@@ -4,6 +4,8 @@ import { useState, type RefObject } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Phone } from "lucide-react";
 import { Fenetre } from "@/components/ui/Fenetre";
+import { OrnementPont } from "@/components/ui/OrnementPont";
+import { useOuvertures } from "@/components/ui/useOuvertures";
 import { estPlaceholder, site } from "@/config/site";
 
 const TEXTES = site.textes.actions.fenetreReservation;
@@ -21,6 +23,7 @@ export function DialogueReservation({ ouvert, onFermer, retour }: Props) {
   // Le widget reste monté après la première ouverture (pas de rechargement à chaque fois)
   const [demande, setDemande] = useState(false);
   if (ouvert && !demande) setDemande(true);
+  const ouvertures = useOuvertures(ouvert);
 
   const telReel = !estPlaceholder(site.telephone);
 
@@ -28,10 +31,14 @@ export function DialogueReservation({ ouvert, onFermer, retour }: Props) {
     <Fenetre ouvert={ouvert} onFermer={onFermer} titre={TEXTES.titre} retour={retour} large>
       {/* Hauteur : ce qui reste entre le titre et les liens de secours, qui restent visibles sans défiler */}
       <div className="relative h-[min(calc(92svh-13.5rem),40rem)] min-h-80 bg-calcaire-clair" data-surface="clair">
+        {/* Le temps que TheFork charge, Béziers se dessine ; le module le recouvre dès qu'il s'affiche */}
         {!charge && (
-          <p className="absolute inset-0 grid place-items-center px-6 text-center text-eau" role="status">
-            {TEXTES.chargement}
-          </p>
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-5 px-6 text-center">
+            <OrnementPont key={ouvertures} fond="clair" animation="ornement-fenetres" className="w-44 sm:w-52" />
+            <p className="text-eau" role="status">
+              {TEXTES.chargement}
+            </p>
+          </div>
         )}
         {demande && (
           <iframe

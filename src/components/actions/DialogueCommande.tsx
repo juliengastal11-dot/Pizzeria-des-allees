@@ -3,6 +3,8 @@
 import type { RefObject } from "react";
 import { ArrowUpRight, MapPin, Phone } from "lucide-react";
 import { Fenetre } from "@/components/ui/Fenetre";
+import { OrnementPont } from "@/components/ui/OrnementPont";
+import { useOuvertures } from "@/components/ui/useOuvertures";
 import { adresseComplete, estPlaceholder, site } from "@/config/site";
 
 const { actions } = site.textes;
@@ -20,10 +22,13 @@ type Props = { ouvert: boolean; onFermer: () => void; retour?: RefObject<HTMLEle
  */
 export function DialogueCommande({ ouvert, onFermer, retour }: Props) {
   const telReel = !estPlaceholder(site.telephone);
+  const ouvertures = useOuvertures(ouvert);
 
   return (
     <Fenetre ouvert={ouvert} onFermer={onFermer} titre={TEXTES.titre} retour={retour}>
       <div className="space-y-4 px-5 py-6 sm:px-6">
+        {/* En attendant la commande en ligne, Béziers se dessine à chaque ouverture */}
+        <OrnementPont key={ouvertures} fond="minuit" animation="ornement-fenetres" className="mx-auto mb-6 block w-40 sm:w-44" />
         <p className="text-lg">{TEXTES.annonce}</p>
         {telReel ? (
           <p className="text-pierre">

@@ -114,6 +114,8 @@ Sur mobile, la **barre Commander / Réserver** est faite de **deux pilules flott
 | `src/components/actions/Boutons.tsx` | `<BoutonCommander variante forme anneau sansIcone className>` et `<BoutonReserver …>` — variantes `or`, `contour`, `nuit`, `contour-nuit`, `voile` ; formes `pilule`, `arche`, `libre` |
 | `src/components/providers/ActionsProvider.tsx` | `useActions()` (stable) : `ouvrirReservation`, `ouvrirCommandeBientot`, `setCtaHeroVisibles`, `setMenuOuvert` ; `useEtatActions()` : `ctaHeroVisibles`, `fenetreOuverte` |
 | `src/components/ui/Fenetre.tsx` | Fenêtre modale accessible |
+| `src/components/ui/OrnementPont.tsx` | `<OrnementPont fond animation className>` : l'arche de Béziers qui se trace (pages de texte ; fenêtre Réserver le temps que TheFork charge ; fenêtre Commander). `fond` (`nuit`, `minuit`, `clair`) règle le ciel de l'arche ; déjà dessinée en mouvement réduit |
+| `src/components/ui/useOuvertures.ts` | Nombre d'ouvertures d'une fenêtre, à passer en `key` pour rejouer une entrée à chaque ouverture |
 | `src/components/ui/Valeur.tsx` | `Valeur` (valeur de config, en pointillés si placeholder) et `TexteAvecValeurs` |
 | `src/components/ui/useMedia.ts` | `useMedia(requête)` sûr à l'hydratation, `MOUVEMENT_REDUIT` |
 | `src/components/ui/Reveal.tsx`, `apparition.ts` | Apparition au défilement, sans état invisible au rendu serveur |

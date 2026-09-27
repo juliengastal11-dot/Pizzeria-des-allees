@@ -137,4 +137,12 @@ export const ANIMATIONS: Record<string, FicheAnimation> = {
     court: "Dessin qui se trace",
     description: "L’arche, la cathédrale, le pont et l’Orb se dessinent au trait, puis étoiles, lune et réverbères s’allument.",
   },
+
+  // Fenêtres Commander et Réserver
+  "ornement-fenetres": {
+    nom: "Le dessin de Béziers dans les fenêtres Commander et Réserver",
+    court: "Dessin des fenêtres",
+    description:
+      "À l’ouverture de la fenêtre Commander, et pendant que la réservation se charge, le même dessin que les pages légales se trace : l’arche, la cathédrale, le pont et l’Orb, puis la lune et les réverbères.",
+  },
 };
