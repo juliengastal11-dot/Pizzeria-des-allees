@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
@@ -47,13 +47,8 @@ function useSectionActive(surAccueil: boolean): IdSection | null {
   return surAccueil ? section : null;
 }
 
-/** Vrai si le focus clavier est dans l'élément : le bandeau ne doit alors pas se cacher. */
-function focusClavierDans(el: HTMLElement | null) {
-  const actif = document.activeElement;
-  return !!el && actif instanceof HTMLElement && el.contains(actif) && actif.matches(":focus-visible");
-}
-
-function BoutonMenu({ ouvert, controle, onClick }: { ouvert: boolean; controle?: string; onClick: () => void }) {
+/** « Incrusté » : sur la photo du hero, un rond de verre fumé qui laisse voir la devanture. */
+function BoutonMenu({ ouvert, controle, incruste = false, onClick }: { ouvert: boolean; controle?: string; incruste?: boolean; onClick: () => void }) {
   return (
     <motion.button
       type="button"
@@ -63,7 +58,11 @@ function BoutonMenu({ ouvert, controle, onClick }: { ouvert: boolean; controle?:
       aria-controls={controle}
       whileTap={{ scale: 0.95 }}
       transition={{ type: "spring", stiffness: 500, damping: 30 }}
-      className="group grid size-11 shrink-0 place-items-center rounded-full border-[1.5px] border-calcaire/85 text-calcaire transition-colors hover:bg-calcaire/10"
+      className={`group grid size-11 shrink-0 place-items-center rounded-full border-[1.5px] text-calcaire transition-[background-color,border-color,box-shadow] duration-300 ${
+        incruste
+          ? "border-calcaire/55 bg-minuit/35 shadow-[0_6px_20px_rgba(6,15,46,0.35)] backdrop-blur-md hover:bg-minuit/55"
+          : "border-calcaire/85 hover:bg-calcaire/10"
+      }`}
     >
       <span aria-hidden className="flex w-4 flex-col gap-[5px]">
         <span className="h-[1.5px] w-4 rounded-full bg-current" />
@@ -84,8 +83,11 @@ function LienLogo({ taille, className }: { taille: number; className?: string })
 
 /**
  * En-tête fixe.
- * - Mobile : logo + nom + « Menu », transparent sur le hero puis fond minuit ;
- *   se retire quand on descend, revient dès qu'on remonte.
+ * - Accueil, tant que la photo de la devanture est sous l'en-tête : ni bandeau
+ *   ni logo (l'enseigne les porte déjà), seul le bouton menu, incrusté sur la
+ *   photo. Dès qu'elle est passée, le bandeau bleu prend le relais (27/09,
+ *   demande de Julien) et reste en place.
+ * - Mobile : logo + nom + « Menu » sur fond minuit (voile léger en haut des pages de texte).
  * - Tablette et ordinateur : capsule flottante (liens + point de lumière sur la
  *   section en cours) ; Commander / Réserver n'y paraissent qu'une fois ceux du hero sortis de l'écran.
  */
@@ -98,31 +100,39 @@ export function Header() {
   const lenis = useLenis();
   const idMenu = useId();
   const refHeader = useRef<HTMLElement>(null);
-  const sens = useRef<{ vers: "haut" | "bas"; depuis: number }>({ vers: "haut", depuis: 0 });
 
   const [menu, setMenu] = useState(false);
   // Le menu plein écran n'est monté qu'à sa première ouverture
   const [menuMonte, setMenuMonte] = useState(false);
   const controleMenu = menuMonte ? idMenu : undefined;
   const [fond, setFond] = useState(false);
-  const [masque, setMasque] = useState(false);
+  // Vrai au rendu serveur de l'accueil : la page s'ouvre sur la photo, sans bandeau
+  const [surPhoto, setSurPhoto] = useState(surAccueil);
+
+  /** La photo du hero passe-t-elle encore sous l'en-tête ? */
+  const mesurerPhoto = useCallback(() => {
+    const photo = document.querySelector("[data-hero-photo]");
+    const basEnTete = refHeader.current?.getBoundingClientRect().bottom ?? 0;
+    setSurPhoto(!!photo && photo.getBoundingClientRect().bottom > basEnTete);
+  }, []);
+
+  useEffect(() => {
+    mesurerPhoto();
+    window.addEventListener("resize", mesurerPhoto);
+    return () => window.removeEventListener("resize", mesurerPhoto);
+  }, [mesurerPhoto, surAccueil]);
 
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (y) => {
-    const avant = scrollY.getPrevious() ?? y;
     setFond(y > 40);
-    const vers = y > avant ? "bas" : y < avant ? "haut" : sens.current.vers;
-    if (vers !== sens.current.vers) sens.current = { vers, depuis: avant };
-    // Petit seuil pour ignorer les tremblements du doigt
-    if (y <= 200) setMasque(false);
-    else if (vers === "bas" && y - sens.current.depuis > 12 && !focusClavierDans(refHeader.current)) setMasque(true);
-    else if (vers === "haut" && sens.current.depuis - y > 12) setMasque(false);
+    mesurerPhoto();
   });
+
+  const bandeau = !surPhoto && fond;
 
   const ouvrir = () => {
     setMenuMonte(true);
     setMenu(true);
-    setMasque(false);
     setMenuOuvert(true);
     lenis?.stop();
   };
@@ -134,54 +144,70 @@ export function Header() {
 
   return (
     <>
-      <header
-        ref={refHeader}
-        className="pointer-events-none fixed inset-x-0 top-0 z-50"
-        onFocus={(e) => {
-          if (e.target instanceof HTMLElement && e.target.matches(":focus-visible")) setMasque(false);
-        }}
-      >
+      <header ref={refHeader} className="pointer-events-none fixed inset-x-0 top-0 z-50">
         <BandeauEssai />
 
         {/* Mobile */}
-        <motion.div
-          className="pointer-events-auto relative pt-[var(--inset-haut,env(safe-area-inset-top))] md:hidden"
-          initial={false}
-          animate={{ y: masque && !menu ? "-100%" : "0%" }}
-          transition={ressort}
-        >
+        <div className="pointer-events-auto relative pt-[var(--inset-haut,env(safe-area-inset-top))] md:hidden">
           <motion.div
             aria-hidden
             className="absolute inset-0 bg-linear-to-b from-nuit/70 via-nuit/25 to-transparent"
             initial={false}
-            animate={{ opacity: fond ? 0 : 1 }}
+            animate={{ opacity: !surPhoto && !fond ? 1 : 0 }}
             transition={{ duration: 0.35 }}
           />
+          {/* Le bandeau bleu descend quand la photo s'en va, remonte quand elle revient */}
           <motion.div
             aria-hidden
             className="absolute inset-0 border-b border-filet/30 bg-minuit/95"
             initial={false}
-            animate={{ opacity: fond ? 1 : 0 }}
-            transition={{ duration: 0.35 }}
+            animate={{ opacity: bandeau ? 1 : 0, y: bandeau ? "0%" : "-100%" }}
+            transition={ressort}
           />
           <div className="relative flex h-16 items-center justify-between gap-3 px-4">
-            <a href={ancre("accueil")} aria-label={nomAccueil} className="flex min-h-11 items-center gap-2.5 rounded-full">
+            <motion.a
+              href={ancre("accueil")}
+              aria-label={nomAccueil}
+              inert={surPhoto}
+              className="flex min-h-11 items-center gap-2.5 rounded-full"
+              initial={false}
+              animate={{ opacity: surPhoto ? 0 : 1, y: surPhoto ? -10 : 0 }}
+              transition={{ duration: 0.35, ease: entree }}
+            >
               <Image src={site.logo.src} alt="" width={42} height={42} className="size-[42px] shrink-0" />
               <span aria-hidden className="whitespace-nowrap font-titre text-[1.02rem] font-semibold leading-[1.02] text-calcaire max-[359px]:hidden">
                 {site.nom}
               </span>
-            </a>
-            <BoutonMenu ouvert={menu} controle={controleMenu} onClick={ouvrir} />
+            </motion.a>
+            <BoutonMenu ouvert={menu} controle={controleMenu} incruste={surPhoto} onClick={ouvrir} />
           </div>
-        </motion.div>
+        </div>
 
-        {/* Tablette et ordinateur : capsule flottante */}
-        <div className="hidden justify-center px-4 pt-[max(0.75rem,var(--inset-haut,env(safe-area-inset-top)))] md:flex">
+        {/* Tablette et ordinateur : capsule flottante, remplacée sur la photo par le seul bouton menu */}
+        <div className="relative hidden justify-center px-4 pt-[max(0.75rem,var(--inset-haut,env(safe-area-inset-top)))] md:flex">
+          <AnimatePresence initial={false}>
+            {surPhoto && (
+              <motion.div
+                key="menu-incruste"
+                className="pointer-events-auto absolute right-5 top-[calc(max(0.75rem,var(--inset-haut,env(safe-area-inset-top)))+0.375rem)] lg:right-8"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3, ease: entree }}
+              >
+                <BoutonMenu ouvert={menu} controle={controleMenu} incruste onClick={ouvrir} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <motion.div
             layout
-            transition={{ layout: ressortCapsule }}
+            inert={surPhoto}
+            initial={false}
+            animate={{ opacity: surPhoto ? 0 : 1, y: surPhoto ? -16 : 0 }}
+            transition={{ layout: ressortCapsule, default: { duration: 0.35, ease: entree } }}
             style={{ borderRadius: 9999 }}
-            className="pointer-events-auto flex items-center gap-1 border border-filet/50 bg-minuit/90 p-1.5 shadow-[0_12px_32px_rgba(6,15,46,0.4)]"
+            className={`flex items-center gap-1 border border-filet/50 bg-minuit/90 p-1.5 shadow-[0_12px_32px_rgba(6,15,46,0.4)] ${surPhoto ? "pointer-events-none" : "pointer-events-auto"}`}
           >
             <motion.div layout="position" className="flex items-center gap-1">
               <LienLogo taille={40} className="grid size-11 shrink-0 place-items-center rounded-full" />

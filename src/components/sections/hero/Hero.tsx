@@ -22,7 +22,7 @@ export function Hero() {
   return (
     <HeroScene
       titreId={TITRE_ID}
-      className="relative isolate z-[1] -mb-6 overflow-x-clip bg-nuit pb-10 pt-[calc(4.75rem_+_var(--inset-haut,env(safe-area-inset-top)))] md:-mb-10 md:pb-14 md:pt-24 lg:pt-[5.75rem]"
+      className="relative isolate z-[1] -mb-6 overflow-x-clip bg-nuit pb-10 pt-[var(--inset-haut,env(safe-area-inset-top))] md:-mb-10 md:pb-14"
     >
       <HeroDevanture titreId={TITRE_ID} />
 

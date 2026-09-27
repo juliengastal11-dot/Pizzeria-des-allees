@@ -656,12 +656,14 @@ export const site = {
    * fond vidéo de « Venir à la Pizzeria des Allées ».
    * --------------------------------------------------------------------- */
   hero: {
-    // Visuel provisoire généré par IA (voir legal.credits.visuelsProvisoires) ; le badge « Made with AI » est coupé au recadrage
+    // Visuel provisoire généré par IA (voir legal.credits.visuelsProvisoires). Retravaillé le 27/09 à la demande de
+    // Julien (GPT Image 2.5 sur Higgsfield) : heure bleue, façade nettoyée, terrasse habillée (chaises en rotin,
+    // oliviers en pot). C'est une projection : la terrasse montrée n'est pas encore la vraie.
     photo: {
-      src: "/images/hero/devanture-pizzeria-des-allees.jpg",
-      alt: "La devanture de la Pizzeria des Allées à la tombée du jour : l’enseigne bleu nuit aux lettres dorées, les vitrines éclairées et la terrasse",
-      largeur: 1536,
-      hauteur: 924,
+      src: "/images/hero/devanture-pizzeria-des-allees-heure-bleue.jpg",
+      alt: "La devanture de la Pizzeria des Allées à l’heure bleue : l’enseigne bleu nuit aux lettres dorées, les vitrines éclairées et la terrasse dressée, chaises en rotin et oliviers en pot",
+      largeur: 1920,
+      hauteur: 1138,
       cadrage: "50% 18%",
     } satisfies PhotoHero,
   },

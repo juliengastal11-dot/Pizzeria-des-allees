@@ -4,15 +4,16 @@
  */
 
 /*
- * La bande de la devanture : toute la largeur, en bannière, jamais plein
- * écran. Téléphone : 3:2, la devanture presque entière ; tablette : 2:1 ;
- * ordinateur : 2,5:1. Sans dépasser le premier écran, pour que les arches
- * Commander / Réserver du pont restent visibles (réserve = en-tête + pont
- * jusqu'à l'eau).
+ * La bande de la devanture : tout en haut de la page (l'en-tête se réduit au
+ * bouton menu, incrusté dessus), toute la largeur, en bannière, jamais plein
+ * écran. Photo en 3:2 sur téléphone, 2:1 sur tablette, 2,5:1 sur ordinateur,
+ * sans dépasser le premier écran : les arches Commander / Réserver du pont
+ * restent visibles (réserve = le pont jusqu'à l'eau).
  */
 .bande {
   --ecran: 100vh;
-  height: max(13rem, min(66.7vw, calc(var(--ecran) - 12.5rem - var(--hauteur-essai, 0px) - var(--inset-haut, env(safe-area-inset-top)))));
+  /* Téléphone : 3 rem de nuit au-dessus de la photo (voir .cadre) */
+  height: max(15rem, min(calc(66.7vw + 3rem), calc(var(--ecran) - 8rem - var(--hauteur-essai, 0px) - var(--inset-haut, env(safe-area-inset-top)))));
 }
 
 @supports (height: 100svh) {
@@ -23,13 +24,42 @@
 
 @media (min-width: 48rem) {
   .bande {
-    height: max(18rem, min(50vw, calc(var(--ecran) - 8rem - var(--hauteur-essai, 0px))));
+    height: max(18rem, min(50vw, calc(var(--ecran) - 9rem - var(--hauteur-essai, 0px))));
   }
 }
 
 @media (min-width: 64rem) {
   .bande {
-    height: max(20rem, min(40vw, calc(var(--ecran) - 8rem - var(--hauteur-essai, 0px))));
+    height: max(20rem, min(40vw, calc(var(--ecran) - 9rem - var(--hauteur-essai, 0px))));
+  }
+}
+
+/*
+ * Sur téléphone, l'enseigne occupe toute la largeur de la photo : un bouton
+ * posé dessus cacherait « Allées ». La photo commence donc 3 rem plus bas, et
+ * le bouton menu flotte dans la nuit au-dessus d'elle. Au-delà, il se pose sur
+ * le mur, à droite de l'enseigne.
+ */
+.cadre {
+  top: 3rem;
+}
+
+.nuitHaute {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 4.75rem;
+  background: linear-gradient(var(--color-minuit, #060f2e) 55%, transparent);
+  pointer-events: none;
+}
+
+@media (min-width: 48rem) {
+  .cadre {
+    top: 0;
+  }
+
+  .nuitHaute {
+    display: none;
   }
 }
 

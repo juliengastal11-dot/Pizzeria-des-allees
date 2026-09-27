@@ -24,8 +24,10 @@ export function HeroDevanture({ titreId }: { titreId: string }) {
   const echelle = useTransform(progression, [0, 1], [1, PAYSAGE.echelleFin]);
 
   return (
+    // data-hero-photo : l'en-tête reste incrusté (bouton menu seul) tant que cette bande passe sous lui
     <div
       data-animation="paysage-hero"
+      data-hero-photo
       className={`${styles.bande} relative isolate overflow-hidden`}
       style={{ background: FOND_DEVANTURE }}
     >
@@ -33,7 +35,7 @@ export function HeroDevanture({ titreId }: { titreId: string }) {
         {site.nom}
         {site.seo.complementTitre}
       </h1>
-      <div className={`${styles.paysage} absolute inset-0`}>
+      <div className={`${styles.paysage} ${styles.cadre} absolute inset-x-0 bottom-0`}>
         <motion.div
           className="absolute inset-0 will-change-transform"
           style={{ y: reduire ? 0 : y, scale: reduire ? 1 : echelle }}
@@ -50,6 +52,8 @@ export function HeroDevanture({ titreId }: { titreId: string }) {
           />
         </motion.div>
       </div>
+      {/* Téléphone : la nuit au-dessus de la devanture, où flotte le bouton menu */}
+      <div aria-hidden className={styles.nuitHaute} />
       {/* La bande se fond dans la nuit, où le Pont Vieux dessiné prend le relais */}
       <div aria-hidden className={styles.fondu} />
     </div>
