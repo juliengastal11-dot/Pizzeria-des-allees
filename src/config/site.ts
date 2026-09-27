@@ -42,15 +42,6 @@ export type Pizza = {
   duMoment?: boolean;
   /** Laisser vide : les prix vivent dans l'outil de commande pour ne jamais être périmés. */
   prix?: string;
-  /**
-   * Tableau vivant (facultatif), sur le mur de cadres : la pizza s'y soulève en
-   * couches puis se repose, une seule fois, quand son cadre passe au milieu de
-   * l'écran. Vidéo carrée, sans son, 5 s au plus, qui commence et finit sur la
-   * même image ; `poster` est cette image (elle remplace l'image détourée dans le
-   * cadre). Le fond de la vidéo est celui du cadre : bleu nuit et lueur ambrée
-   * pour un cadre rond ou ovale.
-   */
-  video?: { mp4: string; poster: string };
 };
 
 export type Photo = {
@@ -66,19 +57,16 @@ export type Photo = {
   cadrage?: string;
 };
 
-/** Une vue de la fenêtre en arche du hero : vidéo en boucle 3:4 (900 × 1200, 24 i/s) et son poster. */
-export type VueHero = {
-  id: string;
-  /** Nom affiché dans la fenêtre tant que l'on peut passer d'une vue à l'autre. */
-  nom: string;
-  videoMp4: string;
-  videoWebm: string;
-  /** Première image de la vidéo : affichée avant elle, et seule en mouvement réduit. */
+/** Une vidéo en boucle et son poster (première image : affichée avant elle, et seule en mouvement réduit). */
+export type VideoBoucle = {
+  mp4: string;
+  webm: string;
   poster: string;
-  /** Ligne d'horizon détourée qui passe devant le titre (il se lève derrière elle). Sans elle, le titre est devant la vue. */
-  horizon?: string;
-  /** Titre calcaire à halo nuit, pour une vue au ciel soutenu ou au feuillage sombre derrière le nom (sinon : nuit à halo calcaire). */
-  titreClair?: boolean;
+};
+
+/** La vidéo du hero : en paysage, avec la ligne d'horizon détourée qui passe devant le titre (il se lève derrière elle). */
+export type VideoHero = VideoBoucle & {
+  horizon: string;
   alt: string;
 };
 
@@ -275,45 +263,19 @@ export const site = {
       surtitre: "Pizzeria artisanale · Béziers",
       accroche: "Pâte pétrie ici, produits du coin, et la terrasse sous les platanes des Allées.", // À VALIDER
       modes: "Sur place · À emporter · En livraison",
-      /** Passage d'une vue à l'autre de la fenêtre (seulement s'il y en a plusieurs, voir `hero.vues`). */
-      vues: { groupe: "Vues de la fenêtre", precedente: "Vue précédente", suivante: "Vue suivante", vue: "vue", sur: "sur" },
     },
 
     // Notre histoire
     histoire: {
       surtitre: "Notre histoire",
       titre: "Même adresse, nouvelle enseigne.",
-      // Le « ⁠ » (liant invisible) empêche la coupure « Paul- / Riquet » en fin de ligne.
-      manifeste:
-        "Une pâte qui repose vingt-quatre heures, des produits choisis avec soin, et le four qu’on allume chaque jour pour vous : voilà ce qu’on aime servir, sous les platanes des allées Paul-⁠Riquet, en plein cœur de Béziers. Bienvenue chez nous.",
       /**
-       * Le mur de cadres : nos pizzas encadrées et rétroéclairées, et cinq ardoises
-       * dont les phrases s'écrivent à la main à l'écran (plus de photos : Julien a
-       * préféré les garder seulement dans la galerie qui défile, plus bas).
+       * Deux ou trois lignes, qui s'allument mot à mot (les mots Béziers, allées et platanes en or).
+       * Raccourci le 27/09 à la demande de Julien, avec le mur de pizzas et d'ardoises retiré de la section.
+       * Le « ⁠ » (liant invisible) empêche la coupure « Paul- / Riquet » en fin de ligne.
        */
-      mur: {
-        /** Nom du mur pour les lecteurs d'écran. */
-        aria: "Le mur de la salle : nos pizzas encadrées et quelques mots sur la maison",
-        /**
-         * Cinq ardoises (textes du restaurateur, 25/09/2026).
-         * ⚠ « pizzas de terroirs » reprend l'intitulé de l'ancienne fiche Google Basilic & Co
-         * (voir liens.avisGoogle) : à reformuler si Julien veut zéro ressemblance.
-         */
-        ardoises: [
-          "La Pizzeria des Allées vous propose une expérience culinaire unique centrée sur la pizza artisanale de qualité.",
-          "Chaque pizza est confectionnée avec des ingrédients soigneusement sélectionnés.",
-          "Notre savoir-faire garantit une pâte à pizza fine et croustillante et des garnitures généreuses.",
-          "Complétant notre offre de pizzas de terroirs, nous vous proposons également une sélection de salades fraîches.", // ⚠ voir la note ci-dessus
-          "Nos gratins de ravioles sont composés d’ingrédients frais et de saison, chaque recette est un équilibre parfait entre fraîcheur, saveurs et authenticité.",
-        ],
-        /**
-         * Pizzas exposées sur le mur (identifiants de `pizzas`), dans l'ordre d'accrochage : quatre pelles.
-         * La Chorizana en tableau vivant (26/09) est mise de côté pour le moment : sa photo, prise de trois
-         * quarts sur sa propre pelle, dépasse du cercle de la pelle illustrée et laisse voir son fond bleu
-         * derrière. À reprendre une fois une vidéo/photo vue de dessus disponible (voir `pizzas.chorizana`).
-         */
-        pizzas: ["passejada", "cers", "rosace", "caritats"],
-      },
+      manifeste:
+        "Une pâte qui repose vingt-quatre heures, des produits choisis avec soin et le four allumé chaque jour, sous les platanes des allées Paul-⁠Riquet, au cœur de Béziers.",
     },
 
     // La carte (fond ciel)
@@ -606,7 +568,6 @@ export const site = {
       base: "tomate",
       // Vue de trois quarts sur sa pelle, pas vue de dessus : à refaire avant de la présenter dans La carte
       image: "/images/pizzas/chorizana.webp",
-      video: { mp4: "/video/pizzas/chorizana-tableau.mp4", poster: "/images/pizzas/chorizana-tableau.webp" },
     },
   ] satisfies Pizza[],
 
@@ -685,45 +646,29 @@ export const site = {
   },
 
   /* ------------------------------------------------------------------------
-   * Hero : les vues de la fenêtre en arche (vidéos en boucle)
-   * Tant qu'il y en a plusieurs, on passe de l'une à l'autre d'un glissé ou
-   * avec les flèches : c'est le mode présentation, pour que le restaurateur
-   * choisisse. Le choix fait, ne garder que la vue retenue : la fenêtre
-   * redevient simple, sans flèches. La première est celle du chargement.
+   * Vidéos en boucle (choix de Julien, 27/09) : la fresque de la salle occupe
+   * tout le hero, en paysage ; les Allées au soleil couchant passent en fond
+   * de « Venir à la Pizzeria des Allées ». La vue des Allées en plein été
+   * (droits incertains) est retirée du site.
    * --------------------------------------------------------------------- */
   hero: {
-    vues: [
-      {
-        id: "fresque",
-        nom: "La fresque de la salle",
-        // ⚠ Droits : la fresque est reproduite et animée. Faire confirmer par écrit l'autorisation de son auteur (voir legal.credits.fresque).
-        videoMp4: "/video/fresque-hero.mp4",
-        videoWebm: "/video/fresque-hero.webm",
-        poster: "/images/hero/fresque-poster.jpg",
-        horizon: "/images/hero/fresque-horizon.webp",
-        alt: "La fresque de la salle : la cathédrale Saint-Nazaire sur sa colline, le Pont Vieux et l’Orb, animés comme un matin d’été",
-      },
-      {
-        id: "allees-soir",
-        nom: "Les Allées au soleil couchant",
-        // Photo de Julien, animée par IA.
-        videoMp4: "/video/allees-soir-hero.mp4",
-        videoWebm: "/video/allees-soir-hero.webm",
-        poster: "/images/hero/allees-soir-poster.jpg",
-        titreClair: true,
-        alt: "Les Allées Paul-Riquet au soleil couchant : promeneurs sous les platanes et la lune dans le ciel bleu",
-      },
-      {
-        id: "allees-jour",
-        nom: "Les Allées en plein été",
-        // ⚠ Droits : photo animée par IA. La remplacer par la nôtre, ou obtenir l'accord de son auteur, avant la mise en ligne.
-        videoMp4: "/video/allees-jour-hero.mp4",
-        videoWebm: "/video/allees-jour-hero.webm",
-        poster: "/images/hero/allees-jour-poster.jpg",
-        alt: "Les Allées Paul-Riquet en plein jour : la voûte des platanes jusqu’au théâtre, promeneurs et terrasses",
-      },
-    ] satisfies VueHero[],
+    // ⚠ Droits : la fresque est reproduite et animée. Faire confirmer par écrit l'autorisation de son auteur (voir legal.credits.fresque).
+    // Élargie en 16:9 (1280 × 720) par Higgsfield (reframe) à partir de la vidéo 3:4 d'origine, le 27/09
+    video: {
+      mp4: "/video/fresque-paysage.mp4",
+      webm: "/video/fresque-paysage.webm",
+      poster: "/images/hero/fresque-paysage-poster.jpg",
+      horizon: "/images/hero/fresque-paysage-horizon.webp",
+      alt: "La fresque de la salle : la cathédrale Saint-Nazaire sur sa colline, le Pont Vieux et l’Orb, animés comme un matin d’été",
+    } satisfies VideoHero,
   },
+
+  /** Derrière la section Infos pratiques, sous un voile sombre. Photo de Julien, animée par IA. */
+  fondInfos: {
+    mp4: "/video/allees-soir.mp4",
+    webm: "/video/allees-soir.webm",
+    poster: "/images/infos/allees-soir-poster.jpg",
+  } satisfies VideoBoucle,
 
   /* ------------------------------------------------------------------------
    * SEO local

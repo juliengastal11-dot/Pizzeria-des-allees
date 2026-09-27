@@ -4,64 +4,56 @@
  */
 
 /*
- * Taille de la fenêtre : toujours 3:4 (vidéo, poster et horizon y sont calés),
- * et assez petite pour que l'en-tête, l'arche et les deux arches-boutons du
- * pont tiennent dans le premier écran, barres du navigateur comprises (svh).
- * Réserve = marge haute + surtitre + écarts + pont jusqu'à la ligne d'eau.
+ * La bande du paysage : toute la largeur, moins haute que l'écran (effet
+ * paysage). Téléphone : 4:5 au plus, pour que le paysage garde de la hauteur,
+ * et les arches Commander / Réserver du pont restent dans le premier écran
+ * (réserve = en-tête + pont jusqu'à l'eau). Au-delà : 43,3 % de la largeur,
+ * soit 77 % de la hauteur de la scène (du ciel au-dessus du titre à l'Orb sous
+ * le pont), sans dépasser le premier écran.
  */
-.cadre {
-  /* Hauteur d'écran barres comprises (svh), repli en vh pour les navigateurs plus anciens */
+.bande {
   --ecran: 100vh;
-  width: min(100%, 28rem, max(15rem, calc((var(--ecran) - 14.75rem - var(--hauteur-essai, 0px) - var(--inset-haut, env(safe-area-inset-top))) * 0.75)));
-  aspect-ratio: 3 / 4;
+  height: max(18rem, min(125vw, calc(var(--ecran) - 12.5rem - var(--hauteur-essai, 0px) - var(--inset-haut, env(safe-area-inset-top)))));
+  container-type: size;
 }
 
 @supports (height: 100svh) {
-  .cadre {
+  .bande {
     --ecran: 100svh;
   }
 }
 
-@media (min-width: 40rem) {
-  .cadre {
-    width: min(100%, 26rem, max(15rem, calc((var(--ecran) - 14.75rem - var(--hauteur-essai, 0px) - var(--inset-haut, env(safe-area-inset-top))) * 0.75)));
-  }
-}
-
 @media (min-width: 48rem) {
-  .cadre {
-    width: min(100%, 26rem, max(18rem, calc((var(--ecran) - 17.5rem - var(--hauteur-essai, 0px) - var(--inset-haut, env(safe-area-inset-top))) * 0.75)));
-  }
-}
-
-/* Ordinateur : colonne de droite, hauteur réglée sur l'écran, pont et reflets au-dessus du pli */
-@media (min-width: 64rem) {
-  .cadre {
-    --arche-h: clamp(24rem, min(76 * var(--ecran) / 100, calc(var(--ecran) - 20.5rem - var(--hauteur-essai, 0px))), 45rem);
-    width: calc(var(--arche-h) * 0.75);
-    height: var(--arche-h);
-    aspect-ratio: auto;
+  .bande {
+    height: max(20rem, min(43.3vw, calc(var(--ecran) - 8rem - var(--hauteur-essai, 0px))));
   }
 }
 
 /*
- * La fenêtre en arche : demi-cercle exact en haut (rapport 3:4), cadre chêne.
- * clip et non hidden : les vues voisines attendent de part et d'autre, et une
- * zone « hidden » défile encore quand le navigateur y amène un élément (focus
- * d'une flèche, recherche dans la page), ce qui décalerait tout le contenu.
+ * La scène 16:9 de la fresque couvre la bande, comme un object-fit: cover, calée
+ * par --scene-x / --scene-y (fraction du débord gardée à gauche / en haut, voir
+ * SCENE dans geometrie.ts). Conteneur à son tour : le titre s'y mesure en cqw.
  */
-.arche {
-  overflow: hidden;
-  overflow: clip;
-  border-radius: 50% 50% 1.75rem 1.75rem / 37.5% 37.5% 1.75rem 1.75rem;
-  box-shadow:
-    0 0 0 5px var(--color-nuit, #051a4b),
-    0 0 0 7px var(--color-chene, #c98a35);
-  container-type: inline-size;
-  animation: arche-ouvre 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+.scene {
+  position: absolute;
+  width: max(100cqw, 177.78cqh);
+  height: max(100cqh, 56.25cqw);
+  left: calc((100cqw - max(100cqw, 177.78cqh)) * var(--scene-x, 0.5));
+  top: calc((100cqh - max(100cqh, 56.25cqw)) * var(--scene-y, 0.5));
+  container-type: size;
 }
 
-/* « La fenêtre s'ouvre » : le paysage se pose */
+/* Le bas de la bande se fond dans la nuit, où le Pont Vieux dessiné prend le relais */
+.fondu {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 14%;
+  background: linear-gradient(to top, var(--color-nuit, #051a4b), transparent);
+  pointer-events: none;
+}
+
+/* « Le paysage se pose » */
 .paysage {
   animation: paysage-pose 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -83,18 +75,6 @@
   text-shadow:
     0 0 28px rgba(241, 224, 200, 0.45),
     0 0 2px rgba(241, 224, 200, 0.25);
-  /* D'une vue à l'autre (mode présentation), le titre change de ton en douceur */
-  transition:
-    color 0.6s ease,
-    text-shadow 0.6s ease;
-}
-
-/* Vue au ciel soutenu ou au feuillage sombre : calcaire à halo nuit */
-.titre[data-ton="clair"] {
-  color: var(--color-calcaire, #f1e0c8);
-  text-shadow:
-    0 0 24px rgba(5, 26, 75, 0.6),
-    0 1px 3px rgba(5, 26, 75, 0.55);
 }
 
 /* Chaque ligne se lève derrière la cathédrale */
@@ -105,14 +85,14 @@
 
 .ligne2 {
   padding-left: var(--titre-retrait);
-  /* Plus bas dans l'arche, elle a toute la largeur : elle ne se replie pas (sinon « Allées » passerait derrière la cathédrale) */
+  /* Elle ne se replie jamais (sinon « Allées » passerait derrière la cathédrale) */
   white-space: nowrap;
   font-style: italic;
   font-weight: 600;
   animation-delay: calc(var(--titre-delai) + var(--titre-decalage));
 }
 
-/* Textes autour de l'arche : ils montent doucement, à la suite de la fenêtre */
+/* Textes du hero : ils montent doucement, à la suite du paysage */
 .monte {
   animation: texte-monte 0.8s cubic-bezier(0.22, 1, 0.36, 1) var(--delai, 0.4s) both;
 }
@@ -125,12 +105,6 @@
 
 .videoVisible {
   opacity: 1;
-}
-
-@keyframes arche-ouvre {
-  from {
-    transform: scale(0.96);
-  }
 }
 
 @keyframes paysage-pose {
@@ -161,14 +135,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .arche,
   .paysage,
   .ligne,
   .monte {
     animation: none;
   }
-  .video,
-  .titre {
+  .video {
     transition: none;
   }
 }

@@ -3,7 +3,6 @@
 import { useCallback, useSyncExternalStore } from "react";
 
 export const MOUVEMENT_REDUIT = "(prefers-reduced-motion: reduce)";
-export const BUREAU = "(min-width: 1024px)";
 
 /**
  * Media query suivie en direct. Faux côté serveur et pendant l'hydratation,

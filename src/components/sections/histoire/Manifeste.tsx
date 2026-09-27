@@ -1,9 +1,9 @@
 "use client";
 
-import { Fragment, useRef, type RefObject } from "react";
+import { Fragment, useRef } from "react";
 import { motion, useScroll, useTransform, type MotionValue } from "motion/react";
 import { normaliserMot } from "./outils";
-import { BUREAU, MOUVEMENT_REDUIT, useMedia } from "./useMedia";
+import { MOUVEMENT_REDUIT, useMedia } from "./useMedia";
 
 const MOTS_CLES = new Set(["beziers", "allee", "allees", "platane", "platanes"]);
 
@@ -14,11 +14,6 @@ const DUREE_MOT = 0.2;
 type Props = {
   texte: string;
   className?: string;
-  /**
-   * En grand écran, où le manifeste reste en place (sticky), la lecture suit
-   * l'entrée de cet élément à l'écran (le mur de cadres) plutôt que la sienne.
-   */
-  cible?: RefObject<HTMLElement | null>;
 };
 
 /**
@@ -28,19 +23,15 @@ type Props = {
  * aucune couleur animée, le texte reste lisible à chaque instant.
  * Les lecteurs d'écran reçoivent la phrase entière une seule fois (copie sr-only).
  */
-export function Manifeste({ texte, className, cible }: Props) {
+export function Manifeste({ texte, className }: Props) {
   const ref = useRef<HTMLParagraphElement>(null);
   const reduire = useMedia(MOUVEMENT_REDUIT);
-  const suivreCible = useMedia(BUREAU) && Boolean(cible);
-  const { scrollYProgress } = useScroll({
-    target: suivreCible ? cible : ref,
-    offset: suivreCible ? ["start 0.9", "start 0.35"] : ["start 0.85", "end 0.45"],
-  });
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "end 0.45"] });
   // Espaces normales seulement : les insécables restent collées au mot.
   const mots = texte.split(" ").filter(Boolean);
 
   return (
-    <div className={`relative md:pl-9 ${className ?? ""}`}>
+    <div data-animation="manifeste" className={`relative md:pl-9 ${className ?? ""}`}>
       {/* Filet de lumière qui descend avec la lecture */}
       <span aria-hidden className="absolute bottom-3 left-0 top-3 hidden w-px overflow-hidden rounded-full bg-filet/35 md:block">
         <motion.span
@@ -51,7 +42,7 @@ export function Manifeste({ texte, className, cible }: Props) {
 
       <p
         ref={ref}
-        className="font-titre text-[clamp(1.5rem,1.1rem+1.6vw,2.25rem)] font-medium leading-[1.3] tracking-[-0.01em] text-[#9099b2] md:max-w-[32ch]"
+        className="font-titre text-[clamp(1.5rem,1.1rem+1.6vw,2.25rem)] font-medium leading-[1.3] tracking-[-0.01em] text-[#9099b2] md:max-w-[58ch]"
       >
         <span className="sr-only">{texte}</span>
         <span aria-hidden="true">

@@ -419,52 +419,6 @@ html[data-typo="comptoir"] {
     font-style: normal;
   }
 
-  /*
-   * Écriture à la main (ardoises du mur de cadres) : les lettres apparaissent
-   * l'une après l'autre, avec un éclat d'encre fraîche. L'état « attente »
-   * n'est posé qu'après le montage (voir TexteEcrit) : sans JavaScript, tout est lisible.
-   */
-  .ecriture .lettre {
-    display: inline-block;
-  }
-
-  .ecriture[data-ecriture="attente"] .lettre {
-    opacity: 0;
-  }
-
-  .ecriture[data-ecriture="en-cours"] .lettre {
-    animation: lettre-ecrite 0.55s var(--ease-out-soft) both;
-    animation-delay: calc(var(--depart, 0ms) + var(--i, 0) * var(--pas, 42ms));
-  }
-
-  @keyframes lettre-ecrite {
-    from {
-      opacity: 0;
-      filter: blur(2px);
-      transform: translateY(0.1em);
-      text-shadow: 0 0 10px rgb(from var(--color-halo) r g b / 0.9);
-    }
-    60% {
-      opacity: 1;
-      filter: blur(0);
-      transform: none;
-      text-shadow: 0 0 6px rgb(from var(--color-halo) r g b / 0.5);
-    }
-    to {
-      opacity: 1;
-      filter: blur(0);
-      transform: none;
-      text-shadow: none;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .ecriture .lettre {
-      opacity: 1;
-      animation: none;
-    }
-  }
-
   /* Arche du Pont Vieux : haut en demi-ellipse, bas légèrement arrondi */
   .arche {
     border-radius: 50% 50% 1.75rem 1.75rem / 38% 38% 1.75rem 1.75rem;
