@@ -712,7 +712,7 @@ export const site = {
     rcs: "[À CONFIRMER]",
     tva: "[À CONFIRMER]",
     directeurPublication: "[À CONFIRMER]",
-    concepteur: "[NOM DU CONCEPTEUR DU SITE]",
+    concepteur: "VTBON",
     /** Date des pages légales (« Dernière mise à jour » et plan du site), au format AAAA-MM-JJ. */
     miseAJour: "2026-09-25",
     /** Vérifié le 25/09/2026 sur vercel.com/legal (adresse) et vercel.com/legal/dmca-policy (téléphone). */
