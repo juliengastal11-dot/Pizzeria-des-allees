@@ -12,6 +12,11 @@ export const ANIMATIONS: Record<string, FicheAnimation> = {
     court: "Devanture qui se pose",
     description: "À l’arrivée, la photo de la devanture se pose en douceur ; en descendant, elle grossit légèrement.",
   },
+  "video-hero": {
+    nom: "La devanture qui s’anime",
+    court: "Devanture animée",
+    description: "En boucle : les convives mangent et trinquent en terrasse, le pizzaiolo enfourne au fond, les bougies et le feu du four vacillent.",
+  },
   "pont-lumieres": {
     nom: "Les lumières du Pont Vieux",
     court: "Lumières du pont",

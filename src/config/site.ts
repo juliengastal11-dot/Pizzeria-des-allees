@@ -669,6 +669,11 @@ export const site = {
       hauteur: 1080,
       cadrage: "50% 18%",
     } satisfies PhotoHero,
+    /** La même scène en boucle de 5 s (Kling 3.0 sur Higgsfield, la photo en première et dernière image) : les convives mangent et trinquent, le pizzaiolo enfourne. */
+    video: {
+      mp4: "/video/devanture-convives.mp4",
+      webm: "/video/devanture-convives.webm",
+    } satisfies Pick<VideoBoucle, "mp4" | "webm">,
   },
 
   /** Derrière la section Infos pratiques, sous un voile sombre. Photo de Julien, animée par IA. */

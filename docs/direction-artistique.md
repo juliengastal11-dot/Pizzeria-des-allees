@@ -82,7 +82,7 @@ Sur mobile, la **barre Commander / Réserver** est faite de **deux pilules flott
 - **Mouvement réduit sans écart d'hydratation** : ne jamais lire `useReducedMotion()` au rendu pour un style visible côté serveur. Utiliser le hook `useMedia(MOUVEMENT_REDUIT)` de `src/components/ui/useMedia.ts` (`useSyncExternalStore`, faux au serveur) ou les variantes CSS `motion-reduce:` / `@media (prefers-reduced-motion: reduce)`. Pour les effets liés au défilement (`useScroll`/`useTransform`), figer l'état final (tout allumé).
 - **transform et opacity uniquement** (pas de width/height/top/filter animés, pas de `backdrop-filter`, pas de `filter: blur` au défilement).
 - Apparitions : le serveur rend l'état final (lisible sans JS et avant l'hydratation) ; après le montage, un bloc encore sous la ligne de flottaison est placé dans son état de départ puis révélé (`preparerApparition`, `src/components/ui/apparition.ts`). CTA, prix, horaires, adresse : jamais partir d'une opacité nulle.
-- Aucune boucle autonome visible plus de 5 s sans moyen de l'arrêter (WCAG 2.2.2) — sauf la vidéo du fond des Infos et les deux promenades de la salle, à la demande de Julien (aucun bouton pause visible) : les vidéos ne jouent pas en mouvement réduit, et les deux promenades s'arrêtent au survol ou au focus (mais pas au doigt, sur tactile — limite acceptée, mouvement lent et non clignotant).
+- Aucune boucle autonome visible plus de 5 s sans moyen de l'arrêter (WCAG 2.2.2) — sauf la vidéo du hero, celle du fond des Infos et les deux promenades de la salle, à la demande de Julien (aucun bouton pause visible) : les vidéos ne jouent pas en mouvement réduit, et les deux promenades s'arrêtent au survol ou au focus (mais pas au doigt, sur tactile — limite acceptée, mouvement lent et non clignotant).
 - Ressorts : boutons `stiffness 500 / damping 30` ; entrées `ease [0.22, 1, 0.36, 1]`.
 - Lenis n'est actif qu'avec une souris ou un pavé tactile (`DefilementDoux`, pointeur fin) ; au doigt, défilement natif. Ne rien animer en `scroll-behavior: smooth` en plus.
 
@@ -97,6 +97,7 @@ Sur mobile, la **barre Commander / Réserver** est faite de **deux pilules flott
 ## 8. Performance
 
 - `next/image` partout (`sizes` précis). `preload` **uniquement** sur la photo du hero. Tout le reste en lazy (défaut).
+- Vidéo du hero (la devanture en boucle) : `muted loop playsInline preload="none"`, sans autoPlay ; lecture après l'événement `load` et un `requestIdleCallback`, si le hero est à l'écran et que le réseau le permet (ni `saveData`, ni 2G/3G) ; jamais en mouvement réduit ; en pause hors écran. La photo, sa première image, reste dessous.
 - Vidéo du fond des Infos : `muted loop playsInline preload="none"`, sans autoPlay ; lecture à l'approche de la section, pause hors de l'écran, poster seul en mouvement réduit ou sur réseau lent.
 - Carte de livraison : MapLibre et ses CSS ne se chargent qu'à l'approche de la section (`import()` déclenché à 600 px) ; avec l'économiseur de données, seulement au clic « Afficher la carte ». Le travailleur MapLibre est lancé depuis un blob : une future CSP devra autoriser `worker-src blob:` et `https://tiles.openfreemap.org` (`connect-src`, `img-src`).
 - Fenêtres (réservation, commande) et menu plein écran ne sont montés qu'à leur première ouverture.

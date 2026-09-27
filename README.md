@@ -98,6 +98,10 @@ chemin dans `site.ts`, sinon l'ancienne version peut rester affichée.
   retirant les 100 premiers pixels. `hero.photo.cadrage` (object-position) garde l'enseigne entière quand la
   bannière rogne la photo ; `largeur` et `hauteur` doivent suivre le fichier. Hauteur de la
   bannière : `.bande` dans `hero/hero.module.css` ; teintes d'attente et réglages du pont : `hero/geometrie.ts`.
+- Hero, vidéo (`hero.video`) : la même devanture en boucle de 10 s (MP4 + WebM 1920 × 1080, 24 i/s, sans son,
+  dans `public/video/`), faite sur Higgsfield avec Kling 3.0 en aller-retour : un clip libre depuis la photo, puis
+  un clip de sa dernière image vers la photo (la même image en début et en fin fige les gens), `-crf 27` en H.264,
+  `-crf 37` en VP9. La photo reste sa première image, au même cadrage 16:9 : aucun saut quand la vidéo démarre.
 - Fresque animée (le hero précédent) : **gardée pour plus tard**, à la demande de Julien, mais plus affichée.
   Fichiers : `public/video/fresque-paysage.mp4` et `.webm`, `public/images/hero/fresque-paysage-poster.jpg` et
   `fresque-paysage-horizon.webp` (l'horizon détouré qui passait devant le titre). Son code (`HeroPaysage.tsx`,
