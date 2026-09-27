@@ -84,13 +84,13 @@ export const CartePizza = memo(function CartePizza({ pizza, index, defileur, rou
           style={{ borderRadius: ARCHE_FILET }}
         />
 
-        <div aria-hidden className="relative mx-auto -mt-[22%] aspect-square w-[80%]">
+        <div data-animation="pizza-survol" aria-hidden className="relative mx-auto -mt-[22%] aspect-square w-[80%]">
           <motion.span
             className="absolute inset-x-[12%] -bottom-[2%] h-[14%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(5,26,75,0.32),rgba(5,26,75,0))]"
             animate={leve ? { opacity: 0.55, scale: 0.86 } : { opacity: 1, scale: 1 }}
             transition={RESSORT}
           />
-          <motion.div className="absolute inset-0" style={roule ? { rotate, scale } : { rotate: 0, scale: 1 }}>
+          <motion.div data-animation="pizza-roule" className="absolute inset-0" style={roule ? { rotate, scale } : { rotate: 0, scale: 1 }}>
             <motion.div
               className="relative size-full"
               animate={leve ? { rotate: 25, y: -10 } : { rotate: 0, y: 0 }}
@@ -116,7 +116,7 @@ export const CartePizza = memo(function CartePizza({ pizza, index, defileur, rou
           <p className="mt-2 text-[0.96875rem] leading-relaxed text-eau">{pizza.description}</p>
           {pizza.prix && (
             <p className="mt-3 font-soustitre text-xl font-semibold tabular-nums text-encre">
-              <Valeur valeur={pizza.prix} />
+              <Valeur valeur={pizza.prix} cle={`pizzas[${pizza.id}].prix`} />
             </p>
           )}
           <ul className="mt-auto flex flex-wrap justify-center gap-2 pt-5">

@@ -97,6 +97,7 @@ export function BarreMobile() {
 
   return (
     <div
+      data-animation="barre-mobile"
       role="group"
       aria-label={TEXTES.groupe}
       data-barre-mobile=""

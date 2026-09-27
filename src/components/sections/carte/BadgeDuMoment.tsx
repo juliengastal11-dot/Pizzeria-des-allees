@@ -32,6 +32,7 @@ const FESTON = feston();
 export function BadgeDuMoment() {
   return (
     <motion.p
+      data-animation="badge-du-moment"
       className="absolute right-[1.5cqw] top-[4cqw] z-10 grid size-[5.5rem] place-items-center text-encre"
       initial={{ scale: 0.55, rotate: -38 }}
       whileInView={{ scale: 1, rotate: -12 }}

@@ -156,7 +156,7 @@ export function PontLumineux({ className }: { className?: string }) {
 
   return (
     <PontScene className={`${styles.pont} ${className ?? ""}`} style={variables}>
-      <div className={styles.boite}>
+      <div data-animation="pont-lumieres" className={styles.boite}>
         <DessinPont plan={mobile} variante="mobile" />
         <DessinPont plan={large} variante="large" />
         <ArchesBoutons

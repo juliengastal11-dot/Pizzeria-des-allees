@@ -1,0 +1,598 @@
+/*
+ * Mode relecture : un outil posé sur le site, pas une partie du site. Ses
+ * couleurs sont donc fixes (les palettes d'essai ne le touchent pas) et il
+ * reprend la police système, comme le bandeau d'essai.
+ */
+.racine {
+  --r-fond: #14161c;
+  --r-surface: #1d2029;
+  --r-surface-2: #262a35;
+  --r-filet: rgb(255 255 255 / 0.12);
+  --r-texte: #f4efe4;
+  --r-doux: #b8b3a8;
+  --r-or: #e9b950;
+  --r-or-clair: #f4da90;
+  --r-encre: #1b1406;
+  --r-danger: #ec8b7f;
+  --r-ombre: 0 18px 50px -14px rgb(0 0 0 / 0.65);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--r-texte);
+  -webkit-font-smoothing: antialiased;
+}
+
+.racine :where(button, input, textarea) {
+  font: inherit;
+  color: inherit;
+}
+
+.racine :where(button) {
+  cursor: pointer;
+}
+
+.racine :focus-visible {
+  outline: 2px solid var(--r-or-clair);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+ * Barre du bas
+ * ------------------------------------------------------------------------- */
+.barre {
+  position: fixed;
+  z-index: 2147483000;
+  left: 50%;
+  bottom: calc(0.75rem + env(safe-area-inset-bottom));
+  translate: -50% 0;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  max-width: calc(100vw - 1rem);
+  padding: 0.375rem;
+  border-radius: 999px;
+  background: var(--r-fond);
+  box-shadow:
+    var(--r-ombre),
+    inset 0 0 0 1px var(--r-filet);
+}
+
+.marque {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding-inline: 0.6rem 0.25rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.marque svg {
+  width: 1rem;
+  height: 1rem;
+  color: var(--r-or);
+}
+
+.bascule {
+  display: inline-flex;
+  padding: 0.1875rem;
+  border-radius: 999px;
+  background: var(--r-surface);
+}
+
+.bascule button {
+  min-height: 2.25rem;
+  padding-inline: 0.8rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--r-doux);
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.bascule button[aria-pressed="true"] {
+  background: var(--r-surface-2);
+  color: var(--r-texte);
+  box-shadow: inset 0 0 0 1px var(--r-filet);
+}
+
+.bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 2.5rem;
+  padding-inline: 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--r-surface);
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background-color 0.15s ease;
+}
+
+.bouton:hover {
+  background: var(--r-surface-2);
+}
+
+.bouton:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.bouton svg {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+.principal {
+  background: var(--r-or);
+  color: var(--r-encre);
+}
+
+.principal:hover:not(:disabled) {
+  background: var(--r-or-clair);
+}
+
+.compte {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  padding-inline: 0.3rem;
+  border-radius: 999px;
+  background: var(--r-or);
+  color: var(--r-encre);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.compte[data-vide] {
+  background: var(--r-surface-2);
+  color: var(--r-doux);
+}
+
+/* Téléphone : la barre prend toute la largeur, les libellés longs s'effacent */
+@media (max-width: 39.99rem) {
+  .barre {
+    left: 0.5rem;
+    right: 0.5rem;
+    translate: none;
+    justify-content: space-between;
+  }
+  .libelleLong {
+    display: none;
+  }
+  .marque {
+    padding-inline: 0.45rem 0;
+  }
+  .bascule button {
+    padding-inline: 0.6rem;
+  }
+  .bouton {
+    padding-inline: 0.7rem;
+  }
+}
+
+/* Message bref au-dessus de la barre (copie réussie) */
+.message {
+  position: fixed;
+  z-index: 2147483001;
+  left: 50%;
+  bottom: calc(4.5rem + env(safe-area-inset-bottom));
+  translate: -50% 0;
+  max-width: calc(100vw - 2rem);
+  padding: 0.55rem 0.9rem;
+  border-radius: 0.75rem;
+  background: var(--r-surface-2);
+  box-shadow: var(--r-ombre);
+  text-align: center;
+}
+
+/* ---------------------------------------------------------------------------
+ * Cartes : édition, liste des retours, aide, copie de secours
+ * ------------------------------------------------------------------------- */
+.carte {
+  position: fixed;
+  z-index: 2147483002;
+  width: min(25rem, calc(100vw - 1.5rem));
+  max-height: calc(100svh - 7rem);
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: var(--r-fond);
+  box-shadow:
+    var(--r-ombre),
+    inset 0 0 0 1px var(--r-filet);
+}
+
+/* Liste, aide, secours : ancrées au-dessus de la barre ; l'éditeur, lui, se place près du bloc */
+.ancree {
+  right: max(0.75rem, calc(50vw - 20rem));
+  bottom: calc(4.5rem + env(safe-area-inset-bottom));
+  width: min(26rem, calc(100vw - 1.5rem));
+}
+
+@media (max-width: 39.99rem) {
+  .carte,
+  .ancree {
+    left: 0.5rem !important;
+    right: 0.5rem !important;
+    top: auto !important;
+    bottom: calc(4.25rem + env(safe-area-inset-bottom)) !important;
+    width: auto;
+    max-height: min(70svh, calc(100svh - 6rem));
+  }
+}
+
+.entete {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.surtitre {
+  margin: 0;
+  color: var(--r-or-clair);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.titre {
+  margin: 0.2rem 0 0;
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+.fermer {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--r-surface);
+}
+
+.fermer svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.note {
+  margin: 0.5rem 0 0;
+  color: var(--r-doux);
+  font-size: 0.8125rem;
+}
+
+.origine {
+  margin: 0 0 0.6rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 0.6rem;
+  background: var(--r-surface);
+  color: var(--r-doux);
+  font-size: 0.8125rem;
+}
+
+.champ {
+  display: block;
+  width: 100%;
+  min-height: 5.5rem;
+  resize: vertical;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--r-filet);
+  border-radius: 0.7rem;
+  background: var(--r-surface);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.champ::placeholder {
+  color: var(--r-doux);
+}
+
+.champ:focus {
+  border-color: var(--r-or);
+  outline: none;
+}
+
+.petitChamp {
+  min-height: 3.5rem;
+}
+
+.etiquette {
+  display: block;
+  margin: 0.9rem 0 0.35rem;
+  color: var(--r-doux);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.lien {
+  margin-top: 0.6rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--r-or-clair);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.actions .gauche {
+  margin-right: auto;
+}
+
+.danger {
+  color: var(--r-danger);
+}
+
+.vignette {
+  display: block;
+  max-width: 100%;
+  max-height: 9rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.6rem;
+  object-fit: cover;
+}
+
+.fichier {
+  margin: 0 0 0.6rem;
+  color: var(--r-doux);
+  font-size: 0.75rem;
+  word-break: break-all;
+}
+
+/* Garder / Supprimer une animation */
+.choix {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+
+.choix button {
+  min-height: 2.75rem;
+  border: 1px solid var(--r-filet);
+  border-radius: 0.7rem;
+  background: var(--r-surface);
+  font-weight: 600;
+}
+
+.choix button[aria-pressed="true"][data-choix="garder"] {
+  border-color: var(--r-or);
+  background: rgb(233 185 80 / 0.16);
+  color: var(--r-or-clair);
+}
+
+.choix button[aria-pressed="true"][data-choix="supprimer"] {
+  border-color: var(--r-danger);
+  background: rgb(236 139 127 / 0.14);
+  color: var(--r-danger);
+}
+
+/* Liste des retours */
+.groupe {
+  margin-top: 1rem;
+}
+
+.groupe h3 {
+  margin: 0 0 0.4rem;
+  font-family: inherit;
+  color: var(--r-doux);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.retour {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: 0.7rem;
+  background: var(--r-surface);
+}
+
+.retour + .retour {
+  margin-top: 0.4rem;
+}
+
+.retour p {
+  margin: 0;
+}
+
+.retour .avant {
+  color: var(--r-doux);
+  text-decoration: line-through;
+  text-decoration-color: rgb(255 255 255 / 0.35);
+}
+
+.retour .boutonsRetour {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.retour .boutonsRetour button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--r-or-clair);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.retour .boutonsRetour button.danger {
+  color: var(--r-danger);
+}
+
+.vide {
+  margin: 0.25rem 0 0;
+  color: var(--r-doux);
+}
+
+.etapes {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  list-style: decimal;
+}
+
+.etapes ::marker {
+  color: var(--r-or-clair);
+  font-weight: 600;
+}
+
+.etapes li + li {
+  margin-top: 0.35rem;
+}
+
+.json {
+  min-height: 12rem;
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 0.75rem;
+}
+
+/* ---------------------------------------------------------------------------
+ * Étiquettes des animations, posées sur la page
+ * ------------------------------------------------------------------------- */
+.pastille {
+  position: fixed;
+  z-index: 2147482999;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  max-width: min(16rem, calc(100vw - 1rem));
+  padding: 0.3rem 0.6rem 0.3rem 0.45rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(20 22 28 / 0.9);
+  box-shadow:
+    0 6px 18px -6px rgb(0 0 0 / 0.6),
+    inset 0 0 0 1px rgb(244 218 144 / 0.35);
+  color: var(--r-texte);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.pastille span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pastille svg {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex-shrink: 0;
+  color: var(--r-or-clair);
+}
+
+.pastille[data-decision="garder"] {
+  box-shadow:
+    0 6px 18px -6px rgb(0 0 0 / 0.6),
+    inset 0 0 0 1.5px var(--r-or);
+}
+
+.pastille[data-decision="supprimer"] {
+  box-shadow:
+    0 6px 18px -6px rgb(0 0 0 / 0.6),
+    inset 0 0 0 1.5px var(--r-danger);
+}
+
+.pastille[data-decision="supprimer"] span {
+  text-decoration: line-through;
+}
+
+.pastille[hidden] {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * Sur la page elle-même, seulement pendant la relecture
+ * ------------------------------------------------------------------------- */
+:global(html[data-relecture="modifier"]) :global([data-relecture-bloc]) {
+  outline: 1px dashed rgb(244 218 144 / 0.5);
+  outline-offset: 2px;
+  cursor: text;
+}
+
+:global(html[data-relecture="modifier"]) :global([data-relecture-image]) {
+  cursor: pointer;
+}
+
+:global(html[data-relecture="modifier"]) :global([data-relecture-bloc]:hover),
+:global(html[data-relecture="modifier"]) :global([data-relecture-image]:hover) {
+  outline: 2px solid #f4da90;
+  outline-offset: 2px;
+}
+
+:global(html[data-relecture]) :global([data-relecture-modifie]) {
+  outline: 2px solid #e9b950;
+  outline-offset: 2px;
+}
+
+:global(html[data-relecture]) :global([data-relecture-cible]) {
+  outline: 2px solid #f4da90 !important;
+  outline-offset: 3px !important;
+}
+
+/* Aperçu d'un texte réécrit dont les enfants appartiennent à React : on les masque, la copie s'affiche */
+:global([data-relecture-apercu]) {
+  font-size: 0 !important;
+}
+
+:global([data-relecture-apercu]) > :not([data-relecture-apercu-texte]) {
+  display: none !important;
+}
+
+:global([data-relecture-apercu-texte]) {
+  font-size: var(--relecture-taille) !important;
+}
+
+/* « Voir » : le bloc clignote doucement une fois à l'écran */
+:global([data-relecture-eclair]) {
+  animation: eclair 1.6s ease-out;
+}
+
+@keyframes eclair {
+  0%,
+  35% {
+    outline: 3px solid #f4da90;
+    outline-offset: 6px;
+  }
+  100% {
+    outline: 3px solid transparent;
+    outline-offset: 2px;
+  }
+}
+
+/* La barre du bas du site remonte au-dessus de celle de la relecture */
+:global(html[data-relecture]) :global([data-barre-mobile]) {
+  bottom: calc(4.5rem + env(safe-area-inset-bottom)) !important;
+}

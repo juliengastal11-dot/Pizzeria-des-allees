@@ -43,7 +43,7 @@ export function AvisGoogle({ className }: { className?: string }) {
   const reduire = useMedia(MOUVEMENT_REDUIT);
 
   return (
-    <div className={className}>
+    <div data-animation="avis-defilent" className={className}>
       <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-center">
         <span className="inline-flex items-center gap-2 text-[0.9375rem] font-semibold text-calcaire">
           <Etoiles note={NOTE} />

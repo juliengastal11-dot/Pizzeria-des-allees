@@ -13,7 +13,7 @@ import { EVENEMENT_ESSAI, poserReglage, reglagePose, type Reglage } from "@/lib/
  * lib/essai.ts, les blocs [data-palette] et [data-typo] de globals.css et les
  * polices d'essai du layout) une fois les choix arrêtés.
  */
-const COULEURS = [
+export const COULEURS = [
   { id: null, nom: "Nuit", swatch: ["#051a4b", "#e9b950"] },
   { id: "four-a-bois", nom: "Four à bois", swatch: ["#3a1810", "#e8a23f"] },
   { id: "cypres", nom: "Cyprès", swatch: ["#0e2420", "#dcaa3f"] },
@@ -25,7 +25,7 @@ const COULEURS = [
 ] as const;
 
 /** `apercu` : le « Aa » du bouton, dans la police des titres de la palette. */
-const TYPOS: readonly { id: string | null; nom: string; polices: string; apercu: CSSProperties }[] = [
+export const TYPOS: readonly { id: string | null; nom: string; polices: string; apercu: CSSProperties }[] = [
   { id: null, nom: "Enseigne", polices: "Besley et Figtree", apercu: { fontFamily: "var(--font-besley)" } },
   { id: "editorial", nom: "Éditorial", polices: "Playfair Display et Raleway", apercu: { fontFamily: "var(--font-playfair)" } },
   { id: "gravure", nom: "Gravure", polices: "Cormorant Garamond et Raleway", apercu: { fontFamily: "var(--font-cormorant)" } },

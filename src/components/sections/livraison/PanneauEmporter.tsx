@@ -33,7 +33,7 @@ export function PanneauEmporter() {
     <div>
       <h3 className="font-soustitre text-[1.6rem] font-semibold italic leading-tight text-calcaire">{TEXTES.titre}</h3>
 
-      <ol role="list" className="mt-8 flex flex-col gap-3 lg:mt-14 lg:flex-row lg:items-end lg:justify-center lg:gap-8">
+      <ol data-animation="ecluses" role="list" className="mt-8 flex flex-col gap-3 lg:mt-14 lg:flex-row lg:items-end lg:justify-center lg:gap-8">
         {TEXTES.etapes.map((titre, i) => (
           <motion.li
             key={titre}

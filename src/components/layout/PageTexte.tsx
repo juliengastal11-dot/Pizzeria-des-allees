@@ -214,6 +214,7 @@ function apparition(delai: number) {
 function OrnementPont() {
   return (
     <svg
+      data-animation="ornement-pont"
       viewBox="0 0 240 176"
       aria-hidden
       focusable="false"

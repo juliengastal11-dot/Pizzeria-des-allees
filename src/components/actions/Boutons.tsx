@@ -75,7 +75,7 @@ const pression = { whileHover: { scale: 1.03 }, whileTap: { scale: 0.96 }, trans
 function Lueur({ variante, forme = "pilule", phase = 0 }: { variante: Variante; forme?: Forme; phase?: number }) {
   const reglages = { "--lueur": LUEURS[variante], "--rayon-tour": RAYONS[forme], "--phase": phase } as CSSProperties;
   return (
-    <span aria-hidden className={styles.bordure} style={reglages}>
+    <span aria-hidden data-animation="lueur-boutons" className={styles.bordure} style={reglages}>
       <span className={styles.lueur} />
     </span>
   );

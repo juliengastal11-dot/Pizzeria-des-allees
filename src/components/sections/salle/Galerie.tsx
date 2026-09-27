@@ -76,7 +76,7 @@ export function Galerie({ photos, titreFenetre }: Props) {
   const reduire = useMedia(MOUVEMENT_REDUIT);
 
   return (
-    <div className="mt-10 md:mt-14">
+    <div data-animation="galerie-defile" className="mt-10 md:mt-14">
       {reduire ? (
         <RangeeFixe photos={photos} onOuvrir={setOuverte} />
       ) : (

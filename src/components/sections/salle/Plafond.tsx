@@ -120,6 +120,7 @@ export function Plafond() {
 
   return (
     <motion.div
+      data-animation="ampoules"
       ref={ref}
       aria-hidden
       // --voute : retombée de la voûte vers les murs ; @container : sa largeur (cqw) donne la pente réelle des pieds

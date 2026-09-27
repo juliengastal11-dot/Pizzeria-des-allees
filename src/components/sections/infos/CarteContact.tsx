@@ -40,7 +40,7 @@ export function CarteContact() {
       <ul className="mt-5 space-y-3">
         <Ligne icone={<Phone className="size-5" strokeWidth={2.1} />} libelle={TEXTES.telephone}>
           {estPlaceholder(telephone) ? (
-            <Valeur valeur={telephone} />
+            <Valeur valeur={telephone} cle="telephone" />
           ) : (
             <a href={`tel:${telephone.replace(/[^\d+]/g, "")}`} className={`${lien} tabular-nums`}>
               {telephone}
@@ -49,7 +49,7 @@ export function CarteContact() {
         </Ligne>
         <Ligne icone={<Mail className="size-5" strokeWidth={2.1} />} libelle={TEXTES.email}>
           {estPlaceholder(email) ? (
-            <Valeur valeur={email} />
+            <Valeur valeur={email} cle="email" />
           ) : (
             <a href={`mailto:${email}`} className={lien}>
               {email}

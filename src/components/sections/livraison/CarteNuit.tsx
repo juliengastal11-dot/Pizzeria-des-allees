@@ -118,6 +118,7 @@ export function CarteNuit({ choix, demande, survol, onChoisir, onEtat }: Props) 
 
   return (
     <div
+      data-animation="carte-nuit"
       ref={panneau}
       className="carte-nuit relative isolate h-[25rem] overflow-hidden rounded-[50%_50%_2.5rem_2.5rem/4.5rem_4.5rem_2.5rem_2.5rem] border border-filet/40 bg-minuit sm:h-[28rem] lg:h-[31.5rem]"
     >

@@ -77,6 +77,7 @@ export function CarrouselPizzas({ pizzas, className }: Props) {
         className="relative snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain pb-8 pt-28 [scrollbar-width:none] focus-visible:[outline-offset:-4px] [&::-webkit-scrollbar]:hidden lg:snap-none lg:overflow-visible lg:pb-0 lg:pt-24"
       >
         <motion.ul
+          data-animation="pizzas-entree"
           initial="cache"
           whileInView="visible"
           viewport={{ once: true, amount: 0.15 }}

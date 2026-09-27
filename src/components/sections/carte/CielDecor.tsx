@@ -25,7 +25,7 @@ export function CielDecor() {
   const calque = fixe ? "" : "will-change-transform";
 
   return (
-    <div ref={ref} aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div data-animation="ciel-carte" ref={ref} aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
       <div className="texture-grain absolute inset-0 opacity-[0.07]" />
 
       <motion.svg

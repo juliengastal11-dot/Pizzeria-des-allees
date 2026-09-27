@@ -17,6 +17,7 @@ type Props = {
 export function Entree({ children, className, delai = 0 }: Props) {
   return (
     <motion.div
+      data-animation="entree-cartes"
       className={className}
       initial={{ y: 56, opacity: 0.5 }}
       whileInView={{ y: 0, opacity: 1 }}

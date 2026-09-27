@@ -17,6 +17,7 @@ import { Providers } from "@/components/providers/Providers";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { BarreMobile } from "@/components/layout/BarreMobile";
+import { LanceurRelecture } from "@/components/relecture/LanceurRelecture";
 import { site } from "@/config/site";
 import { faqJsonLd, restaurantJsonLd } from "@/lib/jsonld";
 import { partage } from "@/lib/metadonnees";
@@ -174,6 +175,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </main>
           <Footer />
           <BarreMobile />
+          <LanceurRelecture />
         </Providers>
       </body>
     </html>

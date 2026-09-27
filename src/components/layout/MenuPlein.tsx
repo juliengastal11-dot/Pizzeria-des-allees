@@ -186,7 +186,7 @@ export function MenuPlein({ id, ouvert, onFermer }: Props) {
               ) : (
                 <p className="flex min-h-11 items-center gap-3">
                   <Phone aria-hidden className="size-5 shrink-0 text-or" />
-                  <Valeur valeur={site.telephone} />
+                  <Valeur valeur={site.telephone} cle="telephone" />
                 </p>
               )}
             </motion.address>

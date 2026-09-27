@@ -54,6 +54,7 @@ export function Onglets({ entete }: { entete: ReactNode }) {
 
         <LayoutGroup id={`${base}-onglets`}>
           <div
+            data-animation="onglets-livraison"
             role="tablist"
             aria-label={TEXTES.aria}
             className="relative flex w-full shrink-0 rounded-full border border-filet bg-grain p-1 sm:w-auto sm:self-start lg:self-auto"

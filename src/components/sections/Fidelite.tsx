@@ -44,7 +44,7 @@ export function Fidelite() {
             </a>
           ) : (
             <span className="inline-flex min-h-12 shrink-0 items-center gap-2 px-4 font-semibold text-eau">
-              {site.fidelite.bouton} <Valeur valeur={url} className="text-sm" />
+              {site.fidelite.bouton} <Valeur valeur={url} cle="fidelite.url" className="text-sm" />
             </span>
           )}
         </div>

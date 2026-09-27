@@ -43,8 +43,8 @@ export function Footer() {
   const annee = new Date().getFullYear();
   const telReel = !estPlaceholder(site.telephone);
   const reseaux = [
-    { nom: "Instagram", url: site.reseaux.instagram, Icone: IconeInstagram },
-    { nom: "Facebook", url: site.reseaux.facebook, Icone: IconeFacebook },
+    { nom: "Instagram", url: site.reseaux.instagram, cle: "reseaux.instagram", Icone: IconeInstagram },
+    { nom: "Facebook", url: site.reseaux.facebook, cle: "reseaux.facebook", Icone: IconeFacebook },
   ];
 
   return (
@@ -123,21 +123,21 @@ export function Footer() {
                 ) : (
                   <p className="flex min-h-11 items-center gap-3">
                     <Phone aria-hidden className="size-5 shrink-0 text-or" />
-                    <Valeur valeur={site.telephone} />
+                    <Valeur valeur={site.telephone} cle="telephone" />
                   </p>
                 )}
                 <p className="flex min-h-11 items-center gap-3">
                   <Clock aria-hidden className="size-5 shrink-0 text-or" />
                   <span>
                     {`${T.horaires} `}
-                    {site.horaires.aConfirmer ? <Valeur valeur={site.horaires.mentionAConfirmer} /> : resumeHoraires()}
+                    {site.horaires.aConfirmer ? <Valeur valeur={site.horaires.mentionAConfirmer} cle="horaires.mentionAConfirmer" /> : resumeHoraires()}
                   </span>
                 </p>
               </address>
 
               <p className="surtitre mt-6 text-pierre">{T.titreReseaux}</p>
               <ul className="mt-2 flex flex-col gap-1">
-                {reseaux.map(({ nom, url, Icone }) => (
+                {reseaux.map(({ nom, url, cle, Icone }) => (
                   <li key={nom}>
                     {estPlaceholder(url) ? (
                       <span className="inline-flex min-h-11 flex-wrap items-center gap-x-2.5 gap-y-1 text-pierre">
@@ -145,7 +145,7 @@ export function Footer() {
                           <Icone className="size-5" />
                         </span>
                         {nom}
-                        <Valeur valeur={url} className="text-sm" />
+                        <Valeur valeur={url} cle={cle} className="text-sm" />
                       </span>
                     ) : (
                       <a
@@ -200,7 +200,7 @@ export function Footer() {
               <p>{T.visuelsProvisoires}</p>
             )}
             <p>
-              {T.credit} <Valeur valeur={site.legal.concepteur} />
+              {T.credit} <Valeur valeur={site.legal.concepteur} cle="legal.concepteur" />
             </p>
             <p>
               © {annee} {site.nom}

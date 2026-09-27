@@ -46,22 +46,22 @@ export default function MentionsLegales() {
         <Fiche>
           <Ligne terme="Nom commercial">{site.nom}</Ligne>
           <Ligne terme="Raison sociale">
-            <Valeur valeur={legal.raisonSociale} />
+            <Valeur valeur={legal.raisonSociale} cle="legal.raisonSociale" />
           </Ligne>
           <Ligne terme="Forme juridique">
-            <Valeur valeur={legal.formeJuridique} />
+            <Valeur valeur={legal.formeJuridique} cle="legal.formeJuridique" />
           </Ligne>
           <Ligne terme="Capital social">
-            <Valeur valeur={legal.capital} />
+            <Valeur valeur={legal.capital} cle="legal.capital" />
           </Ligne>
           <Ligne terme="SIRET">
-            <Valeur valeur={legal.siret} className="tabular-nums" />
+            <Valeur valeur={legal.siret} cle="legal.siret" className="tabular-nums" />
           </Ligne>
           <Ligne terme="RCS">
-            <Valeur valeur={legal.rcs} />
+            <Valeur valeur={legal.rcs} cle="legal.rcs" />
           </Ligne>
           <Ligne terme="TVA intracommunautaire">
-            <Valeur valeur={legal.tva} className="tabular-nums" />
+            <Valeur valeur={legal.tva} cle="legal.tva" className="tabular-nums" />
           </Ligne>
           <Ligne terme="Adresse">
             <address className="not-italic">{adresseComplete}</address>
@@ -77,7 +77,7 @@ export default function MentionsLegales() {
 
       <SectionTexte id="publication" titre="Directeur de la publication">
         <p>
-          <Valeur valeur={legal.directeurPublication} className="text-calcaire" />
+          <Valeur valeur={legal.directeurPublication} cle="legal.directeurPublication" className="text-calcaire" />
         </p>
       </SectionTexte>
 
@@ -98,7 +98,7 @@ export default function MentionsLegales() {
 
       <SectionTexte id="conception" titre="Conception et réalisation">
         <p>
-          Site conçu et réalisé par <Valeur valeur={legal.concepteur} className="text-calcaire" />.
+          Site conçu et réalisé par <Valeur valeur={legal.concepteur} cle="legal.concepteur" className="text-calcaire" />.
         </p>
       </SectionTexte>
 
@@ -122,7 +122,7 @@ export default function MentionsLegales() {
           </Point>
           <Point>
             <strong>Photographies et visuels&nbsp;:</strong>{" "}
-            {site.photos.provisoires ? legal.credits.visuelsProvisoires : <Valeur valeur={legal.credits.photographe} />}
+            {site.photos.provisoires ? legal.credits.visuelsProvisoires : <Valeur valeur={legal.credits.photographe} cle="legal.credits.photographe" />}
           </Point>
           <Point>
             <strong>Carte de la zone de livraison&nbsp;:</strong> {legal.credits.carte}
@@ -151,7 +151,7 @@ export default function MentionsLegales() {
           médiateur de la consommation (articles L.&nbsp;611-1 et suivants du Code de la consommation).
         </p>
         <p>
-          Médiateur&nbsp;: <Valeur valeur={legal.mediateur.nom} className="text-calcaire" />
+          Médiateur&nbsp;: <Valeur valeur={legal.mediateur.nom} cle="legal.mediateur.nom" className="text-calcaire" />
           {!estPlaceholder(legal.mediateur.nom) && (
             <>
               {" "}

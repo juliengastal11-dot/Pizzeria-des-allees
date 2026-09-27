@@ -77,7 +77,7 @@ export function ProfilPont({ pont, remplissage = "var(--color-minuit)", auDefile
  */
 export function PontVieux() {
   return (
-    <div aria-hidden className="relative h-[4.5rem] bg-nuit md:h-[clamp(5.5rem,7.5vw,7.5rem)]">
+    <div data-animation="pont-pied-de-page" aria-hidden className="relative h-[4.5rem] bg-nuit md:h-[clamp(5.5rem,7.5vw,7.5rem)]">
       <ProfilPont pont={PONT_COMPACT} auDefilement className="absolute inset-0 md:hidden" />
       <ProfilPont pont={PONT_LARGE} auDefilement className="absolute inset-0 hidden md:block" />
     </div>

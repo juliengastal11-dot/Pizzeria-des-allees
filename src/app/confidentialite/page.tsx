@@ -50,7 +50,7 @@ export default function Confidentialite() {
     >
       <SectionTexte id="responsable" titre="Qui est responsable de vos données">
         <p>
-          <strong>{site.nom}</strong>, exploitée par <Valeur valeur={legal.raisonSociale} />, {adresseComplete}.
+          <strong>{site.nom}</strong>, exploitée par <Valeur valeur={legal.raisonSociale} cle="legal.raisonSociale" />, {adresseComplete}.
         </p>
         <p>
           Pour toute question sur vos données&nbsp;: <LienValeur valeur={site.email} href={`mailto:${site.email}`} />.

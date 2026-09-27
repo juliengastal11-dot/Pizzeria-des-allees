@@ -51,6 +51,7 @@ export function DessinAllees() {
 
   return (
     <div
+      data-animation="dessin-allees"
       ref={cadre}
       aria-hidden
       // Sous la voûte des ampoules ; en grand écran, le centre (derrière le titre) reste plus discret
