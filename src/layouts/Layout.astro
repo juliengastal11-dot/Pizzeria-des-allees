@@ -1,0 +1,64 @@
+---
+import { Font, getImage } from "astro:assets";
+import "../styles/global.css";
+import { donneesRestaurant, site } from "../config/site";
+import imagePartage from "../assets/images/devanture.jpg";
+import logo from "../assets/images/logo.png";
+
+const titre = "La Pizzeria des Allées · Pizzeria à Béziers, Allées Paul Riquet";
+const description =
+  "Pizzeria au 43 Allées Paul Riquet, en plein centre de Béziers. Sur place, en terrasse, à emporter ou en livraison. Réservez votre table en ligne.";
+
+// Image de partage (réseaux sociaux, messageries) et icônes, tirées de la devanture et du logo
+const partage = await getImage({ src: imagePartage, width: 1200, height: 630, fit: "cover", format: "jpg", quality: 82 });
+const icone = await getImage({ src: logo, width: 64, height: 64, format: "png" });
+const iconeApple = await getImage({ src: logo, width: 180, height: 180, format: "png" });
+const urlPartage = new URL(partage.src, site.urlSite).href;
+---
+
+<!doctype html>
+<html lang="fr" class:list={[site.annoter && "annoter"]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titre}</title>
+    <meta name="description" content={description} />
+    {!site.indexable && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={`${site.urlSite}/`} />
+    <meta name="theme-color" content="#1c1a19" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content={site.nom} />
+    <meta property="og:title" content="La Pizzeria des Allées · Pizzeria à Béziers" />
+    <meta property="og:description" content="Au 43 Allées Paul Riquet, en plein centre de Béziers : sur place, en terrasse, à emporter ou en livraison." />
+    <meta property="og:url" content={`${site.urlSite}/`} />
+    <meta property="og:image" content={urlPartage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="La devanture de La Pizzeria des Allées le soir, avec des convives en terrasse" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/png" href={icone.src} />
+    <link rel="apple-touch-icon" href={iconeApple.src} />
+    <Font cssVariable="--font-cormorant" preload={[{ subset: "latin", style: "normal" }]} />
+    <Font cssVariable="--font-lora" preload={[{ subset: "latin", style: "normal" }]} />
+    <script is:inline>
+      // Avant la première peinture : l'entrée animée ne cache rien si le JavaScript ou les animations manquent
+      (function () {
+        var d = document.documentElement;
+        var reduit = !Element.prototype.animate || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (!reduit) {
+          d.classList.add("intro");
+          // Filet de sécurité : si le script principal ne démarre pas, on affiche tout
+          setTimeout(function () {
+            if (!window.__introOk) d.classList.remove("intro");
+          }, 4000);
+        }
+        if (/[?&]a-valider\b/.test(location.search)) d.classList.add("annoter");
+      })();
+    </script>
+    <script type="application/ld+json" set:html={JSON.stringify(donneesRestaurant())} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

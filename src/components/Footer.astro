@@ -1,0 +1,161 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/images/logo.png";
+import { commande, site } from "../config/site";
+
+const { instagram, facebook } = site.reseaux;
+---
+
+<footer class="pied">
+  <div class="grille">
+    <div class="marque">
+      <Image
+        src={logo}
+        width={96}
+        height={96}
+        densities={[1, 2]}
+        alt="Logo de La Pizzeria des Allées : badge rond bleu nuit et or, avec la cathédrale Saint-Nazaire et le Pont Vieux"
+        class="logo"
+      />
+      <p class="nom">La Pizzeria <em>des Allées</em></p>
+    </div>
+    <div>
+      <h2 class="titre">Nous trouver</h2>
+      <p class="adresse">
+        {site.adresse.rue}<br />{site.adresse.codePostal} {site.adresse.ville}<br /><a href={`tel:${site.telephoneInternational}`} class="clair chiffres">{site.telephone}</a>
+      </p>
+    </div>
+    <div>
+      <h2 class="titre">Sur la page</h2>
+      <ul role="list" class="liens">
+        <li><a href="#carte" class="clair">La carte</a></li>
+        <li><a href="#reserver" class="clair" data-reserver>Réserver une table</a></li>
+        <li><a href={commande.href} target={commande.target} rel={commande.rel} class="clair">Commander</a></li>
+        <li><a href="#venir" class="clair">Horaires et accès</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="titre">Nous suivre</h2>
+      <div class="liens">
+        {instagram && <a href={instagram} target="_blank" rel="noopener" class="clair">Instagram</a>}
+        {facebook && <a href={facebook} target="_blank" rel="noopener" class="clair">Facebook</a>}
+        {!instagram && !facebook && <p class="bientot">Instagram et Facebook arrivent bientôt.</p>}
+      </div>
+    </div>
+  </div>
+
+  <div class="bas">
+    <p class="provisoire">
+      Visuels provisoires : photos de la salle retouchées et pizzas générées par IA, en attendant le reportage photo de la réouverture.
+    </p>
+    <div class="mentions">
+      <button type="button" class="ouvrir-legal" aria-haspopup="dialog" aria-controls="fenetre-legale" data-ouvrir-legal>Mentions légales et confidentialité</button>
+      <span>© {site.annee} {site.nom}</span>
+      {site.legal.concepteur && <span>Site réalisé par {site.legal.concepteur}</span>}
+    </div>
+  </div>
+  <!-- Place laissée à la barre d'actions du téléphone -->
+  <div class="cale sur-mobile" aria-hidden="true"></div>
+</footer>
+
+<style>
+  .pied {
+    padding: clamp(56px, 7vw, 96px) clamp(16px, 3vw, 44px) 40px;
+    border-top: 1px solid var(--color-divider);
+    background: #161413;
+  }
+  .grille {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    gap: 40px 32px;
+  }
+  .marque {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .logo {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+  }
+  .nom {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: 24px;
+    line-height: 1.15;
+  }
+  .nom em {
+    color: var(--color-accent-300);
+  }
+  .titre {
+    margin: 0 0 12px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-text) 66%, transparent);
+  }
+  .adresse {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  .liens {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+    font-size: 15px;
+  }
+  .clair,
+  .clair:hover {
+    color: var(--color-text);
+  }
+  .bientot {
+    margin: 0;
+    color: color-mix(in srgb, var(--color-text) 72%, transparent);
+  }
+  .bas {
+    max-width: 1320px;
+    margin: 48px auto 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-divider);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px 32px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  }
+  .provisoire {
+    margin: 0;
+    flex: 1 1 420px;
+    max-width: 70ch;
+  }
+  .mentions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 20px;
+  }
+  .ouvrir-legal {
+    padding: 10px 0;
+    background: none;
+    border: 0;
+    font: inherit;
+    color: var(--color-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+  .cale {
+    height: 84px;
+  }
+</style>

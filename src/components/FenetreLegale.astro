@@ -1,0 +1,133 @@
+---
+import { adresseComplete, site } from "../config/site";
+
+const aConfirmer = "à confirmer";
+const lignes: [string, string][] = [
+  ["Nom commercial", site.nom],
+  ["Raison sociale, forme juridique", site.legal.raisonSociale || aConfirmer],
+  ["Capital social", site.legal.capital || aConfirmer],
+  ["SIRET · RCS", site.legal.siretRcs || aConfirmer],
+  ["N° de TVA intracommunautaire", site.legal.tva || aConfirmer],
+  ["Adresse", adresseComplete],
+  ["Téléphone", site.telephone],
+  ["E-mail", site.email || aConfirmer],
+  ["Directeur de la publication", site.legal.directeurPublication || aConfirmer],
+];
+---
+
+<!-- Mentions légales, ouvertes depuis le pied de page. Un clic sur le fond sombre la ferme. -->
+<dialog id="fenetre-legale" class="fond" aria-labelledby="titre-legal" data-legal>
+  <div class="dialog fenetre">
+    <div class="tete">
+      <h2 id="titre-legal" class="dialog-title titre">Mentions légales</h2>
+      <button type="button" class="btn btn-secondary fermer" autofocus data-fermer>Fermer</button>
+    </div>
+    <p class="avertissement">
+      Document provisoire : les champs signalés restent à fournir, puis l’ensemble est à relire et valider par l’exploitant avant la mise en ligne.
+    </p>
+    <h3>Éditeur du site</h3>
+    <dl>
+      {
+        lignes.map(([libelle, valeur]) => (
+          <div>
+            <dt>{libelle}</dt>
+            <dd>{valeur}</dd>
+          </div>
+        ))
+      }
+    </dl>
+    <h3>Hébergement</h3>
+    <p>{site.legal.hebergeur || "Hébergeur et nom de domaine : à confirmer."}</p>
+    {
+      site.legal.concepteur && (
+        <>
+          <h3>Conception et réalisation</h3>
+          <p>Site conçu et réalisé par {site.legal.concepteur}.</p>
+        </>
+      )
+    }
+    <h3>Données personnelles</h3>
+    <p class="long">
+      La réservation (TheFork) ne se charge que lorsque vous la demandez ; l’itinéraire et la carte s’ouvrent sur Google Maps, dans un nouvel onglet. La politique de confidentialité complète est à rédiger et à valider.
+    </p>
+  </div>
+</dialog>
+
+<style>
+  .fond {
+    position: fixed;
+    inset: 0;
+    width: auto;
+    height: auto;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    border: 0;
+    padding: var(--space-4);
+    background: rgba(10, 9, 8, 0.72);
+    color: var(--color-text);
+  }
+  .fond[open] {
+    display: grid;
+    place-items: center;
+  }
+  .fond::backdrop {
+    background: transparent;
+  }
+  .fenetre {
+    width: min(640px, 100%);
+    max-height: 86vh;
+    overflow-y: auto;
+    gap: 18px;
+  }
+  .tete {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .titre {
+    margin: 0;
+    font-size: 28px;
+  }
+  .fermer {
+    min-height: 44px;
+    padding: 0 14px;
+    font-size: 16px;
+  }
+  .fenetre p {
+    margin: 0;
+    font-size: 14px;
+  }
+  .avertissement {
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--color-text) 78%, transparent);
+  }
+  .fenetre .long {
+    line-height: 1.6;
+  }
+  h3 {
+    margin: 6px 0 0;
+    font-weight: 500;
+    font-size: 22px;
+  }
+  dl {
+    margin: 0;
+    display: grid;
+    gap: 8px;
+    font-size: 14px;
+  }
+  dl > div {
+    display: grid;
+    grid-template-columns: minmax(0, 13em) minmax(0, 1fr);
+    gap: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--color-divider);
+  }
+  dt {
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  }
+  dd {
+    margin: 0;
+  }
+</style>

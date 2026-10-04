@@ -1,0 +1,239 @@
+---
+import { Picture } from "astro:assets";
+import devanture from "../assets/images/devanture.jpg";
+import { commande, site } from "../config/site";
+---
+
+<section id="accueil" aria-labelledby="titre-accueil" class="hero">
+  <div class="lueur" aria-hidden="true" data-intro="glow" data-intro-delay="1100"></div>
+
+  <div class="cadre">
+    <span class="trait" aria-hidden="true" data-intro="line" data-intro-delay="120"></span>
+    <figure class="plate photo" data-intro="shutter" data-intro-delay="650">
+      <div class="parallaxe" data-par="0.09">
+        <Picture
+          src={devanture}
+          formats={["avif", "webp"]}
+          widths={[640, 960, 1280, 1600, 1920]}
+          sizes="100vw"
+          priority
+          alt="La devanture de La Pizzeria des Allées le soir : l’enseigne bleu nuit aux lettres dorées, et des convives qui dînent en terrasse"
+          data-intro="push"
+          data-intro-delay="650"
+          class="image"
+          pictureAttributes={{ class: "image-cadre" }}
+        />
+      </div>
+      <div class="voile" aria-hidden="true" data-intro="lights" data-intro-delay="1100"></div>
+      <div class="assombri" aria-hidden="true" data-scrub="dim"></div>
+    </figure>
+    <p class="a-valider note">Visuel provisoire, retouché par IA : à remplacer par le reportage photo de la réouverture.</p>
+  </div>
+
+  <div class="bas">
+    <div class="titres">
+      <p class="adresse chiffres" data-intro="fade" data-intro-delay="1450">Pizzeria · Béziers centre · 43 Allées Paul Riquet</p>
+      <h1 id="titre-accueil">
+        <span class="ligne"><span data-intro="rise" data-intro-delay="1500">La Pizzeria</span></span>
+        <span class="ligne ligne-2"><span data-intro="rise" data-intro-delay="1630">des Allées</span></span>
+        <span class="sr-only">, pizzeria à Béziers</span>
+      </h1>
+    </div>
+    <div class="cote">
+      <p class="accroche" data-intro="fade" data-intro-delay="1850">
+        Sur les Allées Paul Riquet, au cœur de Béziers. En salle, en terrasse, à emporter ou livrée chez vous.
+      </p>
+      <div class="boutons" data-intro="fade" data-intro-delay="2000" data-cta-zone="hero">
+        <a class="btn btn-primary b-reserver" href="#reserver" data-reserver>Réserver une table</a>
+        <a class="btn btn-secondary btn-commander b-commander" href={commande.href} target={commande.target} rel={commande.rel}>
+          <span class="remplissage" aria-hidden="true"></span>
+          <span class="point point-grand" aria-hidden="true"><span data-ignite></span></span>
+          <span>Commander</span>
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
+            ><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg
+          >
+        </a>
+        <a class="btn btn-ghost b-venir" href="#venir">Nous trouver</a>
+      </div>
+      <p class="note-google chiffres" data-intro="fade" data-intro-delay="2150">
+        <span class="accent">{site.avisGoogle.note}</span> sur Google · {site.avisGoogle.nombre} · relevé le {site.avisGoogle.releve}
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(22px, 3.4vh, 40px);
+    padding: clamp(74px, 10vh, 100px) clamp(16px, 3vw, 44px) clamp(40px, 7vh, 72px);
+    overflow: hidden;
+    overflow: clip;
+    background: var(--color-bg);
+  }
+  .lueur {
+    position: absolute;
+    z-index: -1;
+    left: -20vw;
+    right: -20vw;
+    bottom: -42vh;
+    height: 88vh;
+    pointer-events: none;
+    background: radial-gradient(50% 50% at 50% 50%, rgba(196, 81, 58, 0.3) 0%, rgba(194, 141, 65, 0.1) 52%, rgba(28, 26, 25, 0) 100%);
+  }
+  .cadre {
+    position: relative;
+    height: clamp(240px, min(68vw, 100svh - 360px), 720px);
+  }
+  .trait {
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: var(--color-accent-300);
+    box-shadow: 0 0 18px 2px rgba(250, 203, 141, 0.55);
+  }
+  .photo {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    overflow: hidden;
+    overflow: clip;
+    background: #0b0a09;
+  }
+  .parallaxe {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -8%;
+    bottom: -8%;
+  }
+  .photo :global(.image-cadre) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .photo :global(.image) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 22%;
+  }
+  .voile,
+  .assombri {
+    position: absolute;
+    inset: 0;
+    background: #0b0a09;
+  }
+  .assombri {
+    opacity: 0;
+  }
+  .note {
+    position: absolute;
+    z-index: 3;
+    right: 12px;
+    top: 12px;
+    margin: 0;
+    max-width: 300px;
+    padding: 8px 12px;
+    color: #f3f2f2;
+    background: rgba(11, 10, 9, 0.86);
+  }
+  .bas {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px 56px;
+  }
+  .titres {
+    flex: 1 1 520px;
+    min-width: 0;
+  }
+  .adresse {
+    margin: 0 0 12px;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-accent-400);
+  }
+  h1 {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: clamp(54px, 8.6vw, 136px);
+    line-height: 0.9;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+  }
+  .ligne {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.06em;
+  }
+  .ligne > span {
+    display: block;
+  }
+  .ligne-2 {
+    padding-bottom: 0.1em;
+    margin-top: -0.06em;
+  }
+  .ligne-2 > span {
+    font-style: italic;
+    color: var(--color-accent-300);
+  }
+  .cote {
+    flex: 0 1 440px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .accroche {
+    margin: 0;
+    font-size: clamp(16px, 1.25vw, 18px);
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--color-text) 84%, transparent);
+    text-wrap: pretty;
+  }
+  .boutons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .b-reserver {
+    min-height: 50px;
+    padding: 0 24px;
+    font-size: 18px;
+    letter-spacing: 0.01em;
+  }
+  .b-commander {
+    min-height: 50px;
+    padding: 0 20px 0 18px;
+    gap: 10px;
+    font-size: 18px;
+  }
+  .point-grand {
+    width: 8px;
+    height: 8px;
+    box-shadow: 0 0 12px 2px rgba(196, 81, 58, 0.75);
+  }
+  .b-venir {
+    min-height: 50px;
+    padding: 0 12px;
+    font-size: 18px;
+    color: var(--color-accent-300);
+  }
+  .note-google {
+    margin: 0;
+    font-size: 14px;
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  }
+</style>

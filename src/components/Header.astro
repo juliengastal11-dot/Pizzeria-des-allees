@@ -1,0 +1,131 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/images/logo.png";
+import { commande, site } from "../config/site";
+---
+
+<header id="entete" class="entete" data-intro="header" data-intro-delay="2050">
+  <div class="barre">
+    <a href="#accueil" aria-label="La Pizzeria des Allées, accueil" class="marque">
+      <Image src={logo} alt="" width={44} height={44} densities={[1, 2]} loading="eager" class="logo" />
+      <span class="nom">La Pizzeria <em>des Allées</em></span>
+    </a>
+    <nav aria-label="Navigation principale" class="nav">
+      <a href="#maison" class="lien-clair">La maison</a>
+      <a href="#carte" class="lien-clair">La carte</a>
+      <a href="#livraison" class="lien-clair">Livraison</a>
+      <a href="#venir" class="lien-clair">Nous trouver</a>
+    </nav>
+    <a href={`tel:${site.telephoneInternational}`} class="tel lien-clair chiffres">{site.telephone}</a>
+    <div class="actions">
+      <a class="btn btn-secondary btn-commander commander" href={commande.href} target={commande.target} rel={commande.rel}>
+        <span class="remplissage" aria-hidden="true"></span>
+        <span class="point" aria-hidden="true"><span data-ignite></span></span>
+        <span>Commander</span>
+      </a>
+      <a class="btn btn-primary reserver" href="#reserver" data-reserver>Réserver</a>
+    </div>
+    <button type="button" class="btn btn-secondary menu" aria-expanded="false" aria-controls="menu-mobile" data-ouvrir-menu>Menu</button>
+  </div>
+</header>
+
+<style>
+  .entete {
+    position: fixed;
+    z-index: 50;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+  .barre {
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 2vw, 28px);
+    padding: 10px clamp(16px, 3vw, 44px);
+    background: rgba(28, 26, 25, 0);
+    border-bottom: 1px solid rgba(243, 242, 242, 0);
+    transition:
+      background 0.35s ease,
+      border-color 0.35s ease;
+  }
+  /* Posé par le script dès qu'on a défilé de quelques pixels */
+  .entete[data-defile] .barre {
+    background: rgba(28, 26, 25, 0.94);
+    border-bottom-color: color-mix(in srgb, #f3f2f2 16%, transparent);
+  }
+  .marque {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-right: auto;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px rgba(233, 185, 80, 0.35);
+  }
+  .nom {
+    font-family: var(--font-heading);
+    font-size: clamp(18px, 1.2vw + 8px, 21px);
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .nom em {
+    color: var(--color-accent-300);
+  }
+  .nav {
+    display: none;
+    gap: clamp(14px, 2vw, 30px);
+    white-space: nowrap;
+  }
+  .nav a {
+    font-size: 15px;
+  }
+  .tel {
+    display: none;
+    color: color-mix(in srgb, var(--color-text) 78%, transparent);
+    font-size: 15px;
+    white-space: nowrap;
+  }
+  .actions {
+    display: none;
+    gap: 8px;
+  }
+  .commander {
+    min-height: 42px;
+    padding: 0 16px 0 14px;
+    gap: 9px;
+    font-size: 16px;
+  }
+  .reserver {
+    min-height: 42px;
+    padding: 0 18px;
+    font-size: 16px;
+  }
+  .menu {
+    min-height: 44px;
+    padding: 0 16px;
+    font-size: 17px;
+  }
+  @media (min-width: 860px) {
+    .actions {
+      display: flex;
+    }
+  }
+  @media (min-width: 1080px) {
+    .nav {
+      display: flex;
+    }
+    .menu {
+      display: none;
+    }
+  }
+  @media (min-width: 1240px) {
+    .tel {
+      display: inline;
+    }
+  }
+</style>
