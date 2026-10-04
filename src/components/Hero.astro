@@ -12,11 +12,6 @@ import { commande, site } from "../config/site";
   </div>
 
   <div class="conteneur">
-    <p class="dateline" data-intro="fade" data-intro-delay="100">
-      <span class="filet" aria-hidden="true"></span>
-      <span>Pizzeria · Béziers centre · {site.adresse.rue}</span>
-      <span class="filet" aria-hidden="true"></span>
-    </p>
     <h1 id="titre-accueil">
       <span class="ligne"><span data-intro="rise" data-intro-delay="200">La Pizzeria <em>des Allées</em></span></span>
       <span class="sr-only">, pizzeria à Béziers</span>
@@ -30,7 +25,7 @@ import { commande, site } from "../config/site";
       <a class="btn btn-text btn-grand" href="#venir">Nous trouver</a>
     </div>
     <p class="note-google chiffres" data-intro="fade" data-intro-delay="580">
-      <span class="note">{site.avisGoogle.note}</span> sur Google · {site.avisGoogle.nombre} · relevé le {site.avisGoogle.releve}
+      <span class="note">{site.avisGoogle.note}</span> sur Google · {site.avisGoogle.nombre}
     </p>
 
     <figure class="visuel photo-cadre" data-intro="visuel" data-intro-delay="680">
@@ -138,32 +133,6 @@ import { commande, site } from "../config/site";
     }
   }
 
-  /* Ligne de dateline entre deux filets, comme l'en-tête d'un journal */
-  .dateline {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-base);
-    max-width: 760px;
-    margin: 0 auto var(--space-lg);
-    color: var(--color-body);
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 1.4;
-    letter-spacing: 0.96px;
-    text-transform: uppercase;
-  }
-  .filet {
-    display: none;
-    flex: 1;
-    height: 1px;
-    background: var(--color-hairline-strong);
-  }
-  @media (min-width: 640px) {
-    .filet {
-      display: block;
-    }
-  }
   .ligne {
     display: block;
     overflow: hidden;

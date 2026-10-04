@@ -27,12 +27,6 @@ const communes = site.livraison.communes.map((c, i) => {
   };
 });
 
-const conditions = [
-  ["Minimum de commande", site.livraison.minimum],
-  ["Frais de livraison", site.livraison.frais],
-  ["Délai estimé", site.livraison.delai],
-];
-
 const heure = (t: string) => {
   const [h, m] = t.split(":");
   return m === "00" ? `${Number(h)} h` : `${Number(h)} h ${m}`;
@@ -152,16 +146,6 @@ const nombre = enLettres(communes.length);
               }
             </ul>
           </div>
-          <dl class="conditions">
-            {
-              conditions.map(([libelle, valeur]) => (
-                <div>
-                  <dt class="libelle">{libelle}</dt>
-                  <dd>{valeur ? valeur : <span class="badge badge-outline">à confirmer</span>}</dd>
-                </div>
-              ))
-            }
-          </dl>
         </div>
       </div>
     </div>
@@ -227,7 +211,7 @@ const nombre = enLettres(communes.length);
           <div>
             <dt class="libelle">Avis Google</dt>
             <dd class="chiffres">
-              {site.avisGoogle.note} · {site.avisGoogle.nombre}, relevé le {site.avisGoogle.releve}
+              {site.avisGoogle.note} · {site.avisGoogle.nombre}
               {
                 site.avisGoogle.ficheVerifiee && (
                   <>
@@ -520,20 +504,6 @@ const nombre = enLettres(communes.length);
     color: var(--color-body);
     font-size: 14px;
     white-space: nowrap;
-  }
-  .conditions {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: var(--space-base);
-    margin: var(--space-lg) 0 0;
-    padding-top: var(--space-lg);
-    border-top: 1px solid var(--color-hairline);
-  }
-  .conditions dd {
-    margin: var(--space-xs) 0 0;
-    color: var(--color-ink);
-    font-size: 16px;
-    font-weight: 500;
   }
 
   /* Nous trouver */

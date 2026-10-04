@@ -71,7 +71,6 @@ const livraison = `Béziers et ${enLettres(n)} commune${n > 1 ? "s" : ""} voisin
         <dt class="libelle">Avis Google</dt>
         <dd class="chiffres">
           {site.avisGoogle.note} · {site.avisGoogle.nombre}
-          <span class="releve">Relevé le {site.avisGoogle.releve}</span>
         </dd>
       </div>
     </dl>
@@ -166,12 +165,6 @@ const livraison = `Béziers et ${enLettres(n)} commune${n > 1 ? "s" : ""} voisin
     font-size: 18px;
     font-weight: 500;
     line-height: 1.4;
-  }
-  .releve {
-    color: var(--color-body);
-    font-size: 14px;
-    font-weight: 400;
-    letter-spacing: 0;
   }
   .note {
     margin-top: var(--space-lg);
