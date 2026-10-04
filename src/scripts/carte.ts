@@ -3,7 +3,7 @@
  * (téléphone). Le HTML contient déjà toutes les pizzas ; le script ne fait
  * que masquer, désigner la pizza active et tenir le compteur à jour.
  */
-import { reduit } from "./animations";
+import { reduit } from "./mouvement";
 
 const carte = document.querySelector<HTMLElement>("[data-carte]");
 
@@ -76,13 +76,40 @@ if (carte) {
       piste?.scrollTo({ left: 0 });
       diapo = 0;
       majCompteur();
+      demanderRoule();
     }),
   );
 
-  // Téléphone : le compteur suit le défilement, les flèches avancent d'une pizza
+  /*
+   * Téléphone : en traversant le centre du carrousel, chaque pizza roule.
+   * Elle arrive par la droite inclinée de 12° et un peu plus petite (92 %), se redresse pleine taille
+   * au centre, puis repart vers la gauche inclinée de −12°. La progression p vaut 0 quand la carte
+   * touche le bord droit, 0,5 centrée, 1 quand elle a quitté le bord gauche.
+   */
+  const rouleurs = new Map(diapos.map((d) => [d, d.querySelector<HTMLElement>("[data-roule]")]));
+  function rouler() {
+    if (reduit || !piste) return;
+    const largeur = piste.clientWidth;
+    if (!largeur) return; // masqué (ordinateur)
+    for (const d of diapos) {
+      const el = rouleurs.get(d);
+      if (!el || d.hidden) continue;
+      const x = d.offsetLeft - piste.scrollLeft;
+      const p = Math.min(1, Math.max(0, (largeur - x) / (largeur + d.offsetWidth)));
+      el.style.rotate = `${(12 - 24 * p).toFixed(2)}deg`;
+      el.style.scale = (1 - 0.08 * Math.abs(2 * p - 1)).toFixed(3);
+    }
+  }
+  let imageRoule = 0;
+  const demanderRoule = () => {
+    if (!imageRoule) imageRoule = requestAnimationFrame(() => ((imageRoule = 0), rouler()));
+  };
+
+  // Le compteur suit le défilement, les flèches avancent d'une pizza
   piste?.addEventListener(
     "scroll",
     () => {
+      demanderRoule();
       const premiere = diaposVisibles()[0];
       if (!premiere) return;
       const pas = premiere.getBoundingClientRect().width + 16;
@@ -94,6 +121,8 @@ if (carte) {
     },
     { passive: true },
   );
+  window.addEventListener("resize", demanderRoule);
+  rouler();
 
   function aller(sens: number) {
     if (!piste) return;

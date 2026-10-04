@@ -1,5 +1,5 @@
 /*
- * Le mouvement de la page, repris tel quel de la maquette Claude Design :
+ * Le mouvement de la page, repris de la maquette Claude Design :
  * - l'entrée du haut de page : data-intro (type) et data-intro-delay (ms) ;
  * - les apparitions au défilement : data-reveal (type) et data-delay (ms),
  *   jouées une fois, seulement pour ce qui arrive sous la ligne de flottaison ;
@@ -9,13 +9,17 @@
  * En mouvement réduit, rien ne bouge : la page s'affiche directement dans son
  * état final (les états de départ ne sont posés qu'avec html.intro).
  */
+import { reduit, videoActive } from "./mouvement";
 
-type Animation3 = [Keyframe[], number, string];
+type Mouvement = [Keyframe[], number, string];
 
 export const EO = "cubic-bezier(.22,1,.36,1)";
 const EIO = "cubic-bezier(.76,0,.24,1)";
 
-const INTRO: Record<string, Animation3> = {
+// Quand la vidéo joue, la photo se pose directement à sa taille : aucun zoom lent ne court sous la vidéo
+const ECHELLE_FINALE = videoActive ? 1 : 1.05;
+
+const INTRO: Record<string, Mouvement> = {
   line: [
     [
       { transform: "scaleX(0)", opacity: 1 },
@@ -26,7 +30,7 @@ const INTRO: Record<string, Animation3> = {
     EO,
   ],
   shutter: [[{ clipPath: "inset(50% 0% 50% 0%)" }, { clipPath: "inset(-2px -2px -2px -2px)" }], 1250, EIO],
-  push: [[{ transform: "scale(1.22)" }, { transform: "scale(1.05)" }], 2800, EO],
+  push: [[{ transform: "scale(1.22)" }, { transform: `scale(${ECHELLE_FINALE})` }], 2800, EO],
   lights: [
     [
       { opacity: 0.94 },
@@ -45,8 +49,10 @@ const INTRO: Record<string, Animation3> = {
   header: [[{ opacity: 0, transform: "translateY(-10px)" }, { opacity: 1, transform: "translateY(0px)" }], 800, EO],
 };
 
-const REVEAL: Record<string, Animation3> = {
+const REVEAL: Record<string, Mouvement> = {
   up: [[{ opacity: 0, transform: "translateY(26px)" }, { opacity: 1, transform: "translateY(0px)" }], 700, EO],
+  // Les pizzas du carrousel : jamais invisibles, elles montent et s'éclairent à peine
+  monte: [[{ opacity: 0.85, transform: "translateY(40px)" }, { opacity: 1, transform: "translateY(0px)" }], 800, EO],
   plate: [[{ clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(-8px -8px -8px -8px)" }], 950, EIO],
   fade: [[{ opacity: 0 }, { opacity: 1 }], 700, "ease-out"],
   pop: [
@@ -63,8 +69,6 @@ const REVEAL: Record<string, Animation3> = {
 // Le script a démarré : le filet de sécurité posé dans le <head> n'a plus à tout afficher d'office
 (window as Window & { __introOk?: boolean }).__introOk = true;
 
-export const reduit = !Element.prototype.animate || matchMedia("(prefers-reduced-motion: reduce)").matches;
-
 /** Fait briller le point des boutons Commander : deux ondes qui s'élargissent. */
 export function allumer(selecteur: string) {
   if (reduit) return;
@@ -77,31 +81,44 @@ export function allumer(selecteur: string) {
   );
 }
 
+/** Se résout quand l'entrée du haut de page est terminée (et nettoyée), ou tout de suite si rien ne s'anime. */
+export let introTerminee: Promise<void> = Promise.resolve();
+
 function entree() {
   // Les polices d'abord (700 ms au plus), pour que le titre ne change pas de forme en montant
   const polices = Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), new Promise((r) => setTimeout(r, 700))]);
-  polices.then(() => {
+  introTerminee = polices.then(async () => {
     const t0 = performance.now();
     setTimeout(() => allumer('[data-ignite=""]'), 2750);
+    const jouees: { el: HTMLElement; animation: Animation }[] = [];
     document.querySelectorAll<HTMLElement>("[data-intro]").forEach((el) => {
       const def = INTRO[el.dataset.intro ?? ""];
       if (!def) return;
       const [images, duree, courbe] = def;
       const delai = Math.max(0, Number(el.dataset.introDelay || 0) - (performance.now() - t0));
-      const a = el.animate(images, { duration: duree, delay: delai, easing: courbe, fill: "both" });
-      // La photo finit de se poser très lentement, comme un plan de cinéma
-      if (el.dataset.intro === "push") {
-        a.finished
-          .then(() =>
-            el.animate([{ transform: "scale(1.05)" }, { transform: "scale(1)" }], {
-              duration: 18000,
-              easing: "cubic-bezier(.3,0,.2,1)",
-              fill: "forwards",
-            }),
-          )
-          .catch(() => {});
-      }
+      jouees.push({ el, animation: el.animate(images, { duration: duree, delay: delai, easing: courbe, fill: "both" }) });
     });
+
+    // Sans vidéo, la photo finit de se poser très lentement, comme un plan de cinéma
+    if (!videoActive) {
+      jouees
+        .filter(({ el }) => el.dataset.intro === "push")
+        .forEach(({ el, animation }) =>
+          animation.finished
+            .then(() => el.animate([{ transform: "scale(1.05)" }, { transform: "scale(1)" }], { duration: 18000, easing: "cubic-bezier(.3,0,.2,1)", fill: "forwards" }))
+            .catch(() => {}),
+        );
+    }
+
+    // Une fois tout posé, on retire les états de départ et les animations : plus rien ne tient la page en calques animés
+    // (un clip-path ou une opacité animés au-dessus d'une vidéo coûtent à chaque image)
+    await Promise.allSettled(jouees.map(({ animation }) => animation.finished));
+    document.documentElement.classList.remove("intro");
+    for (const { el, animation } of jouees) {
+      // sans vidéo, la photo garde son échelle : elle est encore en train de se poser
+      if (!videoActive && el.dataset.intro === "push") continue;
+      animation.cancel();
+    }
   });
 }
 
@@ -136,6 +153,13 @@ function defilement() {
   const groupes = new Map<Element, HTMLElement[]>();
   const proches = new Set<Element>();
   const assombris = document.querySelectorAll<HTMLElement>('[data-scrub="dim"]');
+  // Un élément plus grand que son parent (cadre photo) ne doit jamais découvrir de bande vide : on borne son décalage à sa marge
+  const marges = new WeakMap<HTMLElement, number>();
+  const mesurer = () => {
+    groupes.forEach((els, parent) =>
+      els.forEach((el) => marges.set(el, el.offsetHeight >= parent.clientHeight ? Math.max(0, (el.offsetHeight - parent.clientHeight) / 2) : Infinity)),
+    );
+  };
   let image = 0;
 
   const peindre = () => {
@@ -146,7 +170,9 @@ function defilement() {
       const r = parent.getBoundingClientRect();
       const progres = (r.top + r.height / 2 - vh / 2) / vh;
       groupes.get(parent)?.forEach((el) => {
-        el.style.translate = `0 ${(progres * Number(el.dataset.par) * vh).toFixed(1)}px`;
+        const marge = marges.get(el) ?? Infinity;
+        const decalage = Math.max(-marge, Math.min(marge, progres * Number(el.dataset.par) * vh));
+        el.style.translate = `0 ${decalage.toFixed(1)}px`;
       });
     });
     assombris.forEach((el) => {
@@ -175,9 +201,13 @@ function defilement() {
     }
     groupes.get(parent)?.push(el);
   });
+  mesurer();
 
   window.addEventListener("scroll", demander, { passive: true });
-  window.addEventListener("resize", demander);
+  window.addEventListener("resize", () => {
+    mesurer();
+    demander();
+  });
   demander();
 }
 

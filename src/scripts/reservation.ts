@@ -4,11 +4,11 @@
  * aucun cookie tiers tant que le visiteur ne l'a pas voulu.
  * États du cadre (data-etat) : repos, chargement, pret.
  */
-import { reduit } from "./animations";
+import { reduit } from "./mouvement";
 
 const module = document.querySelector<HTMLElement>("[data-reservation]");
 
-export function activerReservation() {
+function activerReservation() {
   if (!module || module.dataset.etat !== "repos" || !module.dataset.src) return;
   module.dataset.etat = "chargement";
 

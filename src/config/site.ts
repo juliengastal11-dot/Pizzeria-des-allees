@@ -5,11 +5,11 @@
  * lues par Google.
  */
 
-export type Jour = "Lundi" | "Mardi" | "Mercredi" | "Jeudi" | "Vendredi" | "Samedi" | "Dimanche";
+type Jour = "Lundi" | "Mardi" | "Mercredi" | "Jeudi" | "Vendredi" | "Samedi" | "Dimanche";
 /** Créneaux d'ouverture d'un jour, au format 24 h ["ouverture", "fermeture"]. Aucun créneau = fermé. */
-export type Creneaux = [string, string][];
+type Creneaux = [string, string][];
 
-export type Pizza = {
+type Pizza = {
   id: string;
   nom: string;
   description: string;
@@ -19,7 +19,7 @@ export type Pizza = {
   duMoment?: boolean;
 };
 
-export type Commune = {
+type Commune = {
   nom: string;
   /** Libellé sur le plan, avec un retour à la ligne éventuel. */
   etiquette: string;
@@ -87,7 +87,7 @@ export const site = {
   liens: {
     /** Lien Obypay (commande en ligne, à emporter et livraison). Vide : les boutons Commander mènent à la section Commander. */
     obypay: "",
-    /** Module de réservation TheFork. ⚠ La fiche affiche encore « Basilic & Co Béziers » : à renommer dans TheFork Manager. */
+    /** Module de réservation TheFork. La fiche affiche encore « Basilic & Co Béziers » : à renommer dans TheFork Manager. */
     thefork: "https://widget.thefork.com/fr/acc6e60d-e29b-4326-afa2-800b8c26bb8b?step=date",
     itineraire: "https://www.google.com/maps/dir/?api=1&destination=43+All%C3%A9es+Paul+Riquet%2C+34500+B%C3%A9ziers",
     carte: "https://www.google.com/maps/search/?api=1&query=43+All%C3%A9es+Paul+Riquet%2C+34500+B%C3%A9ziers",

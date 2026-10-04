@@ -3,7 +3,8 @@
  * défilement, la barre d'actions du téléphone, le menu, la fenêtre des
  * mentions légales et le jour courant dans les horaires.
  */
-import { allumer, EO, reduit } from "./animations";
+import { allumer, EO } from "./animations";
+import { reduit } from "./mouvement";
 
 const html = document.documentElement;
 const entete = document.getElementById("entete");
@@ -13,14 +14,14 @@ const boutonMenu = document.querySelector<HTMLButtonElement>("[data-ouvrir-menu]
 const legal = document.querySelector<HTMLDialogElement>("[data-legal]");
 const telephone = matchMedia("(max-width: 859.98px)");
 
-/* — en-tête : fond opaque dès qu'on a défilé de quelques pixels — */
+// En-tête : fond opaque dès qu'on a défilé de quelques pixels
 function majEntete() {
   entete?.toggleAttribute("data-defile", window.scrollY > 24);
 }
 
 /*
- * — barre d'actions (téléphone) : visible passé la moitié du premier écran,
- * sauf quand des boutons Réserver ou Commander sont déjà à l'écran —
+ * Barre d'actions (téléphone) : visible passé la moitié du premier écran,
+ * sauf quand des boutons Réserver ou Commander sont déjà à l'écran.
  */
 const zones = new Set<Element>();
 let barreAllumee = false;
@@ -60,10 +61,10 @@ majEntete();
 majBarre();
 
 /*
- * — fenêtres (menu, mentions) : modales natives, page figée derrière.
+ * Fenêtres (menu, mentions) : modales natives, page figée derrière.
  * À la fermeture, le focus revient au bouton qui l'a ouverte (Safari ne le
  * fait pas seul : un clic n'y donne pas le focus au bouton), sauf quand on
- * part vers une section depuis le menu —
+ * part vers une section depuis le menu.
  */
 let ouvreur: HTMLElement | null = null;
 let versUneSection = false;
@@ -77,7 +78,7 @@ for (const fenetre of [menu, legal]) {
   if (!fenetre) continue;
   fenetre.addEventListener("close", () => {
     html.style.overflow = "";
-    boutonMenu?.setAttribute("aria-expanded", "false");
+    if (fenetre === menu) boutonMenu?.setAttribute("aria-expanded", "false");
     if (!versUneSection) ouvreur?.focus({ preventScroll: true });
     ouvreur = null;
     versUneSection = false;
@@ -116,7 +117,7 @@ legal?.addEventListener("click", (e) => {
   if (e.target === legal) legal.close();
 });
 
-/* — horaires : le jour même, à l'heure de Paris — */
+// Horaires : le jour même, à l'heure de Paris
 const jour = new Intl.DateTimeFormat("fr-FR", { weekday: "long", timeZone: "Europe/Paris" }).format(new Date()).toLowerCase();
 const ligne = document.querySelector(`[data-horaires] tr[data-jour="${jour}"]`);
 if (ligne) {

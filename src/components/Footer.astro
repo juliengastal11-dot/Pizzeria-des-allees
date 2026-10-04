@@ -20,25 +20,25 @@ const { instagram, facebook } = site.reseaux;
       <p class="nom">La Pizzeria <em>des Allées</em></p>
     </div>
     <div>
-      <h2 class="titre">Nous trouver</h2>
+      <h2 class="libelle titre">Nous trouver</h2>
       <p class="adresse">
-        {site.adresse.rue}<br />{site.adresse.codePostal} {site.adresse.ville}<br /><a href={`tel:${site.telephoneInternational}`} class="clair chiffres">{site.telephone}</a>
+        {site.adresse.rue}<br />{site.adresse.codePostal} {site.adresse.ville}<br /><a href={`tel:${site.telephoneInternational}`} class="lien-texte chiffres">{site.telephone}</a>
       </p>
     </div>
     <div>
-      <h2 class="titre">Sur la page</h2>
+      <h2 class="libelle titre">Sur la page</h2>
       <ul role="list" class="liens">
-        <li><a href="#carte" class="clair">La carte</a></li>
-        <li><a href="#reserver" class="clair" data-reserver>Réserver une table</a></li>
-        <li><a href={commande.href} target={commande.target} rel={commande.rel} class="clair">Commander</a></li>
-        <li><a href="#venir" class="clair">Horaires et accès</a></li>
+        <li><a href="#carte" class="lien-texte">La carte</a></li>
+        <li><a href="#reserver" class="lien-texte" data-reserver>Réserver une table</a></li>
+        <li><a href={commande.href} target={commande.target} rel={commande.rel} class="lien-texte">Commander</a></li>
+        <li><a href="#venir" class="lien-texte">Horaires et accès</a></li>
       </ul>
     </div>
     <div>
-      <h2 class="titre">Nous suivre</h2>
+      <h2 class="libelle titre">Nous suivre</h2>
       <div class="liens">
-        {instagram && <a href={instagram} target="_blank" rel="noopener" class="clair">Instagram</a>}
-        {facebook && <a href={facebook} target="_blank" rel="noopener" class="clair">Facebook</a>}
+        {instagram && <a href={instagram} target="_blank" rel="noopener" class="lien-texte">Instagram</a>}
+        {facebook && <a href={facebook} target="_blank" rel="noopener" class="lien-texte">Facebook</a>}
         {!instagram && !facebook && <p class="bientot">Instagram et Facebook arrivent bientôt.</p>}
       </div>
     </div>
@@ -94,10 +94,6 @@ const { instagram, facebook } = site.reseaux;
     margin: 0 0 12px;
     font-family: var(--font-body);
     font-weight: 400;
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: color-mix(in srgb, var(--color-text) 66%, transparent);
   }
   .adresse {
     margin: 0;
@@ -111,10 +107,6 @@ const { instagram, facebook } = site.reseaux;
     display: grid;
     gap: 6px;
     font-size: 15px;
-  }
-  .clair,
-  .clair:hover {
-    color: var(--color-text);
   }
   .bientot {
     margin: 0;

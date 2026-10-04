@@ -86,6 +86,8 @@ import { commande, site } from "../config/site";
 
 <style>
   .hero {
+    /* Sert d'étalon à la hauteur du cadre (unités cqw) */
+    container-type: inline-size;
     position: relative;
     isolation: isolate;
     display: flex;
@@ -106,9 +108,19 @@ import { commande, site } from "../config/site";
     pointer-events: none;
     background: radial-gradient(50% 50% at 50% 50%, rgba(196, 81, 58, 0.3) 0%, rgba(194, 141, 65, 0.1) 52%, rgba(28, 26, 25, 0) 100%);
   }
+  /*
+   * Hauteur du cadre : la maquette (68 % de la largeur, bornée par l'écran), mais jamais assez haute pour que
+   * l'image, couverte de part et d'autre, rogne l'enseigne : elle occupe de 9,7 % à 90,3 % de la largeur de la photo,
+   * on en garde donc au moins 88 % (≈ 4 % de marge de chaque côté), parallaxe comprise.
+   */
   .cadre {
+    --jeu: 0.08; /* marge de parallaxe, en haut et en bas, en part de la hauteur */
     position: relative;
     height: clamp(240px, min(68vw, 100svh - 360px), 720px);
+    height: min(
+      clamp(240px, min(68vw, 100svh - 360px), 720px),
+      calc((100cqw - 12px) / (0.88 * 1.7778 * (1 + 2 * var(--jeu))) + 12px)
+    );
   }
   .trait {
     position: absolute;
@@ -121,9 +133,10 @@ import { commande, site } from "../config/site";
     box-shadow: 0 0 18px 2px rgba(250, 203, 141, 0.55);
   }
   .photo {
+    /* Le grain « plaque » est sur la photo seule et incorporé à la vidéo : un filtre posé sur le cadre se recalcule à chaque image de la vidéo */
+    filter: none;
     position: absolute;
     inset: 0;
-    margin: 0;
     overflow: hidden;
     overflow: clip;
     background: #0b0a09;
@@ -160,11 +173,11 @@ import { commande, site } from "../config/site";
     opacity: 1;
   }
   .photo :global(.image) {
-    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: 50% 22%;
+    filter: sepia(0.22) saturate(0.82) contrast(1.05);
   }
   .voile,
   .assombri {
@@ -276,5 +289,15 @@ import { commande, site } from "../config/site";
     margin: 0;
     font-size: 14px;
     color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  }
+  /* Téléphone et tablette en portrait : pas de parallaxe, le cadre est déjà juste de la hauteur de l'image */
+  @media (max-width: 859.98px) {
+    .cadre {
+      --jeu: 0;
+    }
+    .parallaxe {
+      top: 0;
+      bottom: 0;
+    }
   }
 </style>

@@ -45,7 +45,7 @@ const tel = `tel:${site.telephoneInternational}`;
 const nombre = enLettres(communes.length);
 ---
 
-<section id="actions" aria-labelledby="titre-actions" class="actions">
+<section aria-labelledby="titre-actions" class="actions">
   <div class="contenu">
     <p class="surtitre" data-reveal="up">À table</p>
     <h2 id="titre-actions" class="titre-section titre" data-reveal="up" data-delay="60">Réserver, commander, <em>venir.</em></h2>
@@ -72,7 +72,7 @@ const nombre = enLettres(communes.length);
         </div>
         <div class="liens">
           <a href={site.liens.thefork} target="_blank" rel="noopener" class="accent">Ouvrir dans un nouvel onglet</a>
-          <span class="par-tel">Par téléphone : <a href={tel} class="clair chiffres">{site.telephone}</a></span>
+          <span class="par-tel">Par téléphone : <a href={tel} class="lien-texte chiffres">{site.telephone}</a></span>
         </div>
         <p class="a-valider note">Bloquant avant mise en ligne : le widget TheFork affiche encore « Basilic &amp; Co Béziers ». Faire renommer la fiche dans TheFork Manager.</p>
       </div>
@@ -219,11 +219,11 @@ const nombre = enLettres(communes.length);
         <dl class="contact">
           <div>
             <dt class="libelle">Téléphone</dt>
-            <dd><a href={tel} class="clair chiffres">{site.telephone}</a></dd>
+            <dd><a href={tel} class="lien-texte chiffres">{site.telephone}</a></dd>
           </div>
           <div>
             <dt class="libelle">E-mail</dt>
-            <dd>{site.email ? <a href={`mailto:${site.email}`} class="clair">{site.email}</a> : <span class="tag tag-outline">à confirmer</span>}</dd>
+            <dd>{site.email ? <a href={`mailto:${site.email}`} class="lien-texte">{site.email}</a> : <span class="tag tag-outline">à confirmer</span>}</dd>
           </div>
           <div>
             <dt class="libelle">Paiement</dt>
@@ -295,13 +295,8 @@ const nombre = enLettres(communes.length);
   .note {
     margin: 16px 0 0;
   }
-  /* Liens du texte : couleur du texte, soulignés */
-  .clair,
-  .clair:hover {
-    color: var(--color-text);
-  }
 
-  /* — module de réservation — */
+  /* Module de réservation */
   .module {
     position: relative;
     height: clamp(560px, 74vh, 700px);
@@ -410,7 +405,7 @@ const nombre = enLettres(communes.length);
     color: color-mix(in srgb, var(--color-text) 72%, transparent);
   }
 
-  /* — commander — */
+  /* Commander */
   .droite {
     min-width: 0;
     display: flex;
@@ -453,7 +448,7 @@ const nombre = enLettres(communes.length);
     font-size: 18px;
   }
 
-  /* — livraison — */
+  /* Livraison */
   .livraison {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
@@ -473,7 +468,7 @@ const nombre = enLettres(communes.length);
     height: 100%;
     overflow: visible;
   }
-  /* Le rayon de 5 km, posé sur le bord gauche du cercle (en haut, il chevauchait Lignan-sur-Orb) */
+  /* Rayon de 5 km, sur le bord gauche du cercle : à l'écart des noms de communes */
   .echelle {
     position: absolute;
     left: 21.25%;
@@ -515,7 +510,7 @@ const nombre = enLettres(communes.length);
       0 0 18px 4px rgba(196, 81, 58, 0.6);
     transform: translate(-50%, -50%);
   }
-  /* Au-dessus du point (en dessous, elle chevauchait Villeneuve-lès-Béziers) */
+  /* Au-dessus du point : en dessous, elle chevaucherait Villeneuve-lès-Béziers */
   .plan-legende {
     position: absolute;
     left: 50%;
@@ -571,7 +566,7 @@ const nombre = enLettres(communes.length);
     font-size: 12px;
   }
 
-  /* — nous trouver — */
+  /* Nous trouver */
   .venir {
     scroll-margin-top: 84px;
     margin-top: clamp(72px, 9vw, 136px);
@@ -602,7 +597,6 @@ const nombre = enLettres(communes.length);
     height: 100%;
   }
   .facade :global(.image) {
-    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;

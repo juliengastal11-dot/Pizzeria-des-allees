@@ -1,6 +1,6 @@
 # La Pizzeria des Allées
 
-Site vitrine d'une page pour la pizzeria du 43 Allées Paul Riquet, à Béziers. Il reprend la maquette Claude Design (« Pizzeria des Allées (partage).html ») et la reconstruit avec [Astro](https://astro.build) : du HTML statique, le style de chaque section dans son composant et quatre petits scripts, sans framework chargé dans le navigateur.
+Site vitrine d'une page pour la pizzeria du 43 Allées Paul Riquet, à Béziers. Il reprend la maquette Claude Design (« Pizzeria des Allées (partage).html ») et la reconstruit avec [Astro](https://astro.build) : du HTML statique, le style de chaque section dans son composant et cinq petits scripts, sans framework chargé dans le navigateur.
 
 ## Lancer le site
 
@@ -25,7 +25,7 @@ npm run check     # vérifie les types
 - `src/scripts/interface.ts` : l'en-tête qui se fonce, la barre d'actions du téléphone, le menu, les mentions légales, le jour courant dans les horaires.
 - `src/scripts/carte.ts` : le filtre par base, la pizza choisie, le carrousel du téléphone.
 - `src/scripts/reservation.ts` : le module TheFork ne se charge qu'à la demande, donc aucun cookie tiers avant.
-- `src/scripts/devanture.ts` : la devanture en boucle (convives, pizzaiolo) posée sur la photo du haut. Elle ne se télécharge qu'après la page, jamais en économie de données, sur réseau lent ou en animations réduites, et se met en pause hors de l'écran. Fichiers dans `public/video/` (version 720p pour les téléphones).
+- `src/scripts/devanture.ts` : la devanture en boucle (convives, pizzaiolo) posée sur la photo du haut. Elle se télécharge après la page, démarre après l'entrée animée, jamais en économie de données, sur réseau lent ou en animations réduites, et se met en pause hors de l'écran. Fichiers dans `public/video/` (version 720p pour les téléphones). Son arrière-plan est figé et le grain de couleur est incorporé : ne pas poser de filtre ni de zoom animé sur son cadre.
 
 ## Présentation au client
 
