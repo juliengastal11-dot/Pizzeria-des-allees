@@ -5,32 +5,30 @@ import { commande, site } from "../config/site";
 <!-- Téléphone : les trois actions à portée de pouce, une fois le haut de page passé (voir scripts/interface.ts) -->
 <div class="barre sur-mobile" role="region" aria-label="Actions rapides" data-barre>
   <a class="btn btn-primary action" href="#reserver" data-reserver>Réserver</a>
-  <a class="btn btn-secondary action commander" href={commande.href} target={commande.target} rel={commande.rel}>
-    <span class="point" aria-hidden="true"><span data-ignite="bar"></span></span>Commander
-  </a>
-  <a class="btn btn-secondary action" href={`tel:${site.telephoneInternational}`} aria-label={`Appeler le ${site.telephone}`}>Appeler</a>
+  <a class="btn btn-outline action" href={commande.href} target={commande.target} rel={commande.rel}>Commander</a>
+  <a class="btn btn-outline action" href={`tel:${site.telephoneInternational}`} aria-label={`Appeler le ${site.telephone}`}>Appeler</a>
 </div>
 
 <style>
   .barre {
     position: fixed;
     z-index: 45;
-    left: 10px;
-    right: 10px;
-    bottom: calc(10px + env(safe-area-inset-bottom));
+    left: 12px;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
     display: grid;
     grid-template-columns: 1.1fr 1.1fr 0.9fr;
-    gap: 8px;
-    padding: 8px;
-    background: rgba(22, 20, 19, 0.95);
-    border: 1px solid var(--color-divider);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+    gap: var(--space-xs);
+    padding: var(--space-xs);
+    border: 1px solid var(--color-hairline);
+    border-radius: var(--radius-xl);
+    background: var(--color-surface);
+    box-shadow: 0 8px 24px rgba(12, 10, 9, 0.1);
     transform: translateY(140%);
     opacity: 0;
     visibility: hidden;
     transition:
-      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.45s var(--ease-out),
       opacity 0.3s ease,
       visibility 0.45s;
   }
@@ -40,13 +38,7 @@ import { commande, site } from "../config/site";
     visibility: visible;
   }
   .action {
-    min-height: 48px;
-    padding: 0 8px;
-    font-size: 17px;
-  }
-  .commander {
-    position: relative;
-    gap: 8px;
-    border-color: color-mix(in srgb, var(--color-tomato) 75%, transparent);
+    min-height: 44px;
+    padding: 0 var(--space-xs);
   }
 </style>

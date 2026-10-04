@@ -8,199 +8,172 @@ const n = site.livraison.communes.length;
 const livraison = `Béziers et ${enLettres(n)} commune${n > 1 ? "s" : ""} voisine${n > 1 ? "s" : ""}`;
 ---
 
-<section id="maison" aria-labelledby="titre-maison" class="maison">
-  <div class="grille">
-    <div class="texte">
-      <p class="surtitre" data-reveal="up">La maison</p>
-      <h2 id="titre-maison" class="titre-section" data-reveal="up" data-delay="60">Même adresse, <em>nouvelle enseigne.</em></h2>
-      <p class="intro" data-reveal="up" data-delay="120">
-        Au 43 des Allées Paul Riquet, en plein centre de Béziers. La salle s’installe sous une grande fresque du Pont Vieux et de la cathédrale Saint-Nazaire ; la terrasse donne sur les Allées.
-      </p>
+<section id="maison" aria-labelledby="titre-maison" class="section maison">
+  <div class="conteneur">
+    <div class="haut">
+      <div class="texte">
+        <p class="surtitre" data-reveal="up">La maison</p>
+        <h2 id="titre-maison" data-reveal="up" data-delay="60">Même adresse, <em>nouvelle enseigne.</em></h2>
+        <p class="intro" data-reveal="up" data-delay="120">
+          Au 43 des Allées Paul Riquet, en plein centre de Béziers. La salle s’installe sous une grande fresque du Pont Vieux et de la cathédrale Saint-Nazaire ; la terrasse donne sur les Allées.
+        </p>
+      </div>
 
-      <dl class="faits">
-        <div class="fait" data-reveal="up">
-          <dt class="libelle">Sur place</dt>
-          <dd class="sur-place">
-            <span>{site.capacite.texte}</span>
-            {!site.capacite.confirmee && <span class="tag tag-outline a-confirmer">à confirmer</span>}
-          </dd>
-        </div>
-        <div class="fait" data-reveal="up">
-          <dt class="libelle">Livraison</dt>
-          <dd>{livraison}</dd>
-        </div>
-        <div class="fait" data-reveal="up">
-          <dt class="libelle">Paiement</dt>
-          <dd>{site.paiements}</dd>
-        </div>
-        <div class="fait" data-reveal="up">
-          <dt class="libelle">Avis Google</dt>
-          <dd class="chiffres">
-            {site.avisGoogle.note} · {site.avisGoogle.nombre}
-            <span class="releve">Relevé le {site.avisGoogle.releve}</span>
-          </dd>
-        </div>
-      </dl>
-      <p class="a-valider note">
-        Capacité à valider. La fiche Google des avis porte encore l’ancien nom (Basilic &amp; Co) : à faire renommer avant d’y renvoyer depuis le site.
-      </p>
-    </div>
-
-    <div class="photos">
-      <figure>
-        <div class="plate grande" data-reveal="plate">
-          <div class="parallaxe" data-par="0.07">
+      <div class="photos">
+        <figure data-reveal="up" data-delay="80">
+          <div class="cadre cadre-fresque photo-cadre">
             <Picture
               src={fresque}
               formats={["avif", "webp"]}
-              widths={[640, 960, 1280, 1536]}
-              sizes="(min-width: 1000px) 46vw, 100vw"
+              widths={[480, 720, 960, 1280]}
+              sizes="(min-width: 1248px) 640px, (min-width: 1024px) 50vw, 100vw"
               alt="La salle principale : tables en chêne clair sous une grande fresque de Béziers, avec la cathédrale Saint-Nazaire et le Pont Vieux"
-              class="image image-fresque"
+              class="image"
               pictureAttributes={{ class: "image-cadre" }}
             />
           </div>
-        </div>
-        <figcaption class="legende legende-droite">La fresque du Pont Vieux</figcaption>
-      </figure>
-      <figure class="petite-figure" data-par="-0.06">
-        <div class="plate petite" data-reveal="plate" data-delay="140">
-          <Picture
-            src={vignes}
-            formats={["avif", "webp"]}
-            widths={[480, 720, 1046]}
-            sizes="(min-width: 1000px) 22vw, 47vw"
-            alt="Le coin des vignes : une fresque de vignoble, un cadre végétal en chêne et des tables dressées"
-            class="image"
-            pictureAttributes={{ class: "image-cadre" }}
-          />
-        </div>
-        <figcaption class="legende">Le coin des vignes</figcaption>
-      </figure>
+          <figcaption>La fresque du Pont Vieux</figcaption>
+        </figure>
+        <figure data-reveal="up" data-delay="200">
+          <div class="cadre cadre-vignes photo-cadre">
+            <Picture
+              src={vignes}
+              formats={["avif", "webp"]}
+              widths={[360, 540, 780, 1046]}
+              sizes="(min-width: 1248px) 400px, (min-width: 1024px) 30vw, (min-width: 640px) 40vw, 100vw"
+              alt="Le coin des vignes : une fresque de vignoble, un cadre végétal en chêne et des tables dressées"
+              class="image"
+              pictureAttributes={{ class: "image-cadre" }}
+            />
+          </div>
+          <figcaption>Le coin des vignes</figcaption>
+        </figure>
+      </div>
     </div>
+
+    <dl class="faits">
+      <div class="fait panneau" data-reveal="up">
+        <dt class="libelle">Sur place</dt>
+        <dd>
+          {site.capacite.texte}
+          {!site.capacite.confirmee && <span class="badge badge-outline">à confirmer</span>}
+        </dd>
+      </div>
+      <div class="fait panneau" data-reveal="up" data-delay="60">
+        <dt class="libelle">Livraison</dt>
+        <dd>{livraison}</dd>
+      </div>
+      <div class="fait panneau" data-reveal="up" data-delay="120">
+        <dt class="libelle">Paiement</dt>
+        <dd>{site.paiements}</dd>
+      </div>
+      <div class="fait panneau" data-reveal="up" data-delay="180">
+        <dt class="libelle">Avis Google</dt>
+        <dd class="chiffres">
+          {site.avisGoogle.note} · {site.avisGoogle.nombre}
+          <span class="releve">Relevé le {site.avisGoogle.releve}</span>
+        </dd>
+      </div>
+    </dl>
+    <p class="a-valider note">
+      Capacité à valider. La fiche Google des avis porte encore l’ancien nom (Basilic &amp; Co) : à faire renommer avant d’y renvoyer depuis le site.
+    </p>
   </div>
 </section>
 
 <style>
-  .maison {
-    position: relative;
-    scroll-margin-top: 64px;
-    padding: clamp(88px, 11vw, 160px) clamp(16px, 3vw, 44px) clamp(80px, 10vw, 140px);
-    border-top: 1px solid var(--color-divider);
-  }
-  .grille {
-    max-width: 1320px;
-    margin: 0 auto;
+  .haut {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
-    gap: clamp(56px, 7vw, 112px);
-    align-items: start;
+    gap: var(--space-xxl);
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .haut {
+      grid-template-columns: 5fr 7fr;
+      gap: 80px;
+    }
   }
   .texte {
-    max-width: 540px;
+    max-width: 520px;
   }
-  .titre-section {
-    margin-bottom: 28px;
+  .texte h2 {
+    margin-bottom: var(--space-lg);
   }
   .intro {
-    margin: 0;
-    font-size: 17px;
-    line-height: 1.7;
-    text-align: justify;
-    hyphens: auto;
-    color: color-mix(in srgb, var(--color-text) 84%, transparent);
+    line-height: 1.6;
+    text-wrap: pretty;
   }
-  .faits {
-    margin: 44px 0 0;
-    border-top: 1px solid var(--color-divider);
-  }
-  .fait {
-    display: grid;
-    grid-template-columns: minmax(0, 8.5em) minmax(0, 1fr);
-    gap: 6px 20px;
-    padding: 16px 0;
-    border-bottom: 1px solid var(--color-divider);
-  }
-  .fait dt {
-    padding-top: 7px;
-  }
-  .fait dd {
-    margin: 0;
-    font-family: var(--font-heading);
-    font-size: 23px;
-    line-height: 1.3;
-  }
-  .fait .sur-place {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px 12px;
-  }
-  .a-confirmer {
-    font-family: var(--font-body);
-    font-size: 12px;
-  }
-  .releve {
-    display: block;
-    font-family: var(--font-body);
-    font-size: 13px;
-    color: color-mix(in srgb, var(--color-text) 66%, transparent);
-  }
-  .note {
-    margin: 18px 0 0;
-  }
+
   .photos {
-    position: relative;
-    padding-bottom: 30%;
-    margin-top: clamp(0px, 4vw, 56px);
+    display: grid;
+    gap: var(--space-base);
+    align-items: end;
   }
-  .grande,
-  .petite {
-    position: relative;
-    overflow: hidden;
-    overflow: clip;
-    background: #0b0a09;
+  @media (min-width: 640px) {
+    .photos {
+      grid-template-columns: 1.6fr 1fr;
+    }
   }
-  .grande {
+  .cadre {
+    position: relative;
+    border-radius: var(--radius-xl);
+    background: var(--color-surface-strong);
+  }
+  .cadre-fresque {
     aspect-ratio: 1536 / 932;
   }
-  .petite {
+  .cadre-vignes {
     aspect-ratio: 1046 / 932;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
   }
-  .parallaxe {
+  .cadre :global(.image-cadre) {
     position: absolute;
-    left: 0;
-    right: 0;
-    top: -9%;
-    bottom: -9%;
-  }
-  .petite-figure {
-    position: absolute;
-    left: calc(-1 * clamp(0px, 3vw - 8px, 36px));
-    bottom: 0;
-    width: 47%;
-  }
-  .photos :global(.image-cadre) {
+    inset: 0;
     display: block;
-    width: 100%;
-    height: 100%;
   }
-  .photos :global(.image) {
+  .cadre :global(.image) {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  .photos :global(.image-fresque) {
-    object-position: 50% 70%;
+  figcaption {
+    margin-top: var(--space-sm);
+    font-size: 14px;
+    letter-spacing: 0;
   }
-  .legende {
-    margin-top: 10px;
-    font-size: 13px;
-    font-style: italic;
-    color: color-mix(in srgb, var(--color-text) 66%, transparent);
+
+  .faits {
+    display: grid;
+    gap: var(--space-base);
+    margin: var(--space-xxl) 0 0;
   }
-  .legende-droite {
-    text-align: right;
+  @media (min-width: 640px) {
+    .faits {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .faits {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .fait dd {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xs);
+    margin: var(--space-sm) 0 0;
+    color: var(--color-ink);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .releve {
+    color: var(--color-body);
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+  .note {
+    margin-top: var(--space-lg);
   }
 </style>

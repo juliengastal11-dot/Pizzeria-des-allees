@@ -3,7 +3,7 @@
  * défilement, la barre d'actions du téléphone, le menu, la fenêtre des
  * mentions légales et le jour courant dans les horaires.
  */
-import { allumer, EO } from "./animations";
+import { EO } from "./animations";
 import { reduit } from "./mouvement";
 
 const html = document.documentElement;
@@ -12,7 +12,7 @@ const barre = document.querySelector<HTMLElement>("[data-barre]");
 const menu = document.querySelector<HTMLDialogElement>("[data-menu]");
 const boutonMenu = document.querySelector<HTMLButtonElement>("[data-ouvrir-menu]");
 const legal = document.querySelector<HTMLDialogElement>("[data-legal]");
-const telephone = matchMedia("(max-width: 859.98px)");
+const telephone = matchMedia("(max-width: 767.98px)");
 
 // En-tête : fond opaque dès qu'on a défilé de quelques pixels
 function majEntete() {
@@ -24,16 +24,10 @@ function majEntete() {
  * sauf quand des boutons Réserver ou Commander sont déjà à l'écran.
  */
 const zones = new Set<Element>();
-let barreAllumee = false;
 function majBarre() {
   if (!barre) return;
   const visible = telephone.matches && window.scrollY > window.innerHeight * 0.5 && zones.size === 0 && !menu?.open;
-  if (visible === barre.hasAttribute("data-visible")) return;
   barre.toggleAttribute("data-visible", visible);
-  if (visible && !barreAllumee) {
-    barreAllumee = true;
-    setTimeout(() => allumer('[data-ignite="bar"]'), 450);
-  }
 }
 const zonesIO = new IntersectionObserver(
   (entrees) => {

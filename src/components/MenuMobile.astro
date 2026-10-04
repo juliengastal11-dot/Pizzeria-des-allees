@@ -5,14 +5,14 @@ import { commande, site } from "../config/site";
 ---
 
 <!--
-  Menu plein écran (moins de 1080 px). Fenêtre modale native : le reste de la
+  Menu plein écran (moins de 1024 px). Fenêtre modale native : le reste de la
   page devient inerte, Échap la ferme et le focus revient au bouton Menu.
 -->
 <dialog id="menu-mobile" class="menu" aria-label="Menu" data-menu>
-  <div class="lueur" aria-hidden="true"></div>
+  <div class="orbe" aria-hidden="true"></div>
   <div class="tete">
-    <Image src={logo} width={44} height={44} densities={[1, 2]} alt="" class="logo" />
-    <button type="button" class="btn btn-secondary fermer" autofocus data-fermer>Fermer</button>
+    <Image src={logo} width={36} height={36} densities={[1, 2]} alt="" class="logo" />
+    <button type="button" class="btn btn-outline" autofocus data-fermer>Fermer</button>
   </div>
   <nav aria-label="Sections de la page" class="nav">
     <a data-menu-item href="#maison">La maison</a>
@@ -21,9 +21,9 @@ import { commande, site } from "../config/site";
     <a data-menu-item href="#venir">Nous trouver</a>
   </nav>
   <div data-menu-item class="actions">
-    <a class="btn btn-primary action" href="#reserver" data-reserver>Réserver</a>
-    <a class="btn btn-secondary action commander" href={commande.href} target={commande.target} rel={commande.rel}>Commander</a>
-    <a class="btn btn-secondary action appeler chiffres" href={`tel:${site.telephoneInternational}`} data-reste-ouvert>Appeler le {site.telephone}</a>
+    <a class="btn btn-primary btn-grand" href="#reserver" data-reserver>Réserver</a>
+    <a class="btn btn-outline btn-grand" href={commande.href} target={commande.target} rel={commande.rel}>Commander</a>
+    <a class="btn btn-outline btn-grand appeler chiffres" href={`tel:${site.telephoneInternational}`} data-reste-ouvert>Appeler le {site.telephone}</a>
   </div>
 </dialog>
 
@@ -37,9 +37,9 @@ import { commande, site } from "../config/site";
     max-height: none;
     margin: 0;
     border: 0;
-    padding: 10px 16px calc(24px + env(safe-area-inset-bottom));
-    background: var(--color-bg);
-    color: var(--color-text);
+    padding: var(--space-sm) var(--gutter) calc(var(--space-lg) + env(safe-area-inset-bottom));
+    background: var(--color-canvas);
+    color: var(--color-body);
     overflow-x: hidden;
     overflow-y: auto;
   }
@@ -51,66 +51,52 @@ import { commande, site } from "../config/site";
   .menu::backdrop {
     background: transparent;
   }
-  .lueur {
+  .orbe {
     position: fixed;
-    inset: 0;
     z-index: -1;
-    overflow: hidden;
-    pointer-events: none;
-  }
-  .lueur::before {
-    content: "";
-    position: absolute;
     left: -30%;
     right: -30%;
-    bottom: -30%;
-    height: 60%;
-    background: radial-gradient(50% 50% at 50% 50%, rgba(196, 81, 58, 0.22), rgba(28, 26, 25, 0));
+    bottom: -25%;
+    height: 70%;
+    background: radial-gradient(50% 50% at 50% 50%, var(--color-orb-peach), transparent 100%);
+    opacity: 0.7;
+    pointer-events: none;
   }
   .tete {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: var(--space-sm);
+    height: 52px;
   }
   .logo {
-    width: 44px;
-    height: 44px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-  }
-  .fermer {
-    min-height: 44px;
-    padding: 0 16px;
-    font-size: 17px;
   }
   .nav {
     display: flex;
     flex-direction: column;
-    margin-top: 40px;
-    border-top: 1px solid var(--color-divider);
+    margin-top: var(--space-xxl);
+    border-top: 1px solid var(--color-hairline);
   }
   .nav a {
-    padding: 14px 0;
-    border-bottom: 1px solid var(--color-divider);
-    font-family: var(--font-heading);
+    padding: var(--space-base) 0;
+    border-bottom: 1px solid var(--color-hairline);
+    color: var(--color-ink);
+    font-family: var(--font-display);
     font-size: 40px;
+    font-weight: 300;
     line-height: 1.1;
-    color: var(--color-text);
+    letter-spacing: -0.02em;
     text-decoration: none;
   }
   .actions {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: var(--space-xs);
     margin-top: auto;
-    padding-top: 32px;
-  }
-  .action {
-    min-height: 52px;
-    font-size: 18px;
-  }
-  .commander {
-    border-color: color-mix(in srgb, var(--color-tomato) 75%, transparent);
+    padding-top: var(--space-xl);
   }
   .appeler {
     grid-column: 1 / -1;

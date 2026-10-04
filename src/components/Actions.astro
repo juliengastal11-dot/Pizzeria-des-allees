@@ -45,23 +45,23 @@ const tel = `tel:${site.telephoneInternational}`;
 const nombre = enLettres(communes.length);
 ---
 
-<section aria-labelledby="titre-actions" class="actions">
-  <div class="contenu">
+<section aria-labelledby="titre-actions" class="section actions">
+  <div class="conteneur">
     <p class="surtitre" data-reveal="up">À table</p>
-    <h2 id="titre-actions" class="titre-section titre" data-reveal="up" data-delay="60">Réserver, commander, <em>venir.</em></h2>
+    <h2 id="titre-actions" class="titre" data-reveal="up" data-delay="60">Réserver, commander, <em>venir.</em></h2>
 
     <div class="colonnes">
-      <div id="reserver" class="bloc" data-cta-zone="reserver">
+      <div id="reserver" class="bloc reserver panneau" data-cta-zone="reserver">
         <h3 data-reveal="up">Réserver une table</h3>
         <p class="chapo" data-reveal="up">
           Choisissez la date, l’heure et le nombre de couverts. La réservation se fait en ligne avec TheFork, sans quitter la page.
         </p>
-        <div class="plate module" data-reveal="plate" data-reservation data-etat="repos" data-src={site.liens.thefork}>
+        <div class="module" data-reveal="fade" data-reservation data-etat="repos" data-src={site.liens.thefork}>
           <div class="couverture">
-            <div class="couverture-lueur" aria-hidden="true"></div>
+            <div class="couverture-orbe" aria-hidden="true"></div>
             <div class="repos">
               <p class="slogan">Votre table, en quelques clics.</p>
-              <button type="button" class="btn btn-primary choisir" data-choisir-date>Choisir une date</button>
+              <button type="button" class="btn btn-primary btn-grand" data-choisir-date>Choisir une date</button>
               <p class="mention">Le module de réservation est fourni par TheFork, qui peut déposer des cookies. Il ne se charge qu’à votre demande.</p>
             </div>
             <div class="chargement" role="status">
@@ -71,29 +71,26 @@ const nombre = enLettres(communes.length);
           </div>
         </div>
         <div class="liens">
-          <a href={site.liens.thefork} target="_blank" rel="noopener" class="accent">Ouvrir dans un nouvel onglet</a>
-          <span class="par-tel">Par téléphone : <a href={tel} class="lien-texte chiffres">{site.telephone}</a></span>
+          <a href={site.liens.thefork} target="_blank" rel="noopener">Ouvrir dans un nouvel onglet</a>
+          <span class="par-tel">Par téléphone : <a href={tel} class="chiffres">{site.telephone}</a></span>
         </div>
         <p class="a-valider note">Bloquant avant mise en ligne : le widget TheFork affiche encore « Basilic &amp; Co Béziers ». Faire renommer la fiche dans TheFork Manager.</p>
       </div>
 
       <div class="droite">
-        <div id="commander" class="bloc" data-cta-zone="commander">
+        <div id="commander" class="bloc commander" data-cta-zone="commander">
           <h3 data-reveal="up">Commander</h3>
-          <p class="chapo chapo-court" data-reveal="up">À emporter ou en livraison.</p>
+          <p class="chapo" data-reveal="up">À emporter ou en livraison.</p>
           {
             site.liens.obypay ? (
-              <a class="btn btn-primary en-ligne" href={commande.href} target="_blank" rel="noopener">
+              <a class="btn btn-inverse btn-grand" href={commande.href} target="_blank" rel="noopener">
                 Commander en ligne
               </a>
             ) : (
               <div class="bientot" data-reveal="up">
-                <p class="bientot-titre">
-                  <span class="point point-grand" aria-hidden="true" />
-                  La commande en ligne ouvre très bientôt.
-                </p>
+                <p class="bientot-titre">La commande en ligne ouvre très bientôt.</p>
                 <p class="bientot-texte">En attendant, appelez-nous.</p>
-                <a class="btn btn-primary appeler chiffres" href={tel}>
+                <a class="btn btn-inverse btn-grand chiffres" href={tel}>
                   Appeler le {site.telephone}
                 </a>
               </div>
@@ -104,13 +101,13 @@ const nombre = enLettres(communes.length);
           </p>
         </div>
 
-        <div id="livraison" class="bloc">
+        <div id="livraison" class="bloc livraison panneau">
           <h3 data-reveal="up">Livraison</h3>
           <p class="chapo" data-reveal="up">Béziers et {nombre} communes autour.</p>
-          <div class="livraison">
+          <div class="carte-livraison">
             <div class="plan" role="img" aria-label={`Plan schématique : la pizzeria au centre de Béziers et les ${nombre} communes livrées autour`}>
               <svg aria-hidden="true" viewBox="0 0 100 105" preserveAspectRatio="none" class="plan-svg">
-                <circle cx="50" cy="52.5" r="28.75" fill="none" stroke="rgba(243,242,242,0.18)" stroke-width="1" stroke-dasharray="2 3" vector-effect="non-scaling-stroke"></circle>
+                <circle cx="50" cy="52.5" r="28.75" fill="none" stroke="var(--color-hairline-strong)" stroke-width="1" stroke-dasharray="2 3" vector-effect="non-scaling-stroke"></circle>
                 {
                   communes.map((c) => (
                     <line
@@ -123,7 +120,7 @@ const nombre = enLettres(communes.length);
                       pathLength="1"
                       stroke-dasharray="1"
                       stroke-dashoffset="0"
-                      stroke="rgba(250,203,141,0.42)"
+                      stroke="rgba(12, 10, 9, 0.28)"
                       stroke-width="0.35"
                     />
                   ))
@@ -160,7 +157,7 @@ const nombre = enLettres(communes.length);
               conditions.map(([libelle, valeur]) => (
                 <div>
                   <dt class="libelle">{libelle}</dt>
-                  <dd>{valeur ? valeur : <span class="tag tag-outline a-confirmer">à confirmer</span>}</dd>
+                  <dd>{valeur ? valeur : <span class="badge badge-outline">à confirmer</span>}</dd>
                 </div>
               ))
             }
@@ -170,36 +167,34 @@ const nombre = enLettres(communes.length);
     </div>
 
     <div id="venir" class="venir">
-      <figure>
-        <div class="plate facade" data-reveal="plate">
-          <div class="parallaxe" data-par="0.06">
-            <Picture
-              src={facade}
-              formats={["avif", "webp"]}
-              widths={[640, 960, 1280, 1536]}
-              sizes="(min-width: 1000px) 46vw, 100vw"
-              alt="La devanture le soir : enseigne bleu nuit aux lettres dorées, au numéro 43 des Allées Paul Riquet"
-              class="image"
-              pictureAttributes={{ class: "image-cadre" }}
-            />
-          </div>
+      <figure data-reveal="up">
+        <div class="facade photo-cadre">
+          <Picture
+            src={facade}
+            formats={["avif", "webp"]}
+            widths={[480, 720, 960, 1280]}
+            sizes="(min-width: 1248px) 560px, (min-width: 1024px) 46vw, 100vw"
+            alt="La devanture le soir : enseigne bleu nuit aux lettres dorées, au numéro 43 des Allées Paul Riquet"
+            class="image"
+            pictureAttributes={{ class: "image-cadre" }}
+          />
         </div>
-        <figcaption class="legende">Repérez l’enseigne bleu nuit, au numéro 43.</figcaption>
+        <figcaption>Repérez l’enseigne bleu nuit, au numéro 43.</figcaption>
       </figure>
       <div class="trouver">
         <h3 data-reveal="up">Nous trouver</h3>
         <address data-reveal="up">{site.adresse.rue}<br />{site.adresse.codePostal} {site.adresse.ville}</address>
         <p class="coordonnees chiffres" data-reveal="up">Occitanie, France · {site.adresse.latitude}, {site.adresse.longitude}</p>
         <div class="trouver-boutons" data-reveal="up">
-          <a class="btn btn-primary itineraire" href={site.liens.itineraire} target="_blank" rel="noopener">Itinéraire</a>
-          <a class="btn btn-secondary maps" href={site.liens.carte} target="_blank" rel="noopener">Voir sur Google Maps</a>
+          <a class="btn btn-primary" href={site.liens.itineraire} target="_blank" rel="noopener">Itinéraire</a>
+          <a class="btn btn-outline" href={site.liens.carte} target="_blank" rel="noopener">Voir sur Google Maps</a>
         </div>
 
         <div class="horaires-tete">
           <h4>Horaires</h4>
-          {!site.horaires.confirmes && <span class="tag tag-outline">à confirmer</span>}
+          {!site.horaires.confirmes && <span class="badge badge-outline">à confirmer</span>}
         </div>
-        <table class="table horaires" data-horaires>
+        <table class="table" data-horaires>
           <caption class="sr-only">Horaires d’ouverture de la semaine</caption>
           <tbody>
             {
@@ -219,11 +214,11 @@ const nombre = enLettres(communes.length);
         <dl class="contact">
           <div>
             <dt class="libelle">Téléphone</dt>
-            <dd><a href={tel} class="lien-texte chiffres">{site.telephone}</a></dd>
+            <dd><a href={tel} class="chiffres">{site.telephone}</a></dd>
           </div>
           <div>
             <dt class="libelle">E-mail</dt>
-            <dd>{site.email ? <a href={`mailto:${site.email}`} class="lien-texte">{site.email}</a> : <span class="tag tag-outline">à confirmer</span>}</dd>
+            <dd>{site.email ? <a href={`mailto:${site.email}`}>{site.email}</a> : <span class="badge badge-outline">à confirmer</span>}</dd>
           </div>
           <div>
             <dt class="libelle">Paiement</dt>
@@ -237,7 +232,7 @@ const nombre = enLettres(communes.length);
                 site.avisGoogle.ficheVerifiee && (
                   <>
                     {" · "}
-                    <a href={site.avisGoogle.lien} target="_blank" rel="noopener" class="accent">
+                    <a href={site.avisGoogle.lien} target="_blank" rel="noopener">
                       Lire les avis
                     </a>
                   </>
@@ -252,58 +247,54 @@ const nombre = enLettres(communes.length);
 </section>
 
 <style>
-  .actions {
-    position: relative;
-    padding: clamp(88px, 11vw, 160px) clamp(16px, 3vw, 44px) clamp(72px, 9vw, 128px);
-    border-top: 1px solid var(--color-divider);
-  }
-  .contenu {
-    max-width: 1320px;
-    margin: 0 auto;
-  }
   .titre {
-    margin-bottom: clamp(40px, 5vw, 72px);
-    text-wrap: initial;
+    margin-bottom: var(--space-xxl);
   }
   .colonnes {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr));
-    gap: clamp(48px, 6vw, 96px);
+    gap: var(--space-lg);
     align-items: start;
   }
-  .bloc {
-    scroll-margin-top: 84px;
+  @media (min-width: 1024px) {
+    .colonnes {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .droite {
+    display: grid;
+    gap: var(--space-lg);
     min-width: 0;
   }
-  .bloc h3,
-  .trouver h3 {
-    margin: 0 0 10px;
-    font-weight: 500;
-    font-size: 34px;
-    line-height: 1.1;
+  .bloc {
+    scroll-margin-top: calc(var(--hauteur-entete) + var(--space-lg));
+    min-width: 0;
+  }
+  .bloc h3 {
+    margin-bottom: var(--space-sm);
+    font-size: 28px;
   }
   .chapo {
-    margin: 0 0 22px;
     max-width: 52ch;
-    font-size: 16px;
-    line-height: 1.65;
-    color: color-mix(in srgb, var(--color-text) 82%, transparent);
-  }
-  .chapo-court {
-    margin-bottom: 20px;
+    margin-bottom: var(--space-lg);
   }
   .note {
-    margin: 16px 0 0;
+    margin-top: var(--space-base);
+  }
+  @media (min-width: 640px) {
+    .panneau {
+      padding: var(--space-xl);
+    }
   }
 
   /* Module de réservation */
   .module {
     position: relative;
     height: clamp(560px, 74vh, 700px);
+    border: 1px solid var(--color-hairline);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
     overflow: hidden;
     overflow: clip;
-    background: #f8f4f4;
-    filter: none;
   }
   .module :global(iframe) {
     position: absolute;
@@ -325,18 +316,21 @@ const nombre = enLettres(communes.length);
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    gap: 18px;
     padding: clamp(24px, 4vw, 48px);
-    background: #211f1e;
-    color: var(--color-text);
+    background: var(--color-canvas-soft);
   }
   .module[data-etat="pret"] .couverture {
     display: none;
   }
-  .couverture-lueur {
+  .couverture-orbe {
     position: absolute;
-    inset: 0;
-    background: radial-gradient(60% 50% at 80% 100%, rgba(196, 81, 58, 0.22), rgba(33, 31, 30, 0) 70%);
+    right: -12%;
+    bottom: -16%;
+    width: 78%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, var(--color-orb-peach) 0%, var(--color-orb-rose) 50%, transparent 100%);
+    opacity: 0.85;
     pointer-events: none;
   }
   .repos,
@@ -345,7 +339,7 @@ const nombre = enLettres(communes.length);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 18px;
+    gap: var(--space-base);
   }
   .chargement,
   .module[data-etat="chargement"] .repos {
@@ -355,111 +349,96 @@ const nombre = enLettres(communes.length);
     display: flex;
   }
   .slogan {
-    margin: 0;
-    font-family: var(--font-heading);
-    font-size: clamp(28px, 2.6vw, 38px);
-    line-height: 1.15;
-    max-width: 16ch;
-  }
-  .choisir {
-    min-height: 50px;
-    padding: 0 24px;
-    font-size: 18px;
+    max-width: 14ch;
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-size: clamp(30px, 3vw, 40px);
+    font-weight: 300;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
   }
   .mention {
-    margin: 0;
     max-width: 44ch;
     font-size: 13px;
-    line-height: 1.55;
-    color: color-mix(in srgb, var(--color-text) 68%, transparent);
+    letter-spacing: 0;
   }
   .chargement-texte {
-    margin: 0;
-    font-family: var(--font-heading);
+    color: var(--color-ink);
+    font-family: var(--font-display);
     font-size: 26px;
     font-style: italic;
+    font-weight: 300;
   }
   .barre-chargement {
     position: relative;
     width: min(320px, 100%);
-    height: 1px;
+    height: 2px;
+    background: var(--color-hairline-strong);
     overflow: hidden;
-    background: var(--color-divider);
+    overflow: clip;
   }
   .barre-chargement span {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
+    inset: 0 auto 0 0;
     width: 40%;
-    background: var(--color-accent-300);
+    background: var(--color-ink);
   }
   .liens {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px 24px;
-    margin-top: 16px;
+    gap: var(--space-xs) var(--space-lg);
+    margin-top: var(--space-base);
     font-size: 15px;
   }
-  .par-tel {
-    color: color-mix(in srgb, var(--color-text) 72%, transparent);
-  }
 
-  /* Commander */
-  .droite {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: clamp(48px, 5vw, 72px);
+  /* Commander : la carte sombre en vedette */
+  .commander {
+    padding: var(--space-lg);
+    border-radius: var(--radius-xl);
+    background: var(--color-surface-dark);
+    color: var(--color-on-dark-soft);
   }
-  .en-ligne {
-    min-height: 52px;
-    padding: 0 26px;
-    font-size: 19px;
+  @media (min-width: 640px) {
+    .commander {
+      padding: var(--space-xl);
+    }
   }
-  .bientot {
-    padding: 22px 0;
-    border-top: 1px solid var(--color-divider);
-    border-bottom: 1px solid var(--color-divider);
+  .commander h3 {
+    color: #fff;
+  }
+  .commander .chapo {
+    margin-bottom: var(--space-lg);
   }
   .bientot-titre {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 0 0 8px;
-    font-family: var(--font-heading);
-    font-size: 24px;
-    line-height: 1.25;
-  }
-  .point-grand {
-    width: 8px;
-    height: 8px;
-    box-shadow: 0 0 12px 2px rgba(196, 81, 58, 0.75);
+    margin-bottom: var(--space-xs);
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 300;
+    line-height: 1.2;
   }
   .bientot-texte {
-    margin: 0 0 18px;
-    font-size: 16px;
-    line-height: 1.6;
-    color: color-mix(in srgb, var(--color-text) 82%, transparent);
+    margin-bottom: var(--space-lg);
   }
-  .appeler {
-    min-height: 50px;
-    padding: 0 22px;
-    font-size: 18px;
+  .commander .note {
+    border-color: var(--color-on-dark-soft);
+    background: transparent;
+    color: var(--color-on-dark-soft);
   }
 
   /* Livraison */
-  .livraison {
+  .carte-livraison {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-    gap: 28px;
+    gap: var(--space-lg);
     align-items: center;
   }
   .plan {
     position: relative;
-    aspect-ratio: 1 / 1.05;
-    max-width: 340px;
     width: 100%;
+    max-width: 340px;
+    aspect-ratio: 1 / 1.05;
+    justify-self: center;
   }
   .plan-svg {
     position: absolute;
@@ -473,29 +452,29 @@ const nombre = enLettres(communes.length);
     position: absolute;
     left: 21.25%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    padding: 0 4px;
+    background: var(--color-surface);
+    color: var(--color-body);
     font-size: 11px;
     letter-spacing: 0.08em;
-    color: color-mix(in srgb, var(--color-text) 60%, transparent);
-    background: #1c1a19;
-    padding: 0 4px;
+    transform: translate(-50%, -50%);
   }
   .plan-point {
     position: absolute;
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #f4da90;
-    box-shadow: 0 0 10px 2px rgba(242, 211, 140, 0.55);
+    background: var(--color-ink);
     transform: translate(-50%, -50%);
   }
   .plan-nom {
     position: absolute;
-    transform: translateY(-50%);
     max-width: 31%;
+    color: var(--color-ink);
     font-size: 12px;
     line-height: 1.2;
-    color: color-mix(in srgb, var(--color-text) 86%, transparent);
+    letter-spacing: 0;
+    transform: translateY(-50%);
   }
   .plan-pizzeria {
     position: absolute;
@@ -504,201 +483,180 @@ const nombre = enLettres(communes.length);
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: var(--color-tomato);
-    box-shadow:
-      0 0 0 4px rgba(196, 81, 58, 0.25),
-      0 0 18px 4px rgba(196, 81, 58, 0.6);
+    background: var(--color-ink);
+    box-shadow: 0 0 0 6px var(--color-orb-peach);
     transform: translate(-50%, -50%);
   }
   /* Au-dessus du point : en dessous, elle chevaucherait Villeneuve-lès-Béziers */
   .plan-legende {
     position: absolute;
     left: 50%;
-    top: calc(50% - 12px);
-    transform: translate(-50%, -100%);
-    font-family: var(--font-heading);
+    top: calc(50% - 16px);
+    color: var(--color-ink);
+    font-family: var(--font-display);
     font-size: 15px;
     font-style: italic;
     white-space: nowrap;
-    color: var(--color-accent-300);
+    transform: translate(-50%, -100%);
   }
   .communes {
-    list-style: none;
     margin: 0;
     padding: 0;
-    border-top: 1px solid var(--color-divider);
+    list-style: none;
   }
   .communes li {
     display: flex;
     justify-content: space-between;
-    gap: 12px;
-    padding: 9px 0;
-    border-bottom: 1px solid var(--color-divider);
-    font-family: var(--font-heading);
-    font-size: 20px;
+    gap: var(--space-sm);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-hairline);
+    color: var(--color-ink);
+    font-size: 16px;
+  }
+  .communes li:last-child {
+    border-bottom: 0;
   }
   .communes li span {
-    font-family: var(--font-body);
-    font-size: 13px;
+    color: var(--color-body);
+    font-size: 14px;
     white-space: nowrap;
-    color: color-mix(in srgb, var(--color-text) 66%, transparent);
   }
   .conditions {
-    margin: 28px 0 0;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 16px;
-  }
-  .conditions > div {
-    padding-top: 12px;
-    border-top: 1px solid var(--color-divider);
-  }
-  .conditions dt {
-    letter-spacing: 0.12em;
+    gap: var(--space-base);
+    margin: var(--space-lg) 0 0;
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-hairline);
   }
   .conditions dd {
-    margin: 6px 0 0;
-    font-family: var(--font-heading);
-    font-size: 21px;
-  }
-  .a-confirmer {
-    font-family: var(--font-body);
-    font-size: 12px;
+    margin: var(--space-xs) 0 0;
+    color: var(--color-ink);
+    font-size: 16px;
+    font-weight: 500;
   }
 
   /* Nous trouver */
   .venir {
-    scroll-margin-top: 84px;
-    margin-top: clamp(72px, 9vw, 136px);
-    padding-top: clamp(48px, 6vw, 80px);
-    border-top: 1px solid var(--color-divider);
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
-    gap: clamp(40px, 6vw, 96px);
+    gap: var(--space-xxl);
     align-items: start;
+    margin-top: var(--space-section);
+    padding-top: var(--space-section);
+    border-top: 1px solid var(--color-hairline);
+    scroll-margin-top: var(--hauteur-entete);
+  }
+  @media (min-width: 1024px) {
+    .venir {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 80px;
+    }
+  }
+  /* La photo reste en vue pendant qu'on lit les horaires */
+  @media (min-width: 1024px) {
+    .venir > figure {
+      position: sticky;
+      top: calc(var(--hauteur-entete) + var(--space-lg));
+    }
   }
   .facade {
     position: relative;
     aspect-ratio: 1536 / 932;
-    overflow: hidden;
-    overflow: clip;
-    background: #0b0a09;
-  }
-  .parallaxe {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: -8%;
-    bottom: -8%;
+    border-radius: var(--radius-xl);
+    background: var(--color-surface-strong);
   }
   .facade :global(.image-cadre) {
+    position: absolute;
+    inset: 0;
     display: block;
-    width: 100%;
-    height: 100%;
   }
   .facade :global(.image) {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 50% 40%;
   }
-  .legende {
-    margin-top: 10px;
-    font-size: 13px;
-    font-style: italic;
-    color: color-mix(in srgb, var(--color-text) 66%, transparent);
+  figcaption {
+    margin-top: var(--space-sm);
+    font-size: 14px;
+    letter-spacing: 0;
   }
   .trouver {
     min-width: 0;
   }
   .trouver h3 {
-    margin-bottom: 14px;
+    margin-bottom: var(--space-base);
+    font-size: 28px;
   }
   address {
-    margin: 0;
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-size: clamp(30px, 3vw, 40px);
     font-style: normal;
-    font-family: var(--font-heading);
-    font-size: clamp(28px, 2.6vw, 38px);
-    line-height: 1.15;
+    font-weight: 300;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
   }
   .coordonnees {
-    margin: 8px 0 22px;
+    margin: var(--space-sm) 0 var(--space-lg);
     font-size: 13px;
-    letter-spacing: 0.06em;
-    color: color-mix(in srgb, var(--color-text) 66%, transparent);
+    letter-spacing: 0.04em;
   }
   .trouver-boutons {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-  }
-  .itineraire {
-    min-height: 48px;
-    padding: 0 22px;
-    font-size: 17px;
-  }
-  .maps {
-    min-height: 48px;
-    padding: 0 20px;
-    font-size: 17px;
+    gap: var(--space-sm);
   }
   .horaires-tete {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin: 40px 0 6px;
-  }
-  .horaires-tete h4 {
-    margin: 0;
-    font-weight: 500;
-    font-size: 24px;
-  }
-  .horaires-tete .tag {
-    font-size: 12px;
-  }
-  .horaires {
-    font-size: 15px;
-  }
-  .horaires th {
-    padding: 9px 9px 9px 0;
-    text-align: left;
-    font-weight: 400;
-    font-size: 15px;
-    border-bottom: 1px solid var(--color-divider);
-  }
-  .horaires td {
-    padding: 9px 0;
-    text-align: right;
+    gap: var(--space-sm);
+    margin: var(--space-xxl) 0 var(--space-xs);
   }
   /* Le jour même, repéré par le script (fuseau de Paris) */
-  .horaires tr[aria-current="date"] {
-    color: var(--color-accent-300);
+  .table tr[aria-current="date"] {
+    background: var(--color-surface);
   }
-  .aujourdhui {
-    font-size: 12px;
-    font-style: italic;
-    margin-left: 8px;
-    color: var(--color-accent-300);
+  .table tr[aria-current="date"] th,
+  .table tr[aria-current="date"] td {
+    font-weight: 500;
+    color: var(--color-ink);
+  }
+  .table tr[aria-current="date"] th {
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
+  }
+  .table tr[aria-current="date"] td {
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  }
+  .aujourdhui:not(:empty) {
+    margin-left: var(--space-xs);
+    padding: 2px 8px;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
   }
   .contact {
-    margin: 32px 0 0;
     display: grid;
-    gap: 14px;
+    gap: 0;
+    margin: var(--space-xl) 0 0;
   }
   .contact > div {
     display: grid;
     grid-template-columns: minmax(0, 8.5em) minmax(0, 1fr);
-    gap: 12px;
+    gap: var(--space-sm);
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--color-hairline);
+  }
+  .contact > div:last-child {
+    border-bottom: 0;
   }
   .contact dt {
-    letter-spacing: 0.12em;
-    padding-top: 3px;
+    padding-top: 2px;
   }
   .contact dd {
     margin: 0;
-    font-size: 16px;
-  }
-  .contact .tag {
-    font-size: 12px;
+    color: var(--color-ink);
   }
 </style>

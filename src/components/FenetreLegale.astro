@@ -19,8 +19,8 @@ const lignes: [string, string][] = [
 <dialog id="fenetre-legale" class="fond" aria-labelledby="titre-legal" data-legal>
   <div class="dialog fenetre">
     <div class="tete">
-      <h2 id="titre-legal" class="dialog-title titre">Mentions légales</h2>
-      <button type="button" class="btn btn-secondary fermer" autofocus data-fermer>Fermer</button>
+      <h2 id="titre-legal">Mentions légales</h2>
+      <button type="button" class="btn btn-outline" autofocus data-fermer>Fermer</button>
     </div>
     <p class="avertissement">
       Document provisoire : les champs signalés restent à fournir, puis l’ensemble est à relire et valider par l’exploitant avant la mise en ligne.
@@ -47,7 +47,7 @@ const lignes: [string, string][] = [
       )
     }
     <h3>Données personnelles</h3>
-    <p class="long">
+    <p>
       La réservation (TheFork) ne se charge que lorsque vous la demandez ; l’itinéraire et la carte s’ouvrent sur Google Maps, dans un nouvel onglet. La politique de confidentialité complète est à rédiger et à valider.
     </p>
   </div>
@@ -63,9 +63,9 @@ const lignes: [string, string][] = [
     max-height: none;
     margin: 0;
     border: 0;
-    padding: var(--space-4);
-    background: rgba(10, 9, 8, 0.72);
-    color: var(--color-text);
+    padding: var(--space-base);
+    background: rgba(12, 10, 9, 0.5);
+    color: var(--color-body);
   }
   .fond[open] {
     display: grid;
@@ -75,59 +75,47 @@ const lignes: [string, string][] = [
     background: transparent;
   }
   .fenetre {
-    width: min(640px, 100%);
     max-height: 86vh;
     overflow-y: auto;
-    gap: 18px;
+    gap: var(--space-base);
   }
   .tete {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: var(--space-sm);
   }
-  .titre {
-    margin: 0;
-    font-size: 28px;
-  }
-  .fermer {
-    min-height: 44px;
-    padding: 0 14px;
-    font-size: 16px;
-  }
-  .fenetre p {
-    margin: 0;
-    font-size: 14px;
-  }
-  .avertissement {
-    line-height: 1.6;
-    color: color-mix(in srgb, var(--color-text) 78%, transparent);
-  }
-  .fenetre .long {
-    line-height: 1.6;
+  h2 {
+    font-size: 30px;
   }
   h3 {
-    margin: 6px 0 0;
-    font-weight: 500;
+    margin-top: var(--space-xs);
     font-size: 22px;
   }
-  dl {
-    margin: 0;
-    display: grid;
-    gap: 8px;
+  .fenetre p {
     font-size: 14px;
+    line-height: 1.6;
+    letter-spacing: 0;
+  }
+  dl {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    font-size: 14px;
+    letter-spacing: 0;
   }
   dl > div {
     display: grid;
     grid-template-columns: minmax(0, 13em) minmax(0, 1fr);
-    gap: 12px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--color-divider);
+    gap: var(--space-sm);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-hairline);
   }
   dt {
-    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+    color: var(--color-body);
   }
   dd {
     margin: 0;
+    color: var(--color-ink);
   }
 </style>

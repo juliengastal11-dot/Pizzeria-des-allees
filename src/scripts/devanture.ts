@@ -3,10 +3,9 @@
  * haut de page : rien ne se télécharge avant que la page ait fini de charger
  * (la photo s'affiche d'abord), ni en mouvement réduit, ni en économie de
  * données ou sur un réseau lent (la photo suffit : voir mouvement.ts). Elle
- * ne démarre qu'une fois l'entrée animée du haut de page terminée, pour ne
- * pas jouer sous un zoom ou un masque en mouvement, et se met en pause dès
- * qu'elle sort de l'écran. Sur téléphone, le navigateur prend la version 720p
- * (sources de Hero.astro).
+ * ne démarre qu'une fois l'entrée animée du haut de page terminée, et se met
+ * en pause dès qu'elle sort de l'écran. Sur téléphone, le navigateur prend la
+ * version 720p (sources de Hero.astro).
  */
 import { introTerminee } from "./animations";
 import { videoActive } from "./mouvement";

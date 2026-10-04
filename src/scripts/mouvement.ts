@@ -10,8 +10,5 @@ export const reduit = !Element.prototype.animate || matchMedia("(prefers-reduced
 const connexion = (navigator as Navigator & { connection?: Connexion }).connection;
 const reseauPermis = !connexion?.saveData && !/2g|3g/.test(connexion?.effectiveType ?? "");
 
-/**
- * Vrai quand la vidéo de la devanture va jouer (ni animations réduites, ni économie de données, ni réseau lent).
- * La photo du haut n'a alors aucun mouvement lent à finir : un zoom qui bouge sous une vidéo la fait trembler.
- */
+/** Vrai quand la vidéo de la devanture va jouer (ni animations réduites, ni économie de données, ni réseau lent). */
 export const videoActive = !reduit && reseauPermis && !!document.querySelector("[data-video-devanture]");

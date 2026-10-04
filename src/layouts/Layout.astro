@@ -25,7 +25,7 @@ const urlPartage = new URL(partage.src, site.urlSite).href;
     <meta name="description" content={description} />
     {!site.indexable && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={`${site.urlSite}/`} />
-    <meta name="theme-color" content="#1c1a19" />
+    <meta name="theme-color" content="#f5f5f5" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:site_name" content={site.nom} />
@@ -39,8 +39,8 @@ const urlPartage = new URL(partage.src, site.urlSite).href;
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/png" href={icone.src} />
     <link rel="apple-touch-icon" href={iconeApple.src} />
-    <Font cssVariable="--font-cormorant" preload={[{ subset: "latin", style: "normal" }]} />
-    <Font cssVariable="--font-lora" preload={[{ subset: "latin", style: "normal" }]} />
+    <Font cssVariable="--font-newsreader" preload={[{ subset: "latin", style: "normal" }]} />
+    <Font cssVariable="--font-inter" preload={[{ subset: "latin", style: "normal" }]} />
     <script is:inline>
       // Avant la première peinture : l'entrée animée ne cache rien si le JavaScript ou les animations manquent
       (function () {
