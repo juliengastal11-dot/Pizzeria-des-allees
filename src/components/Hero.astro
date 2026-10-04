@@ -11,23 +11,45 @@ import { commande, site } from "../config/site";
     <span class="trait" aria-hidden="true" data-intro="line" data-intro-delay="120"></span>
     <figure class="plate photo" data-intro="shutter" data-intro-delay="650">
       <div class="parallaxe" data-par="0.09">
-        <Picture
-          src={devanture}
-          formats={["avif", "webp"]}
-          widths={[640, 960, 1280, 1600, 1920]}
-          sizes="100vw"
-          priority
-          alt="La devanture de La Pizzeria des Allées le soir : l’enseigne bleu nuit aux lettres dorées, et des convives qui dînent en terrasse"
-          data-intro="push"
-          data-intro-delay="650"
-          class="image"
-          pictureAttributes={{ class: "image-cadre" }}
-        />
+        <!-- Un seul calque porte l'entrée animée : la photo et la vidéo ne se décalent jamais -->
+        <div class="media" data-intro="push" data-intro-delay="650">
+          <Picture
+            src={devanture}
+            formats={["avif", "webp"]}
+            widths={[640, 960, 1280, 1600, 1920]}
+            sizes="100vw"
+            priority
+            alt="La devanture de La Pizzeria des Allées le soir : l’enseigne bleu nuit aux lettres dorées, et des convives qui dînent en terrasse"
+            class="image"
+            pictureAttributes={{ class: "image-cadre" }}
+          />
+          <!--
+            La devanture qui vit en boucle (convives, pizzaiolo). Sa première image est la photo :
+            aucun saut quand elle démarre. Lancée par scripts/devanture.ts, après le chargement de la page.
+          -->
+          <video
+            class="video"
+            muted
+            loop
+            playsinline
+            preload="none"
+            disablepictureinpicture
+            disableRemotePlayback
+            aria-hidden="true"
+            tabindex="-1"
+            data-video-devanture
+          >
+            <source src="/video/devanture-convives.webm" type="video/webm" media="(min-width: 860px)" />
+            <source src="/video/devanture-convives.mp4" type="video/mp4" media="(min-width: 860px)" />
+            <source src="/video/devanture-convives-720.webm" type="video/webm" />
+            <source src="/video/devanture-convives-720.mp4" type="video/mp4" />
+          </video>
+        </div>
       </div>
       <div class="voile" aria-hidden="true" data-intro="lights" data-intro-delay="1100"></div>
       <div class="assombri" aria-hidden="true" data-scrub="dim"></div>
     </figure>
-    <p class="a-valider note">Visuel provisoire, retouché par IA : à remplacer par le reportage photo de la réouverture.</p>
+    <p class="a-valider note">Photo et vidéo provisoires, retouchée et animée par IA : à remplacer par le reportage de la réouverture.</p>
   </div>
 
   <div class="bas">
@@ -113,10 +135,29 @@ import { commande, site } from "../config/site";
     top: -8%;
     bottom: -8%;
   }
+  .media {
+    position: absolute;
+    inset: 0;
+  }
   .photo :global(.image-cadre) {
     display: block;
     width: 100%;
     height: 100%;
+  }
+  /* Posée sur la photo, invisible jusqu'à ce que la lecture démarre, puis en fondu */
+  .video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 22%;
+    opacity: 0;
+    transition: opacity 0.7s ease;
+    pointer-events: none;
+  }
+  .video[data-lecture] {
+    opacity: 1;
   }
   .photo :global(.image) {
     display: block;

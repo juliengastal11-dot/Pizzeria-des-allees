@@ -25,6 +25,7 @@ npm run check     # vérifie les types
 - `src/scripts/interface.ts` : l'en-tête qui se fonce, la barre d'actions du téléphone, le menu, les mentions légales, le jour courant dans les horaires.
 - `src/scripts/carte.ts` : le filtre par base, la pizza choisie, le carrousel du téléphone.
 - `src/scripts/reservation.ts` : le module TheFork ne se charge qu'à la demande, donc aucun cookie tiers avant.
+- `src/scripts/devanture.ts` : la devanture en boucle (convives, pizzaiolo) posée sur la photo du haut. Elle ne se télécharge qu'après la page, jamais en économie de données, sur réseau lent ou en animations réduites, et se met en pause hors de l'écran. Fichiers dans `public/video/` (version 720p pour les téléphones).
 
 ## Présentation au client
 
@@ -40,4 +41,4 @@ Chaque push sur `main` redéploie le site sur Vercel. `vercel.json` impose le pr
 
 ## L'ancien site
 
-Le site Next.js précédent se retrouve dans le tag git `ancien-site-nextjs` (commit `c69c0df`) et en copie dans le dossier `Ancien site (Next.js, 27-09-2026)` à côté de ce projet. Le dossier `ressources/` garde la fresque animée et la boucle de la devanture, sans les publier.
+Le site Next.js précédent se retrouve dans le tag git `ancien-site-nextjs` (commit `c69c0df`) et en copie dans le dossier `Ancien site (Next.js, 27-09-2026)` à côté de ce projet. Le dossier `ressources/` garde la fresque animée, sans la publier.
